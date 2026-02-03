@@ -1,0 +1,62 @@
+﻿@model IEnumerable<RestControlMVC.DTOs.UserDTO>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-0">Gestão de Utilizadores</h3>
+        <p class="text-muted small">Administre as contas de clientes e administradores da plataforma.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+        <i class="bi bi-person-plus me-2"></i>Novo Utilizador
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="table-responsive p-3">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Perfil (Role)</th>
+                    <th>Estado</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                                    @user.name.Substring(0, 1).ToUpper()
+                                </div>
+                                <span class="fw-medium">@user.name</span>
+                            </div>
+                        </td>
+                        <td>@user.email</td>
+                        <td>
+                            <span class="badge @(user.role == "Admin" ? "bg-dark" : "bg-secondary-subtle text-dark")">
+                                @user.role
+                            </span>
+                        </td>
+                        <td>
+                            @if (user.isActive)
+                            {
+                                <span class="text-success small"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> Ativo</span>
+                            }
+                            else
+                            {
+                                <span class="text-danger small"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> Inativo</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-pencil"></i></button>
+                            <button class="btn btn-sm btn-outline-danger border-0 ms-2"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+}
+
+@if (showBanner)
+{
+    <div id="cookieConsent" class="fixed-bottom p-4 bg-white border-top shadow-lg d-flex align-items-center justify-content-between animate__animated animate__fadeInUp" style="z-index: 9999;">
+        <div class="d-flex align-items-center gap-3">
+            <div class="bg-primary-subtle p-3 rounded-circle text-primary">
+                <i class="bi bi-shield-check fs-4"></i>
+            </div>
+            <div>
+                <h6 class="mb-1 fw-bold">Privacidade & Cookies</h6>
+                <p class="text-muted small mb-0">Utilizamos cookies para melhorar sua experiência no painel administrativo do RestFlow.</p>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-4" data-bs-dismiss="alert">Recusar</button>
+            <button type="button" class="btn btn-primary btn-sm rounded-pill px-4" data-cookie-string="@cookieString">Aceitar Cookies</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector("#cookieConsent button[data-cookie-string]").addEventListener("click", function (el) {
+            document.cookie = el.target.dataset.cookieString;
+            document.querySelector("#cookieConsent").classList.add("d-none");
+        });
+    </script>
+}

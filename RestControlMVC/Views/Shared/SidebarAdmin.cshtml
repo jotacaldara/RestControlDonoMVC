@@ -1,0 +1,44 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<nav class="sidebar">
+    <div class="sidebar-header d-flex align-items-center gap-2">
+        <i class="bi bi-hexagon-fill text-primary fs-4"></i>
+        <h5 class="mb-0 fw-bold">RestFlow</h5>
+    </div>
+
+    <ul class="nav flex-column mt-4 gap-1">
+        <li class="nav-item">
+            <a class="nav-link @(currentController == "Dashboard" ? "active" : "")"
+               asp-controller="Dashboard" asp-action="Index">
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentController == "Restaurants" ? "active" : "")"
+               asp-controller="Restaurants" asp-action="Index">
+                <i class="bi bi-shop-window"></i> Restaurantes
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentController == "Users" ? "active" : "")"
+               asp-controller="Users" asp-action="Index">
+                <i class="bi bi-people-fill"></i> Usuários
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(currentController == "Subscriptions" ? "active" : "")"
+               asp-controller="Subscriptions" asp-action="Index">
+                <i class="bi bi-credit-card-2-front-fill"></i> Planos
+            </a>
+        </li>
+    </ul>
+
+    <div class="mt-auto p-3">
+        <div class="card bg-dark border-0 p-3" style="background: rgba(255,255,255,0.05);">
+            <small class="text-muted d-block mb-2">Suporte</small>
+            <p class="small text-white mb-0">Precisa de ajuda? <br> dev@restflow.com</p>
+        </div>
+    </div>
+</nav>
