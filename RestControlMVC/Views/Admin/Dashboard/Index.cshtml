@@ -20,8 +20,13 @@
                     <i class="bi bi-currency-dollar fs-4"></i>
                 </div>
             </div>
-            <h6 class="text-muted small fw-bold text-uppercase">Receita Plataforma</h6>
-            <h2 class="fw-bold mb-0">@Model.TotalRevenue.ToString("C")</h2>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <p class="text-uppercase small fw-bold text-muted">Receita Plataforma</p>
+                    <i class="bi bi-currency-dollar text-success fs-4"></i>
+                </div>
+                <h2 class="fw-bold">@Model.TotalRevenue.ToString("C2", new System.Globalization.CultureInfo("pt-PT"))</h2>
+            </div>
         </div>
     </div>
 
@@ -57,25 +62,72 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Exemplo de como chamaremos os dados depois
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-                datasets: [{
-                    label: 'Receita (€)',
-                    data: [1200, 1900, 3000, 2500, 4200, 3800],
-                    borderColor: '#0d6efd',
-                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true } }
+        <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            try {
+                // 1. Busca os dados reais ao seu Controller MVC
+                const response = await fetch('/Admin/Dashboard/GetChartData');
+
+                if (!response.ok) throw new Error("Erro ao buscar dados");
+
+                const apiData = await response.json();
+
+                // 2. Mapeia os dados (Meses 1 a 12).
+                // Se a API devolver lista vazia, criamos um array de zeros por segurança.
+                const labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+                // Garante que temos 12 meses de dados, ou preenche com 0
+                const values = apiData.length === 12
+                    ? apiData.map(d => d.total)
+                    : new Array(12).fill(0);
+
+                // 3. Desenha o Gráfico
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Comissão Plataforma (10%)', // Texto atualizado
+                            data: values, // AQUI entram os dados reais
+                            borderColor: '#0d6efd',
+                            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4, // Curvatura da linha
+                            pointRadius: 4,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#0d6efd'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(context.raw);
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { borderDash: [2, 4], color: '#e9ecef' },
+                                ticks: { callback: value => value + ' €' }
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Erro no gráfico:", error);
             }
         });
     </script>

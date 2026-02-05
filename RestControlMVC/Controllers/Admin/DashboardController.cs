@@ -1,5 +1,4 @@
-﻿// Local: Controllers/Admin/DashboardController.cs
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestControlMVC.Services;
 using RestControlMVC.DTOs;
@@ -17,10 +16,17 @@ public class DashboardController : Controller
 
     public async Task<IActionResult> Index()
     {
-        // Bate no endpoint da sua API
+        //(Total de Restaurantes, Receita, Reservas, Pendentes)
         var stats = await _apiService.GetAsync<DashboardKpiDTO>("admin/admindashboard/stats");
-        return View("~/Views/Admin/Dashboard/Index.cshtml", stats);
+
+        return View("~/Views/Admin/Dashboard/Index.cshtml", stats ?? new DashboardKpiDTO());
     }
 
-
+    [HttpGet]
+    public async Task<IActionResult> GetChartData()
+    {
+        //EndPoint
+        var data = await _apiService.GetAsync<List<RevenueDataDTO>>("admin/admindashboard/revenue-data");
+        return Json(data ?? new List<RevenueDataDTO>());
+    }
 }

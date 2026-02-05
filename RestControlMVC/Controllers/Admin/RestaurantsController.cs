@@ -48,5 +48,47 @@ namespace RestControlMVC.Controllers.Admin
             var result = await _apiService.PostAsync<object>($"admin/admindashboard/approve/{id}", null);
             return RedirectToAction("Pending");
         }
+
+        // POST: Admin/Restaurants/Deactivate/5
+        [HttpPost]
+        public async Task<IActionResult> Deactivate(int id)
+        {
+            var result = await _apiService.PostAsync<object>($"restaurants/deactivate/{id}", null);
+
+            if (result != null)
+                TempData["Success"] = "Restaurante desativado com sucesso.";
+            else
+                TempData["Error"] = "Erro ao desativar restaurante.";
+
+            return RedirectToAction("Details", new { id = id });
+        }
+
+        // GET: Admin/Restaurants/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var restaurant = await _apiService.GetAsync<RestaurantDetailDTO>($"restaurants/{id}");
+            if (restaurant == null) return NotFound();
+            return View("~/Views/Admin/Restaurants/Edit.cshtml", restaurant);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(RestaurantDetailDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("~/Views/Admin/Restaurants/Edit.cshtml", model);
+            }
+
+            var result = await _apiService.PostAsync<bool>($"restaurants/update/{model.Id}", model);
+
+            if (result)
+            {
+                TempData["Success"] = "Restaurante atualizado com sucesso!";
+                return RedirectToAction("Details", new { id = model.Id });
+            }
+
+            TempData["Error"] = "Erro ao atualizar restaurante na API.";
+            return View("~/Views/Admin/Restaurants/Edit.cshtml", model);
+        }
     }
 }

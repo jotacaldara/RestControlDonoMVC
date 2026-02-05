@@ -73,5 +73,12 @@ namespace RestControlMVC.Services
                 PropertyNameCaseInsensitive = true
             });
         }
+
+        public async Task<bool> DeleteAsync(string endpoint)
+        {
+            AddAuthorizationHeader();
+            var response = await _httpClient.DeleteAsync(endpoint);
+            return response.IsSuccessStatusCode;
+        }
     }
 }
