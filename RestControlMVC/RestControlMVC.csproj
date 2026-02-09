@@ -7,9 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Owner\Dashboard\" />
-    <Folder Include="Views\Owner\Owner\" />
-    <Folder Include="Views\Owner\Reservations\" />
+    <Compile Remove="Views\Owner\Owner\**" />
+    <Content Remove="Views\Owner\Owner\**" />
+    <EmbeddedResource Remove="Views\Owner\Owner\**" />
+    <None Remove="Views\Owner\Owner\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Owner\Menu\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
   </ItemGroup>
 
 </Project>

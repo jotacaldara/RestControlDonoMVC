@@ -1,0 +1,218 @@
+﻿@model RestControlMVC.DTOs.Owner.OwnerDashboardDTO
+
+@{
+    ViewData["Title"] = "Dashboard - Gestão do Restaurante";
+}
+
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-tachometer-alt me-2"></i>Dashboard - @Model.RestaurantName
+            </h1>
+            <p class="text-muted mb-0">
+                <i class="fas fa-map-marker-alt me-1"></i>@Model.City
+            </p>
+        </div>
+    </div>
+
+    <!-- Mensagens de Feedback -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Cards de Estatísticas -->
+    <div class="row g-4 mb-4">
+        <!-- Total de Reservas -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total de Reservas
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.TotalReservations
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reservas Pendentes -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Reservas Pendentes
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.PendingReservations
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Avaliação Média -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Avaliação Média
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.AverageRating.ToString("F1")
+                                <small class="text-muted">/ 5.0</small>
+                            </div>
+                            <small class="text-muted">@Model.TotalReviews avaliações</small>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-star fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total de Produtos no Menu -->
+        <div class="col-xl-3 col-md-6">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col me-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Produtos no Menu
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.TotalProducts
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-utensils fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-store me-2"></i>Meu Restaurante
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Visualize e edite as informações do seu restaurante.</p>
+                    <a href="@Url.Action("RestaurantDetails", "Dashboard", new { area = "Owner" })"
+                       class="btn btn-primary btn-sm me-2">
+                        <i class="fas fa-eye me-1"></i>Ver Detalhes
+                    </a>
+                    <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit me-1"></i>Editar Informações
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-utensils me-2"></i>Menu
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Gerencie categorias e produtos do seu menu.</p>
+                    <a href="@Url.Action("Index", "Menu", new { area = "Owner" })"
+                       class="btn btn-success btn-sm">
+                        <i class="fas fa-list me-1"></i>Gerenciar Menu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-calendar-check me-2"></i>Reservas
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Visualize e gerencie as reservas do seu restaurante.</p>
+                    <a href="@Url.Action("Index", "Reservations", new { area = "Owner" })"
+                       class="btn btn-warning btn-sm">
+                        <i class="fas fa-eye me-1"></i>Ver Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h6 class="m-0 font-weight-bold">
+                        <i class="fas fa-star me-2"></i>Avaliações
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">Veja o que os clientes dizem sobre você.</p>
+                    <button class="btn btn-info btn-sm" disabled>
+                        <i class="fas fa-comments me-1"></i>Em breve
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .border-left-primary {
+            border-left: 0.25rem solid #4e73df !important;
+        }
+
+        .border-left-success {
+            border-left: 0.25rem solid #1cc88a !important;
+        }
+
+        .border-left-info {
+            border-left: 0.25rem solid #36b9cc !important;
+        }
+
+        .border-left-warning {
+            border-left: 0.25rem solid #f6c23e !important;
+        }
+    </style>
+}

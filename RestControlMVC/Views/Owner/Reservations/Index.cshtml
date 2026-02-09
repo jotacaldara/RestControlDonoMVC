@@ -1,0 +1,167 @@
+﻿@model List<RestControlMVC.DTOs.Owner.ReservationDTO>
+
+@{
+    ViewData["Title"] = "Reservas";
+    var currentStatus = ViewBag.CurrentStatus as string;
+}
+
+<div class="container-fluid">
+    <!-- Cabeçalho -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="h3 mb-3">
+                <i class="fas fa-calendar-check me-2"></i>Gestão de Reservas
+            </h1>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Filtrar por Status</h6>
+        </div>
+        <div class="card-body">
+            <div class="btn-group" role="group">
+                <a href="@Url.Action("Index", "Reservations", new { area = "Owner" })"
+                   class="btn @(string.IsNullOrEmpty(currentStatus) ? "btn-primary" : "btn-outline-primary")">
+                    Todas
+                </a>
+                <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Pendente" })"
+                   class="btn @(currentStatus == "Pendente" ? "btn-warning" : "btn-outline-warning")">
+                    Pendentes
+                </a>
+                <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Confirmada" })"
+                   class="btn @(currentStatus == "Confirmada" ? "btn-success" : "btn-outline-success")">
+                    Confirmadas
+                </a>
+                <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Cancelada" })"
+                   class="btn @(currentStatus == "Cancelada" ? "btn-danger" : "btn-outline-danger")">
+                    Canceladas
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensagens -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            @TempData["Info"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Tabela de Reservas -->
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Lista de Reservas
+                @if (!string.IsNullOrEmpty(currentStatus))
+                {
+                    <span class="badge bg-secondary">@currentStatus</span>
+                }
+            </h6>
+        </div>
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Cliente</th>
+                                <th>E-mail</th>
+                                <th>Nº Pessoas</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var reservation in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-calendar me-1"></i>
+                                        @reservation.ReservationDate.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-user me-1"></i>
+                                        @reservation.RestaurantName
+                                    </td>
+                                
+                                    <td>
+                                        <i class="fas fa-users me-1"></i>
+                                        @reservation.NumberOfPeople
+                                    </td>
+                                    <td>
+                                        @switch (reservation.Status)
+                                        {
+                                            case "Pendente":
+                                                <span class="badge bg-warning text-dark">
+                                                    <i class="fas fa-clock me-1"></i>Pendente
+                                                </span>
+                                                break;
+                                            case "Confirmado":
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-check me-1"></i>Confirmado
+                                                </span>
+                                                break;
+                                            case "Cancelada":
+                                                <span class="badge bg-danger">
+                                                    <i class="fas fa-times me-1"></i>Cancelada
+                                                </span>
+                                                break;
+                                            default:
+                                                <span class="badge bg-secondary">@reservation.Status</span>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info" disabled>
+                                            <i class="fas fa-eye"></i> Ver
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Nenhuma reserva encontrada
+                    @if (!string.IsNullOrEmpty(currentStatus))
+                    {
+                        <text>com o status "<strong>@currentStatus</strong>"</text>
+                    }
+    .
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Botão Voltar -->
+    <div class="mt-4">
+        <a href="@Url.Action("Index", "Dashboard", new { area = "Owner" })"
+           class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Voltar ao Dashboard
+        </a>
+    </div>
+</div>

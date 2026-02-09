@@ -1,71 +1,173 @@
 ﻿@model IEnumerable<RestControlMVC.DTOs.SubscriptionDTO>
+@using System.Globalization
 
-<div class="p-4">
-    <h3 class="fw-bold mb-4">Gestão de Planos & Financeiro</h3>
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark">Gestão de Planos & Financeiro</h3>
+        <span class="badge bg-light text-dark border p-2">
+            <i class="bi bi-database-check me-1"></i> Dados atualizados
+        </span>
+    </div>
 
-    <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
+    <ul class="nav nav-pills mb-4 gap-2" id="pills-tab" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active rounded-pill" data-bs-toggle="pill" data-bs-target="#tab-expiring">Vencimentos</button>
+            <button class="nav-link active rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#tab-expiring">
+                <i class="bi bi-calendar-event me-2"></i>Vencimentos
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#tab-configs">Configuração de Planos</button>
+            <button class="nav-link rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#tab-configs">
+                <i class="bi bi-sliders me-2"></i>Configuração de Planos
+            </button>
         </li>
     </ul>
 
     <div class="tab-content">
         <div class="tab-pane fade show active" id="tab-expiring">
-            <div class="card border-0 shadow-sm p-3">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Restaurante</th>
-                            <th>Vencimento</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.RestaurantName</td>
-                                <td><span class="badge @(item.DaysRemaining < 3 ? "bg-danger" : "bg-warning")">@item.EndDate</span></td>
-                                <td>
-                                    <button onclick="enviarEmail(@item.SubscriptionId)" class="btn btn-sm btn-primary">Enviar Cobrança</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4">Restaurante</th>
+                                    <th>Plano Atual</th>
+                                    <th>Vencimento</th>
+                                    <th class="text-end pe-4">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Any())
+                                {
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="ps-4 fw-bold">@item.RestaurantName</td>
+                                            <td><span class="badge bg-secondary">@item.PlanName</span></td>
+                                            <td>
+                                                @if (item.DaysRemaining <= 3)
+                                                {
+                                                    <span class="badge bg-danger-subtle text-danger border border-danger">
+                                                        <i class="bi bi-exclamation-circle me-1"></i> @item.EndDate (Expira em breve)
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success-subtle text-success">
+                                                        @item.EndDate
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <button onclick="enviarEmail(@item.SubscriptionId)" class="btn btn-sm btn-outline-primary rounded-pill">
+                                                    <i class="bi bi-envelope me-1"></i> Enviar Cobrança
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="bi bi-check-circle fs-2 d-block mb-2"></i>
+                                            Nenhuma subscrição a vencer nos próximos 5 dias.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="tab-pane fade" id="tab-configs">
             <div class="row g-4">
-                @foreach (var plan in ViewBag.Plans as List<RestControlMVC.DTOs.PlanDTO>)
+                @if (ViewBag.Plans != null)
                 {
-                    <div class="col-md-4">
-                        <div class="card border-0 shadow-sm rounded-4 h-100">
-                            <div class="card-body">
-                                <h5 class="fw-bold">@plan.Name</h5>
-                                <form asp-action="EditPlan" method="post">
-                                    <input type="hidden" name="PlanId" value="@plan.PlanId" />
-                                    <input type="hidden" name="Name" value="@plan.Name" />
+                    @foreach (var plan in ViewBag.Plans as List<RestControlMVC.DTOs.PlanDTO>)
+                    {
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm rounded-4 h-100 position-relative overflow-hidden">
+                                <div class="position-absolute top-0 start-0 w-100 bg-primary" style="height: 6px;"></div>
 
-                                    <div class="mb-3">
-                                        <label class="small text-muted">Mensalidade (€)</label>
-                                        <input type="number" step="0.01" name="MonthlyPrice" class="form-control" value="@plan.MonthlyPrice.ToString("F2")" />
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h4 class="fw-bold mb-0">@plan.Name</h4>
+                                        <span class="badge bg-light text-dark border">ID: @plan.PlanId</span>
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="small text-muted">Comissão por Reserva (%)</label>
-                                        <input type="number" step="0.1" name="ReservationCommission" class="form-control" value="@plan.ReservationCommission.ToString("F1")" />
+
+                                    <div class="bg-light rounded-3 p-3 mb-4">
+                                        <small class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Configuração Atual</small>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <div>
+                                                <span class="d-block text-muted small">Preço</span>
+                                                <span class="fs-5 fw-bold text-primary">@plan.MonthlyPrice.ToString("C")</span>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="d-block text-muted small">Comissão</span>
+                                                <span class="fs-5 fw-bold text-dark">@plan.ReservationCommission%</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-dark w-100">Salvar Alterações</button>
-                                </form>
+
+                                    <hr class="text-muted opacity-25">
+
+                                    <h6 class="fw-bold mb-3"><i class="bi bi-pencil-square me-2"></i>Editar Valores</h6>
+
+                                    <form asp-action="EditPlan" method="post">
+                                        <input type="hidden" name="PlanId" value="@plan.PlanId" />
+                                        <input type="hidden" name="Name" value="@plan.Name" />
+
+                                        <div class="mb-3">
+                                            <label class="form-label small text-muted">Novo Preço Mensal</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text border-0 bg-light">€</span>
+                                                <input type="number" step="0.01" name="MonthlyPrice" class="form-control bg-light border-0"
+                                                       value="@plan.MonthlyPrice.ToString("0.00", CultureInfo.InvariantCulture)" required />
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label class="form-label small text-muted">Nova Comissão (%)</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text border-0 bg-light">%</span>
+                                                <input type="number" step="0.1" name="ReservationCommission" class="form-control bg-light border-0"
+                                                       value="@plan.ReservationCommission.ToString("0.0", CultureInfo.InvariantCulture)" required />
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-dark w-100 rounded-pill py-2">
+                                            Atualizar Plano
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center text-muted py-5">
+                        <p>Não foi possível carregar os planos da base de dados.</p>
                     </div>
                 }
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function enviarEmail(id) {
+        if(!confirm("Deseja enviar um lembrete de pagamento para este restaurante?")) return;
+
+        fetch(`/Admin/Plans/SendReminder/${id}`, { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) alert("Email enviado com sucesso!");
+                else alert("Erro ao enviar email.");
+            })
+            .catch(err => console.error(err));
+    }
+</script>

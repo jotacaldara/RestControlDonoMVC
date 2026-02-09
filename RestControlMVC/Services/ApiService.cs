@@ -58,6 +58,16 @@ namespace RestControlMVC.Services
             return await HandleResponse<T>(response);
         }
 
+
+        //Login Segurança
+        public async Task<HttpResponseMessage> PostRawAsync(string endpoint, object data)
+        {
+            var jsonContent = JsonSerializer.Serialize(data);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            // Faz a chamada bruta sem tentar desserializar
+            return await _httpClient.PostAsync(endpoint, content);
+        }
         // Método auxiliar para tratar a resposta
         private async Task<T> HandleResponse<T>(HttpResponseMessage response)
         {
@@ -80,5 +90,15 @@ namespace RestControlMVC.Services
             var response = await _httpClient.DeleteAsync(endpoint);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> PutAsync(string endpoint, object data)
+        {
+            AddAuthorizationHeader();
+            var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(endpoint, content);
+            return response.IsSuccessStatusCode;
+        }
+
+
     }
 }
