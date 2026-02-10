@@ -1,101 +1,240 @@
 ﻿@model RestControlMVC.DTOs.RestaurantDetailDTO
 
-<div class="container-fluid py-4">
-    <div class="position-relative rounded-4 overflow-hidden mb-4 shadow-sm" style="height: 300px;">
-        <img src="@(Model.Images.FirstOrDefault() ?? "/img/default-restaurant.jpg")" class="w-100 h-100 object-fit-cover" style="filter: brightness(0.6);">
-        <div class="position-absolute bottom-0 start-0 p-4 text-white">
-            <span class="badge bg-warning text-dark mb-2"><i class="bi bi-star-fill"></i> @Model.AverageRating.ToString("F1") (@Model.TotalReviews Reviews)</span>
-            <h1 class="display-5 fw-bold">@Model.Name</h1>
-            <p class="mb-0 opacity-75"><i class="bi bi-geo-alt"></i> @Model.Address, @Model.City</p>
+@{
+    ViewData["Title"] = "Meu Restaurante";
+}
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
+                    <i class="bi bi-shop me-2" style="color: #10b981;"></i>
+                    Meu Restaurante
+                </h1>
+                <p class="text-muted mb-0">
+                    Informações detalhadas do seu estabelecimento
+                </p>
+            </div>
+            <div>
+                <a href="@Url.Action("Index", "Dashboard", new { area = "Owner" })"
+                   class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Voltar
+                </a>
+                <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
+                   class="btn btn-success">
+                    <i class="bi bi-pencil me-1"></i>
+                    Editar Informações
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Restaurant Info -->
+<div class="row g-4 mb-4">
+    <!-- Main Info Card -->
+    <div class="col-lg-8">
+        <div class="card card-custom border-0">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-info-circle me-2" style="color: #10b981;"></i>
+                    Informações Gerais
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <!-- Nome -->
+                <div class="mb-4">
+                    <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                        Nome do Restaurante
+                    </label>
+                    <h4 class="mb-0 fw-bold" style="color: #1e293b;">@Model.Name</h4>
+                </div>
+
+                <!-- Descrição -->
+                <div class="mb-4">
+                    <label class="text-muted small text-uppercase mb-2" style="letter-spacing: 0.5px;">
+                        Descrição
+                    </label>
+                    <p class="mb-0" style="line-height: 1.7;">
+                        @Model.Description
+                    </p>
+                </div>
+
+                <!-- Endereço -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-8">
+                        <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                            <i class="bi bi-geo-alt me-1"></i>
+                            Endereço
+                        </label>
+                        <p class="mb-0 fw-semibold">@Model.Address</p>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                            <i class="bi bi-pin-map me-1"></i>
+                            Cidade
+                        </label>
+                        <p class="mb-0 fw-semibold">@Model.City</p>
+                    </div>
+                </div>
+
+                <!-- Telefone -->
+                <div class="mb-4">
+                    <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                        <i class="bi bi-telephone me-1"></i>
+                        Telefone
+                    </label>
+                    <p class="mb-0 fw-semibold">
+                        <a href="tel:@Model.Phone" class="text-decoration-none" style="color: #10b981;">
+                            @Model.Phone
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Alert Info -->
+                <div class="alert alert-info d-flex align-items-start mb-0">
+                    <i class="bi bi-info-circle me-2 mt-1"></i>
+                    <div>
+                        <strong>Nota Importante:</strong>
+                        Nome, endereço e cidade só podem ser alterados pelo administrador do sistema.
+                        Você pode editar a descrição e o telefone.
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3">Sobre o Restaurante</h5>
-                    <p class="text-secondary">@Model.Description</p>
+    <!-- Stats Sidebar -->
+    <div class="col-lg-4">
+        <!-- Avaliações -->
+        <div class="card card-custom border-0 mb-4">
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    <div class="display-3 fw-bold mb-1" style="color: #10b981;">
+                        @Model.AverageRating.ToString("F1")
+                    </div>
+                    <div class="text-warning mb-2">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Floor(Model.AverageRating))
+                            {
+                                <i class="bi bi-star-fill"></i>
+                            }
+                            else if (i - Model.AverageRating < 1)
+                            {
+                                <i class="bi bi-star-half"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-star"></i>
+                            }
+                        }
+                    </div>
+                    <p class="text-muted mb-0">
+                        Baseado em @Model.TotalReviews avaliações
+                    </p>
                 </div>
             </div>
+        </div>
 
-            <h4 class="fw-bold mb-3 mt-5">Cardápio Digital</h4>
-            @if (Model.MenuCategories != null && Model.MenuCategories.Any())
-            {
-                @foreach (var category in Model.MenuCategories)
-                {
-                    <div class="mb-5">
-                        <h5 class="text-primary fw-bold border-bottom pb-2 mb-3">@category.Name</h5>
-                        <div class="row g-3">
-                            @foreach (var product in category.Products)
-                            {
-                                <div class="col-md-6">
-                                    <div class="card h-100 border-0 shadow-sm rounded-3">
-                                        <div class="card-body d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="fw-bold mb-1">@product.Name</h6>
+        <!-- Menu Stats -->
+        <div class="card card-custom border-0">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3">
+                    <i class="bi bi-ui-checks-grid me-1" style="color: #10b981;"></i>
+                    Estatísticas do Menu
+                </h6>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted">Categorias:</span>
+                    <span class="fw-bold">@Model.MenuCategories.Count</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Total de Produtos:</span>
+                    <span class="fw-bold">@Model.MenuCategories.Sum(c => c.Products.Count)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Images Gallery -->
+@if (Model.Images != null && Model.Images.Any())
+{
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card card-custom border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-images me-2" style="color: #10b981;"></i>
+                        Galeria de Imagens
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        @foreach (var image in Model.Images)
+                        {
+                            <div class="col-md-4 col-sm-6">
+                                <div class="position-relative overflow-hidden rounded" style="padding-top: 66.67%;">
+                                    <img src="@image"
+                                         alt="Imagem do restaurante"
+                                         class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+                                         style="cursor: pointer;"
+                                         onclick="window.open('@image', '_blank')">
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Menu Preview -->
+@if (Model.MenuCategories != null && Model.MenuCategories.Any())
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="card card-custom border-0">
+                <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-book me-2" style="color: #10b981;"></i>
+                        Pré-visualização do Menu
+                    </h5>
+                    <a href="@Url.Action("Index", "Menu", new { area = "Owner" })"
+                       class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-pencil me-1"></i>
+                        Editar Menu
+                    </a>
+                </div>
+                <div class="card-body p-4">
+                    @foreach (var category in Model.MenuCategories)
+                    {
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3 pb-2 border-bottom">@category.Name</h5>
+                            <div class="row g-3">
+                                @foreach (var product in category.Products)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div class="flex-grow-1 me-3">
+                                                <h6 class="mb-1 fw-semibold">@product.Name</h6>
                                                 <p class="text-muted small mb-0">@product.Description</p>
                                             </div>
-                                            <span class="badge bg-success-subtle text-success">@product.Price.ToString("C")</span>
+                                            <span class="badge bg-success fs-6 fw-semibold" style="min-width: 70px;">
+                                                €@product.Price.ToString("F2")
+                                            </span>
                                         </div>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <p class="text-muted">Este restaurante ainda não cadastrou o cardápio.</p>
-            }
-        </div>
-
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 20px;">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-4">Gestão da Unidade</h5>
-
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="bi bi-telephone text-primary me-3 fs-4"></i>
-                        <div>
-                            <p class="text-muted small mb-0">Telefone</p>
-                            <p class="fw-medium mb-0">@Model.Phone</p>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary w-100 mb-2 py-2 rounded-pill">
-                        <i class="bi bi-pencil-square me-2"></i> Editar Dados
-                    </a>
-
-                    <button type="button" class="btn btn-outline-danger w-100 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#deactivateModal">
-                        <i class="bi bi-power me-2"></i> Desativar Unidade
-                    </button>
+                    }
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="deactivateModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold text-danger">Confirmar Desativação</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Tem a certeza que deseja desativar o restaurante <strong>@Model.Name</strong>?</p>
-                <p class="small text-muted">Ao desativar, ele deixará de aparecer nas buscas e os donos perderão acesso ao painel até que seja reativado.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                <form asp-action="Deactivate" asp-route-id="@Model.Id" method="post">
-                    <button type="submit" class="btn btn-danger">Sim, Desativar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+}

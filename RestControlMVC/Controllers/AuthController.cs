@@ -1,8 +1,5 @@
-﻿// ==============================================================================
-// ARQUIVO: RestControlMVC/Controllers/AuthController.cs
-// SUBSTITUA SEU AuthController ATUAL POR ESTE
-// ==============================================================================
-
+﻿
+using RestControlMVC.ViewModels.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +25,7 @@ namespace RestControlMVC.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+
             return View();
         }
 
@@ -49,10 +47,8 @@ namespace RestControlMVC.Controllers
                     Password = model.Password
                 };
 
-                //  Chamar a API através do AuthService
                 var response = await _authService.LoginAsync(loginDto);
 
-                //  Se o login falhou (API retornou null ou 401)
                 if (response == null)
                 {
                     ModelState.AddModelError("", "E-mail ou senha inválidos.");
@@ -107,13 +103,14 @@ namespace RestControlMVC.Controllers
             }
         }
 
-        // Remove o cookie de autenticação tambem
-       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
+            await _authService.LogoutAsync();
+
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
             return RedirectToAction("Login", "Auth");
         }
 

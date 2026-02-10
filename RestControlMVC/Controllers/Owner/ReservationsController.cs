@@ -21,7 +21,7 @@ namespace RestControlMVC.Owner.Controllers
         {
             try
             {
-                var endpoint = "api/owner/reservations";
+                var endpoint = "owner/reservations";
 
                 if (!string.IsNullOrWhiteSpace(status))
                 {
@@ -37,7 +37,7 @@ namespace RestControlMVC.Owner.Controllers
                 }
 
                 ViewBag.CurrentStatus = status;
-                return View(reservations);
+                return View("~/Views/Owner/Reservations/Index.cshtml", reservations);
             }
             catch (Exception ex)
             {

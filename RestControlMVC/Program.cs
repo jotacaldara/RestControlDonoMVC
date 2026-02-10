@@ -4,42 +4,41 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7149/";
+if (!apiBaseUrl.EndsWith("/"))
+    apiBaseUrl += "/";
 
 builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
 {
-    client.BaseAddress = new Uri(apiBaseUrl);
+    client.BaseAddress = new Uri(apiBaseUrl ?? "https://localhost:7149/api/");
 });
 
 builder.Services.AddHttpClient<ApiService>(client =>
 {
-    client.BaseAddress = new Uri(apiBaseUrl);
+    client.BaseAddress = new Uri(apiBaseUrl ?? "https://localhost:7149/api/");
 });
 
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+    .AddCookie(options =>
     {
         options.LoginPath = "/Auth/Login";
         options.LogoutPath = "/Auth/Logout";
         options.AccessDeniedPath = "/Auth/AccessDenied";
         options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.SlidingExpiration = true; // Renova o cookie automaticamente
-        options.Cookie.HttpOnly = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS obrigatório
-        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.Name = "RestControlAuth"; 
     });
-// 1. Serviços de UI
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => false;
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+});
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthorization();
 
-// 2. Política de Cookies (Consentimento/Pop-up)
-builder.Services.Configure<CookiePolicyOptions>(options =>
-{
-    options.CheckConsentNeeded = context => true; // Ativa a necessidade de aceitar o banner
-    options.MinimumSameSitePolicy = SameSiteMode.None;
-});
 
 
 // 4. Injeção de Dependência
@@ -69,7 +68,6 @@ app.UseRouting();
 
 // O CookiePolicy deve vir antes da Autenticação para o banner funcionar
 app.UseCookiePolicy();
-
 app.UseAuthentication();
 app.UseAuthorization();
 

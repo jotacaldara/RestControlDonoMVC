@@ -1,218 +1,348 @@
 ﻿@model RestControlMVC.DTOs.Owner.OwnerDashboardDTO
 
 @{
-    ViewData["Title"] = "Dashboard - Gestão do Restaurante";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="container-fluid">
-    <!-- Cabeçalho -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="h3 mb-0 text-gray-800">
-                <i class="fas fa-tachometer-alt me-2"></i>Dashboard - @Model.RestaurantName
-            </h1>
-            <p class="text-muted mb-0">
-                <i class="fas fa-map-marker-alt me-1"></i>@Model.City
-            </p>
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
+                    <i class="bi bi-grid-1x2-fill me-2" style="color: #10b981;"></i>
+                    Dashboard
+                </h1>
+                <p class="text-muted mb-0">
+                    <i class="bi bi-shop me-1"></i>
+                    @Model.RestaurantName
+                    <span class="mx-2">•</span>
+                    <i class="bi bi-geo-alt me-1"></i>
+                    @Model.City
+                </p>
+            </div>
+            <div>
+                <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
+                   class="btn btn-outline-success">
+                    <i class="bi bi-gear me-1"></i>
+                    Configurações
+                </a>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Mensagens de Feedback -->
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    <!-- Cards de Estatísticas -->
-    <div class="row g-4 mb-4">
-        <!-- Total de Reservas -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total de Reservas
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @Model.TotalReservations
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                        </div>
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <!-- Total de Reservas -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
+                            Total de Reservas
+                        </p>
+                        <h3 class="mb-0 fw-bold" style="color: #1e293b;">
+                            @Model.TotalReservations
+                        </h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 56px; height: 56px; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+                        <i class="bi bi-calendar-check text-white" style="font-size: 1.5rem;"></i>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Reservas Pendentes -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Reservas Pendentes
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @Model.PendingReservations
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-clock fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Avaliação Média -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Avaliação Média
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @Model.AverageRating.ToString("F1")
-                                <small class="text-muted">/ 5.0</small>
-                            </div>
-                            <small class="text-muted">@Model.TotalReviews avaliações</small>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-star fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total de Produtos no Menu -->
-        <div class="col-xl-3 col-md-6">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row align-items-center">
-                        <div class="col me-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                Produtos no Menu
-                            </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                @Model.TotalProducts
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-utensils fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
+                <div class="mt-3 pt-3 border-top">
+                    <small class="text-muted">
+                        <i class="bi bi-clock me-1"></i>
+                        Atualizado agora
+                    </small>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Ações Rápidas -->
-    <div class="row g-4">
-        <div class="col-lg-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-store me-2"></i>Meu Restaurante
-                    </h6>
+    <!-- Reservas Pendentes -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
+                            Pendentes
+                        </p>
+                        <h3 class="mb-0 fw-bold" style="color: #1e293b;">
+                            @Model.PendingReservations
+                        </h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 56px; height: 56px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <i class="bi bi-hourglass-split text-white" style="font-size: 1.5rem;"></i>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="mb-3">Visualize e edite as informações do seu restaurante.</p>
-                    <a href="@Url.Action("RestaurantDetails", "Dashboard", new { area = "Owner" })"
-                       class="btn btn-primary btn-sm me-2">
-                        <i class="fas fa-eye me-1"></i>Ver Detalhes
-                    </a>
-                    <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
-                       class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-edit me-1"></i>Editar Informações
+                <div class="mt-3 pt-3 border-top">
+                    <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Pendente" })"
+                       class="text-decoration-none small fw-semibold" style="color: #f59e0b;">
+                        Ver pendentes
+                        <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="col-lg-6">
-            <div class="card shadow">
-                <div class="card-header bg-success text-white">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-utensils me-2"></i>Menu
-                    </h6>
+    <!-- Avaliação Média -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
+                            Avaliação Média
+                        </p>
+                        <h3 class="mb-0 fw-bold" style="color: #1e293b;">
+                            @Model.AverageRating.ToString("F1")
+                            <span class="small text-muted">/ 5.0</span>
+                        </h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 56px; height: 56px; background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="bi bi-star-fill text-white" style="font-size: 1.5rem;"></i>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="mb-3">Gerencie categorias e produtos do seu menu.</p>
+                <div class="mt-3 pt-3 border-top">
+                    <small class="text-muted">
+                        <i class="bi bi-chat-left-text me-1"></i>
+                        @Model.TotalReviews avaliações
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Produtos no Menu -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card card-custom border-0 h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
+                            Produtos no Menu
+                        </p>
+                        <h3 class="mb-0 fw-bold" style="color: #1e293b;">
+                            @Model.TotalProducts
+                        </h3>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                         style="width: 56px; height: 56px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);">
+                        <i class="bi bi-ui-checks-grid text-white" style="font-size: 1.5rem;"></i>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-top">
                     <a href="@Url.Action("Index", "Menu", new { area = "Owner" })"
-                       class="btn btn-success btn-sm">
-                        <i class="fas fa-list me-1"></i>Gerenciar Menu
+                       class="text-decoration-none small fw-semibold" style="color: #8b5cf6;">
+                        Gerenciar menu
+                        <i class="bi bi-arrow-right ms-1"></i>
                     </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card shadow">
-                <div class="card-header bg-warning text-dark">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-calendar-check me-2"></i>Reservas
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <p class="mb-3">Visualize e gerencie as reservas do seu restaurante.</p>
-                    <a href="@Url.Action("Index", "Reservations", new { area = "Owner" })"
-                       class="btn btn-warning btn-sm">
-                        <i class="fas fa-eye me-1"></i>Ver Reservas
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="card shadow">
-                <div class="card-header bg-info text-white">
-                    <h6 class="m-0 font-weight-bold">
-                        <i class="fas fa-star me-2"></i>Avaliações
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <p class="mb-3">Veja o que os clientes dizem sobre você.</p>
-                    <button class="btn btn-info btn-sm" disabled>
-                        <i class="fas fa-comments me-1"></i>Em breve
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@section Styles {
-    <style>
-        .border-left-primary {
-            border-left: 0.25rem solid #4e73df !important;
-        }
+<!-- Charts Row -->
+<div class="row g-4 mb-4">
+    <!-- Reservas por Mês (Gráfico) -->
+    <div class="col-lg-8">
+        <div class="card card-custom border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-bar-chart-line me-2" style="color: #10b981;"></i>
+                    Reservas dos Últimos 6 Meses
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="reservationsChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
 
-        .border-left-success {
-            border-left: 0.25rem solid #1cc88a !important;
-        }
+    <!-- Distribuição de Avaliações -->
+    <div class="col-lg-4">
+        <div class="card card-custom border-0 h-100">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-pie-chart me-2" style="color: #10b981;"></i>
+                    Distribuição de Avaliações
+                </h5>
+            </div>
+            <div class="card-body d-flex align-items-center justify-content-center">
+                <canvas id="ratingsChart" width="250" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
-        .border-left-info {
-            border-left: 0.25rem solid #36b9cc !important;
-        }
+<!-- Quick Actions -->
+<div class="row g-4">
+    <!-- Meu Restaurante -->
+    <div class="col-lg-4">
+        <div class="card card-custom border-0 h-100" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle bg-white bg-opacity-25 p-3 me-3">
+                        <i class="bi bi-shop" style="font-size: 1.75rem;"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Meu Restaurante</h5>
+                        <small class="opacity-75">Informações e configurações</small>
+                    </div>
+                </div>
+                <p class="mb-3 opacity-90">
+                    Visualize e edite as informações do seu restaurante, incluindo endereço, telefone e descrição.
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="@Url.Action("RestaurantDetails", "Dashboard", new { area = "Owner" })"
+                       class="btn btn-light btn-sm">
+                        <i class="bi bi-eye me-1"></i>
+                        Ver Detalhes
+                    </a>
+                    <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
+                       class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-pencil me-1"></i>
+                        Editar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        .border-left-warning {
-            border-left: 0.25rem solid #f6c23e !important;
-        }
-    </style>
+    <!-- Menu -->
+    <div class="col-lg-4">
+        <div class="card card-custom border-0 h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle bg-white bg-opacity-25 p-3 me-3">
+                        <i class="bi bi-ui-checks-grid" style="font-size: 1.75rem;"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Menu</h5>
+                        <small class="opacity-75">Categorias e produtos</small>
+                    </div>
+                </div>
+                <p class="mb-3 opacity-90">
+                    Gerencie categorias, adicione produtos, ajuste preços e mantenha seu menu sempre atualizado.
+                </p>
+                <div>
+                    <a href="@Url.Action("Index", "Menu", new { area = "Owner" })"
+                       class="btn btn-light btn-sm">
+                        <i class="bi bi-list-ul me-1"></i>
+                        Gerenciar Menu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reservas -->
+    <div class="col-lg-4">
+        <div class="card card-custom border-0 h-100" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+            <div class="card-body text-white p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle bg-white bg-opacity-25 p-3 me-3">
+                        <i class="bi bi-calendar-check" style="font-size: 1.75rem;"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">Reservas</h5>
+                        <small class="opacity-75">Gestão de reservas</small>
+                    </div>
+                </div>
+                <p class="mb-3 opacity-90">
+                    Visualize, confirme ou cancele reservas. Mantenha controle total sobre sua agenda.
+                </p>
+                <div>
+                    <a href="@Url.Action("Index", "Reservations", new { area = "Owner" })"
+                       class="btn btn-light btn-sm">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        Ver Reservas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Dados simulados para o gráfico (você pode buscar da API depois)
+        const reservationsData = {
+            labels: ['Setembro', 'Outubro', 'Novembro', 'Dezembro', 'Janeiro', 'Fevereiro'],
+            datasets: [{
+                label: 'Reservas',
+                data: [12, 19, 15, 25, 22, @Model.TotalReservations],
+                backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                borderColor: 'rgba(16, 185, 129, 1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        };
+
+        const reservationsChart = new Chart(document.getElementById('reservationsChart'), {
+            type: 'line',
+            data: reservationsData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 5
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfico de pizza de avaliações
+        const ratingsData = {
+            labels: ['5 Estrelas', '4 Estrelas', '3 Estrelas', '2 Estrelas', '1 Estrela'],
+            datasets: [{
+                data: [45, 30, 15, 7, 3],
+                backgroundColor: [
+                    'rgba(16, 185, 129, 0.8)',
+                    'rgba(52, 211, 153, 0.8)',
+                    'rgba(134, 239, 172, 0.8)',
+                    'rgba(254, 202, 202, 0.8)',
+                    'rgba(248, 113, 113, 0.8)'
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        };
+
+        const ratingsChart = new Chart(document.getElementById('ratingsChart'), {
+            type: 'doughnut',
+            data: ratingsData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 }

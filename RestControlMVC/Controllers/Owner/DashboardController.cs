@@ -22,14 +22,14 @@ namespace RestControlMVC.Areas.Owner.Controllers
         {
             try
             {
-                var dashboardData = await _apiService.GetAsync<OwnerDashboardDTO>("owner");
+                var dashboardData = await _apiService.GetAsync<OwnerDashboardDTO>("owner/dashboard");
 
                 if (dashboardData == null)
                 {
-                    // Se a API falhar, não podemos enviar null para a View
-                    return View(new OwnerDashboardDTO { RestaurantName = "Campus Point Café" });
+                    // Se falhar, retorna a view com caminho absoluto para evitar erro 404
+                    return View("~/Views/Owner/Dashboard/Index.cshtml", new OwnerDashboardDTO());
                 }
-                return View(dashboardData);
+                return View("~/Views/Owner/Dashboard/Index.cshtml", dashboardData);
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
         {
             try
             {
-                var restaurant = await _apiService.GetAsync<RestaurantDetailDTO>("api/owner/restaurant");
+                var restaurant = await _apiService.GetAsync<RestaurantDetailDTO>("owner/restaurant");
 
                 if (restaurant == null)
                 {
@@ -53,7 +53,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return View(restaurant);
+                return View("~/Views/Owner/Dashboard/RestaurantDetails.cshtml", restaurant);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
         {
             try
             {
-                var restaurant = await _apiService.GetAsync<RestaurantDetailDTO>("api/owner/restaurant");
+                var restaurant = await _apiService.GetAsync<RestaurantDetailDTO>("owner/restaurant");
 
                 if (restaurant == null)
                 {
@@ -83,7 +83,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
                     Phone = restaurant.Phone
                 };
 
-                return View(editDto);
+                return View("~/Views/Owner/Dashboard/Edit.cshtml", editDto);
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
                     Phone = model.Phone
                 };
 
-                var success = await _apiService.PutAsync("api/owner/restaurant", updateDto);
+                var success = await _apiService.PutAsync("owner/restaurant", updateDto);
 
                 if (success)
                 {
@@ -118,7 +118,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
                 else
                 {
                     TempData["Error"] = "Erro ao atualizar o restaurante.";
-                    return View(model);
+                    return View("~/Views/Owner/Dashboard/Edit.cshtml", model);
                 }
             }
             catch (Exception ex)

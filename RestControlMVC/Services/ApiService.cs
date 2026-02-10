@@ -17,7 +17,6 @@ namespace RestControlMVC.Services
 
         private void AddAuthorizationHeader()
         {
-            // Buscamos a Claim "Token" que salvamos no AuthController
             var token = _httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
 
             if (!string.IsNullOrEmpty(token))
@@ -29,6 +28,10 @@ namespace RestControlMVC.Services
 
         public async Task<T> GetAsync<T>(string endpoint)
         {
+            AddAuthorizationHeader();
+            var requestUrl = $"{_httpClient.BaseAddress}{endpoint}";
+            System.Diagnostics.Debug.WriteLine($"[ApiService] Chamando URL: {requestUrl}");
+
             try
             {
                 var response = await _httpClient.GetAsync(endpoint);
@@ -50,6 +53,7 @@ namespace RestControlMVC.Services
             }
         }
 
+        // POST com autenticação (retorna objeto deserializado)
         public async Task<T> PostAsync<T>(string endpoint, object data)
         {
             AddAuthorizationHeader();
@@ -58,39 +62,35 @@ namespace RestControlMVC.Services
             return await HandleResponse<T>(response);
         }
 
-
-        //Login Segurança
-        public async Task<HttpResponseMessage> PostRawAsync(string endpoint, object data)
-        {
-            var jsonContent = JsonSerializer.Serialize(data);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            // Faz a chamada bruta sem tentar desserializar
-            return await _httpClient.PostAsync(endpoint, content);
-        }
-        // Método auxiliar para tratar a resposta
-        private async Task<T> HandleResponse<T>(HttpResponseMessage response)
-        {
-            if (!response.IsSuccessStatusCode)
-            {
-                // Se der 401 ou 403, você pode lançar uma exceção ou tratar aqui
-                return default;
-            }
-
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-        }
-
-        public async Task<bool> DeleteAsync(string endpoint)
+        // POST que retorna bool (para operações simples)
+        public async Task<bool> PostAsync(string endpoint, object data)
         {
             AddAuthorizationHeader();
-            var response = await _httpClient.DeleteAsync(endpoint);
+            var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(endpoint, content);
             return response.IsSuccessStatusCode;
         }
 
+        //  MÉTODO PARA LOGIN
+        // Retorna o HttpResponseMessage completo (usado no AuthService)
+        public async Task<HttpResponseMessage> PostRawAsync(string endpoint, object data)
+        {
+            // NÃO adiciona Authorization header (login não precisa estar autenticado)
+            var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(endpoint, content);
+            return response; // Retorna a resposta completa
+        }
+
+        // PUT com autenticação (retorna objeto)
+        public async Task<T> PutAsync<T>(string endpoint, object data)
+        {
+            AddAuthorizationHeader();
+            var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync(endpoint, content);
+            return await HandleResponse<T>(response);
+        }
+
+        // PUT que retorna bool
         public async Task<bool> PutAsync(string endpoint, object data)
         {
             AddAuthorizationHeader();
@@ -99,6 +99,33 @@ namespace RestControlMVC.Services
             return response.IsSuccessStatusCode;
         }
 
+        // DELETE com autenticação
+        public async Task<bool> DeleteAsync(string endpoint)
+        {
+            AddAuthorizationHeader();
+            var response = await _httpClient.DeleteAsync(endpoint);
+            return response.IsSuccessStatusCode;
+        }
 
+        // Método auxiliar para processar respostas
+        private async Task<T> HandleResponse<T>(HttpResponseMessage response)
+        {
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"API ERROR {response.StatusCode}: {errorContent}");
+                return default;
+            }
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            if (string.IsNullOrWhiteSpace(content))
+                return default;
+
+            return JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
     }
 }

@@ -1,13 +1,12 @@
 ﻿using RestControlMVC.DTOs;
-using System.Net.Http;
-using System.Text;
 using System.Text.Json;
 
 namespace RestControlMVC.Services
 {
     public interface IAuthService
     {
-        Task<LoginResponseDTO> LoginAsync(LoginDto loginDto);
+        Task<LoginResponseDTO?> LoginAsync(LoginDto loginDto);
+        Task<bool> LogoutAsync();
     }
 
     public class AuthService : IAuthService
@@ -23,39 +22,60 @@ namespace RestControlMVC.Services
         {
             try
             {
-                // 1. Serializar o objeto para JSON
-                var jsonContent = JsonSerializer.Serialize(new
-                {
-                    email = loginDto.Email,
-                    password = loginDto.Password
-                });
+                System.Diagnostics.Debug.WriteLine($"[AuthService] Tentando login com email: {loginDto.Email}");
 
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+                var response = await _apiService.PostRawAsync("auth/login", loginDto);
 
-                // 2. Fazer POST para a API
-                var response = await _apiService.PostRawAsync("api/auth/login", content);
+                System.Diagnostics.Debug.WriteLine($"[AuthService] Status Code: {response.StatusCode}");
 
-                // 3. Se não foi bem-sucedido, retorna null
                 if (!response.IsSuccessStatusCode)
                 {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    System.Diagnostics.Debug.WriteLine($"Login falhou: {response.StatusCode} - {errorContent}");
+                    var errorDetail = await response.Content.ReadAsStringAsync();
+                    System.Diagnostics.Debug.WriteLine($"[AuthService] API retornou erro {response.StatusCode}: {errorDetail}");
                     return null;
                 }
 
-                // 4. Ler o JSON de resposta
                 var responseContent = await response.Content.ReadAsStringAsync();
 
-                // 5. Desserializar para LoginResponseDto
-                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
                 var loginResponse = JsonSerializer.Deserialize<LoginResponseDTO>(responseContent, options);
 
+                if (loginResponse == null || string.IsNullOrEmpty(loginResponse.Token))
+                {
+                    System.Diagnostics.Debug.WriteLine("[AuthService] ERRO: Token ausente na resposta da API!");
+                    return null;
+                }
+
+                System.Diagnostics.Debug.WriteLine($"[AuthService] Login OK! Role: {loginResponse.Role}");
                 return loginResponse;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Erro no AuthService.LoginAsync: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[AuthService] EXCEÇÃO NO LOGIN: {ex.Message}");
                 return null;
+            }
+        }
+
+        public async Task<bool> LogoutAsync()
+        {
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("[AuthService] Comunicando logout à API...");
+
+                // Chama o endpoint de logout
+                // O ApiService injeta automaticamente o Header Authorization com o Token
+                var response = await _apiService.PostAsync("auth/logout", new { });
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[AuthService] EXCEÇÃO NO LOGOUT: {ex.Message}");
+                return false;
             }
         }
     }
