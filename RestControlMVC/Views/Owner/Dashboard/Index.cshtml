@@ -273,13 +273,13 @@
 </div>
 
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Dados simulados para o gráfico (você pode buscar da API depois)
         const reservationsData = {
-            labels: ['Setembro', 'Outubro', 'Novembro', 'Dezembro', 'Janeiro', 'Fevereiro'],
+            labels: ['Total Atual'],
             datasets: [{
-                label: 'Reservas',
-                data: [12, 19, 15, 25, 22, @Model.TotalReservations],
+                label: 'Reservas Registradas',
+                data: [@Model.TotalReservations], 
                 backgroundColor: 'rgba(16, 185, 129, 0.2)',
                 borderColor: 'rgba(16, 185, 129, 1)',
                 borderWidth: 2,
@@ -295,32 +295,29 @@
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            stepSize: 5
+                            stepSize: 1,
+                            precision: 0
                         }
                     }
                 }
             }
         });
 
-        // Gráfico de pizza de avaliações
+        const avgRating = @Model.AverageRating.ToString("F1", System.Globalization.CultureInfo.InvariantCulture);
+
         const ratingsData = {
-            labels: ['5 Estrelas', '4 Estrelas', '3 Estrelas', '2 Estrelas', '1 Estrela'],
+            labels: ['Média Atual', 'Restante'],
             datasets: [{
-                data: [45, 30, 15, 7, 3],
+                data: [avgRating, 5 - avgRating], 
                 backgroundColor: [
-                    'rgba(16, 185, 129, 0.8)',
-                    'rgba(52, 211, 153, 0.8)',
-                    'rgba(134, 239, 172, 0.8)',
-                    'rgba(254, 202, 202, 0.8)',
-                    'rgba(248, 113, 113, 0.8)'
+                    'rgba(16, 185, 129, 0.8)', 
+                    'rgba(226, 232, 240, 0.5)' 
                 ],
                 borderWidth: 2,
                 borderColor: '#fff'
@@ -341,7 +338,8 @@
                             usePointStyle: true
                         }
                     }
-                }
+                },
+                cutout: '70%'
             }
         });
     </script>

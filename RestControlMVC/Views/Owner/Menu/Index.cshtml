@@ -1,0 +1,291 @@
+﻿ @model List<RestControlMVC.DTOs.CategoryDTO>
+
+@{
+    ViewData["Title"] = "Gestão de Menu";
+}
+
+<style>
+    .product-card {
+        transition: all 0.2s;
+        border-left: 4px solid #10b981;
+    }
+
+        .product-card:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+    .category-header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .badge-available {
+        background: #d1fae5;
+        color: #065f46;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .badge-unavailable {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
+                    <i class="bi bi-ui-checks-grid me-2" style="color: #10b981;"></i>
+                    Gestão de Menu
+                </h1>
+                <p class="text-muted mb-0">
+                    Gerencie categorias e produtos do seu restaurante
+                </p>
+            </div>
+            <div>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalNovaCategoria">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Nova Categoria
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Menu Content -->
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        Você ainda não tem categorias. Comece criando uma categoria!
+    </div>
+}
+else
+{
+    @foreach (var category in Model)
+    {
+        <div class="card card-custom border-0 mb-4">
+            <div class="category-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-folder me-2"></i>
+                    @category.Name
+                </h5>
+                <div>
+                    <button class="btn btn-sm btn-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalNovoProduto"
+                            onclick="setCategory(@category.CategoryId, '@category.Name')">
+                        <i class="bi bi-plus me-1"></i>
+                        Adicionar Produto
+                    </button>
+                    <form method="post" asp-action="DeleteCategory" class="d-inline" onsubmit="return confirm('Tem certeza? Todos os produtos desta categoria serão removidos!')">
+                        <input type="hidden" name="id" value="@category.CategoryId" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card-body p-4">
+                @if (!category.Products.Any())
+                {
+                    <p class="text-muted mb-0">
+                        <i class="bi bi-inbox me-1"></i>
+                        Nenhum produto nesta categoria.
+                    </p>
+                }
+                else
+                {
+                    <div class="row g-3">
+                        @foreach (var product in category.Products)
+                        {
+                            <div class="col-md-6 col-lg-4">
+                                <div class="product-card card h-100 border">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="fw-bold mb-0">@product.Name</h6>
+                                            <span class="@(product.IsAvailable ? "badge-available" : "badge-unavailable")">
+                                                @(product.IsAvailable ? "Disponível" : "Indisponível")
+                                            </span>
+                                        </div>
+                                        <p class="text-muted small mb-2">@product.Description</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="h5 mb-0 text-success">€@product.Price.ToString("F2")</span>
+                                            <div class="btn-group btn-group-sm">
+                                                <button class="btn btn-outline-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#modalEditarProduto"
+                                                        onclick="editProduct(@product.ProductId, '@product.Name', '@product.Description', @product.Price, @category.CategoryId, @product.IsAvailable.ToString().ToLower())">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <form method="post" asp-action="DeleteProduct" class="d-inline">
+                                                    <input type="hidden" name="id" value="@product.ProductId" />
+                                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Remover este produto?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
+
+<!-- Modal: Nova Categoria -->
+<div class="modal fade" id="modalNovaCategoria" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="CreateCategory">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-folder-plus me-2"></i>
+                        Nova Categoria
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nome da Categoria</label>
+                        <input type="text" name="name" class="form-control" placeholder="Ex: Entradas, Pratos Principais..." required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Criar Categoria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Novo Produto -->
+<div class="modal fade" id="modalNovoProduto" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" asp-action="CreateProduct">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Novo Produto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="newProductCategoryId" name="CategoryId" />
+                    <div class="mb-3">
+                        <label class="form-label">Categoria</label>
+                        <input type="text" id="newProductCategoryName" class="form-control" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nome do Produto</label>
+                        <input type="text" name="Name" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descrição</label>
+                        <textarea name="Description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Preço (€)</label>
+                            <input type="number" name="Price" class="form-control" step="0.01" min="0.01" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Disponibilidade</label>
+                            <select name="IsAvailable" class="form-select">
+                                <option value="true">Disponível</option>
+                                <option value="false">Indisponível</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Criar Produto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Produto -->
+<div class="modal fade" id="modalEditarProduto" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" asp-action="UpdateProduct">
+                <input type="hidden" id="editProductId" name="id" />
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-pencil-square me-2"></i>
+                        Editar Produto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editProductCategoryId" name="CategoryId" />
+                    <div class="mb-3">
+                        <label class="form-label">Nome do Produto</label>
+                        <input type="text" id="editProductName" name="Name" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Descrição</label>
+                        <textarea id="editProductDescription" name="Description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Preço (€)</label>
+                            <input type="number" id="editProductPrice" name="Price" class="form-control" step="0.01" min="0.01" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Disponibilidade</label>
+                            <select id="editProductAvailable" name="IsAvailable" class="form-select">
+                                <option value="true">Disponível</option>
+                                <option value="false">Indisponível</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function setCategory(categoryId, categoryName) {
+            document.getElementById('newProductCategoryId').value = categoryId;
+            document.getElementById('newProductCategoryName').value = categoryName;
+        }
+
+        function editProduct(id, name, description, price, categoryId, isAvailable) {
+            document.getElementById('editProductId').value = id;
+            document.getElementById('editProductName').value = name;
+            document.getElementById('editProductDescription').value = description;
+            document.getElementById('editProductPrice').value = price;
+            document.getElementById('editProductCategoryId').value = categoryId;
+            document.getElementById('editProductAvailable').value = isAvailable.toString();
+        }
+    </script>
+}

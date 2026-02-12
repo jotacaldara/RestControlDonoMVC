@@ -1,167 +1,250 @@
 ﻿@model List<RestControlMVC.DTOs.Owner.ReservationDTO>
 
 @{
-    ViewData["Title"] = "Reservas";
-    var currentStatus = ViewBag.CurrentStatus as string;
+    ViewData["Title"] = "Gestão de Reservas";
+    var statusFilter = ViewBag.StatusFilter as string;
 }
 
-<div class="container-fluid">
-    <!-- Cabeçalho -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <h1 class="h3 mb-3">
-                <i class="fas fa-calendar-check me-2"></i>Gestão de Reservas
-            </h1>
-        </div>
-    </div>
+<style>
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
 
-    <!-- Filtros -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Filtrar por Status</h6>
-        </div>
-        <div class="card-body">
-            <div class="btn-group" role="group">
-                <a href="@Url.Action("Index", "Reservations", new { area = "Owner" })"
-                   class="btn @(string.IsNullOrEmpty(currentStatus) ? "btn-primary" : "btn-outline-primary")">
-                    Todas
-                </a>
-                <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Pendente" })"
-                   class="btn @(currentStatus == "Pendente" ? "btn-warning" : "btn-outline-warning")">
-                    Pendentes
-                </a>
-                <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Confirmada" })"
-                   class="btn @(currentStatus == "Confirmada" ? "btn-success" : "btn-outline-success")">
-                    Confirmadas
-                </a>
-                <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Cancelada" })"
-                   class="btn @(currentStatus == "Cancelada" ? "btn-danger" : "btn-outline-danger")">
-                    Canceladas
-                </a>
+    .status-pendente {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-confirmada {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-cancelada {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
+                    <i class="bi bi-calendar-check me-2" style="color: #10b981;"></i>
+                    Gestão de Reservas
+                </h1>
+                <p class="text-muted mb-0">
+                    Confirme, cancele e gerencie todas as reservas
+                </p>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Mensagens -->
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-    @if (TempData["Info"] != null)
-    {
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            @TempData["Info"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
-
-    <!-- Tabela de Reservas -->
-    <div class="card shadow">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">
-                Lista de Reservas
-                @if (!string.IsNullOrEmpty(currentStatus))
-                {
-                    <span class="badge bg-secondary">@currentStatus</span>
-                }
-            </h6>
-        </div>
-        <div class="card-body">
-            @if (Model != null && Model.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Data/Hora</th>
-                                <th>Cliente</th>
-                                <th>E-mail</th>
-                                <th>Nº Pessoas</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var reservation in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        <i class="fas fa-calendar me-1"></i>
-                                        @reservation.ReservationDate.ToString("dd/MM/yyyy HH:mm")
-                                    </td>
-                                    <td>
-                                        <i class="fas fa-user me-1"></i>
-                                        @reservation.RestaurantName
-                                    </td>
-                                
-                                    <td>
-                                        <i class="fas fa-users me-1"></i>
-                                        @reservation.NumberOfPeople
-                                    </td>
-                                    <td>
-                                        @switch (reservation.Status)
-                                        {
-                                            case "Pendente":
-                                                <span class="badge bg-warning text-dark">
-                                                    <i class="fas fa-clock me-1"></i>Pendente
-                                                </span>
-                                                break;
-                                            case "Confirmado":
-                                                <span class="badge bg-success">
-                                                    <i class="fas fa-check me-1"></i>Confirmado
-                                                </span>
-                                                break;
-                                            case "Cancelada":
-                                                <span class="badge bg-danger">
-                                                    <i class="fas fa-times me-1"></i>Cancelada
-                                                </span>
-                                                break;
-                                            default:
-                                                <span class="badge bg-secondary">@reservation.Status</span>
-                                                break;
-                                        }
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-info" disabled>
-                                            <i class="fas fa-eye"></i> Ver
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+<!-- Filtros -->
+<div class="card card-custom border-0 mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Filtrar por Status</label>
+                <select class="form-select" onchange="filterByStatus(this.value)">
+                    <option value="">Todas as Reservas</option>
+                    <option value="Pendente" selected="@(statusFilter == "Pendente")">Pendentes</option>
+                    <option value="Confirmada" selected="@(statusFilter == "Confirmada")">Confirmadas</option>
+                    <option value="Cancelada" selected="@(statusFilter == "Cancelada")">Canceladas</option>
+                </select>
+            </div>
+            <div class="col-md-8 text-end">
+                <div class="btn-group">
+                    <a href="@Url.Action("Index", new { status = "" })" class="btn @(string.IsNullOrEmpty(statusFilter) ? "btn-success" : "btn-outline-secondary")">
+                        Todas (@Model.Count)
+                    </a>
+                    <a href="@Url.Action("Index", new { status = "Pendente" })" class="btn @(statusFilter == "Pendente" ? "btn-warning" : "btn-outline-warning")">
+                        Pendentes (@Model.Count(r => r.Status == "Pendente"))
+                    </a>
+                    <a href="@Url.Action("Index", new { status = "Confirmada" })" class="btn @(statusFilter == "Confirmada" ? "btn-success" : "btn-outline-success")">
+                        Confirmadas (@Model.Count(r => r.Status == "Confirmada"))
+                    </a>
+                    <a href="@Url.Action("Index", new { status = "Cancelada" })" class="btn @(statusFilter == "Cancelada" ? "btn-danger" : "btn-outline-danger")">
+                        Canceladas (@Model.Count(r => r.Status == "Cancelada"))
+                    </a>
                 </div>
-            }
-            else
-            {
-                <div class="alert alert-info mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Nenhuma reserva encontrada
-                    @if (!string.IsNullOrEmpty(currentStatus))
-                    {
-                        <text>com o status "<strong>@currentStatus</strong>"</text>
-                    }
-    .
-                </div>
-            }
+            </div>
         </div>
-    </div>
-
-    <!-- Botão Voltar -->
-    <div class="mt-4">
-        <a href="@Url.Action("Index", "Dashboard", new { area = "Owner" })"
-           class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Voltar ao Dashboard
-        </a>
     </div>
 </div>
+
+<!-- Lista de Reservas -->
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        Nenhuma reserva encontrada.
+    </div>
+}
+else
+{
+    <div class="card card-custom border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #f8f9fa;">
+                        <tr>
+                            <th>Data/Hora</th>
+                            <th>Cliente</th>
+                            <th class="text-center">Pessoas</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-end">Valor Gasto</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var reservation in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="fw-semibold">@reservation.ReservationDate.ToString("dd/MM/yyyy")</div>
+                                    <small class="text-muted">@reservation.ReservationDate.ToString("HH:mm")</small>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">@reservation.CustomerName</div>
+                                    <small class="text-muted">
+                                        <i class="bi bi-envelope me-1"></i>@reservation.CustomerEmail
+                                    </small>
+                                    @if (!string.IsNullOrEmpty(reservation.CustomerPhone))
+                                    {
+                                        <br />
+                                        <small class="text-muted">
+                                            <i class="bi bi-telephone me-1"></i>@reservation.CustomerPhone
+                                        </small>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary">@reservation.NumberOfPeople pessoas</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="status-badge status-@reservation.Status.ToLower()">
+                                        @reservation.Status
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    @if (reservation.TotalAmount > 0)
+                                    {
+                                        <span class="fw-bold text-success">€@reservation.TotalAmount.ToString("F2")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        @if (reservation.Status == "Pendente")
+                                        {
+                                            <form method="post" asp-action="ConfirmReservation" class="d-inline">
+                                                <input type="hidden" name="id" value="@reservation.Id" />
+                                                <button type="submit" class="btn btn-outline-success" title="Confirmar">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </button>
+                                            </form>
+                                            <form method="post" asp-action="CancelReservation" class="d-inline">
+                                                <input type="hidden" name="id" value="@reservation.Id" />
+                                                <button type="submit" class="btn btn-outline-danger" title="Cancelar" onclick="return confirm('Cancelar esta reserva?')">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (reservation.Status == "Confirmada" && reservation.TotalAmount == 0)
+                                        {
+                                            <button class="btn btn-outline-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalAdicionarValor"
+                                                    onclick="setReservation(@reservation.Id, '@reservation.CustomerName')">
+                                                <i class="bi bi-cash-coin"></i> Adicionar Valor
+                                            </button>
+                                        }
+
+                                        @if (reservation.TotalAmount > 0)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                Pago
+                                            </span>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Modal: Adicionar Valor Gasto -->
+<div class="modal fade" id="modalAdicionarValor" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="AddAmount">
+                <input type="hidden" id="amountReservationId" name="id" />
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-cash-coin me-2"></i>
+                        Adicionar Valor Gasto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Cliente</label>
+                        <input type="text" id="amountCustomerName" class="form-control" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Valor Total Gasto (€)</label>
+                        <input type="number" name="Amount" class="form-control form-control-lg" step="0.01" min="0.01" required placeholder="0.00" />
+                        <small class="form-text text-muted">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Este valor será usado para calcular a comissão da plataforma.
+                        </small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Método de Pagamento</label>
+                        <select name="PaymentMethod" class="form-select">
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Cartão">Cartão</option>
+                            <option value="MB WAY">MB WAY</option>
+                            <option value="Transferência">Transferência</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Confirmar Pagamento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function filterByStatus(status) {
+            window.location.href = '@Url.Action("Index")?status=' + status;
+        }
+
+        function setReservation(reservationId, customerName) {
+            document.getElementById('amountReservationId').value = reservationId;
+            document.getElementById('amountCustomerName').value = customerName;
+        }
+    </script>
+}
+
+
+               
