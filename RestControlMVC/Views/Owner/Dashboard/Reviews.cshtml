@@ -1,0 +1,165 @@
+﻿
+@model List<RestControlMVC.DTOs.ReviewDTO>
+
+@{
+    ViewData["Title"] = "Avaliações do Restaurante";
+    var reviewsList = Model ?? new List<RestControlMVC.DTOs.ReviewDTO>();
+    var averageRating = reviewsList.Any() ? reviewsList.Average(r => r.Rating) : 0;
+    var totalReviews = reviewsList.Count;
+}
+
+<style>
+    .review-card {
+        border-radius: 16px;
+        transition: transform 0.2s;
+    }
+
+        .review-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+    .star-rating {
+        color: #fbbf24;
+    }
+
+    .reply-box {
+        background: #f0fdf4;
+        border-left: 4px solid #10b981;
+    }
+</style>
+
+<!-- Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h2 fw-bold mb-1" style="color: #1e293b;">
+            <i class="bi bi-star-fill me-2" style="color: #10b981;"></i>
+            Avaliações
+        </h1>
+        <p class="text-muted mb-0">Veja o que os clientes dizem sobre o seu restaurante</p>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body p-4 text-center">
+                <h6 class="text-muted text-uppercase small mb-2">Avaliação Média</h6>
+                <h2 class="display-4 fw-bold mb-2" style="color: #10b981;">
+                    @averageRating.ToString("F1")
+                    <small class="fs-5 text-muted">/ 5.0</small>
+                </h2>
+                <div class="star-rating fs-4">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <i class="bi bi-star-fill @(i <= Math.Round(averageRating) ? "" : "text-muted opacity-25")"></i>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+            <div class="card-body p-4 text-center">
+                <h6 class="text-muted text-uppercase small mb-2">Total de Avaliações</h6>
+                <h2 class="display-4 fw-bold" style="color: #10b981;">@totalReviews</h2>
+                <p class="text-muted small mb-0">Feedback de clientes</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews List -->
+@if (Model != null && Model.Any())
+{
+    <div class="row g-3">
+        @foreach (var review in Model)
+        {
+            <div class="col-12">
+                <div class="card review-card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <!-- Review Header -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">@review.UserName</h6>
+                                <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="bi bi-star-fill @(i <= review.Rating ? "" : "text-muted opacity-25")"></i>
+                                    }
+                                </div>
+                            </div>
+                            <small class="text-muted">@review.Date</small>
+                        </div>
+
+                        <!-- Review Comment -->
+                        <p class="mb-3">@review.Comment</p>
+
+                        <!-- Owner Reply (if exists) -->
+                        @if (!string.IsNullOrEmpty(review.Reply))
+                        {
+                            <div class="reply-box p-3 rounded-3 mb-3">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-reply-fill text-success me-2 mt-1"></i>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-1"><strong>Resposta do Restaurante:</strong></p>
+                                        <p class="mb-1">@review.Reply</p>
+                                        @if (review.RepliedAt.HasValue)
+                                        {
+                                            <small class="text-muted">
+                                                Respondido em @review.RepliedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                            </small>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Reply Form -->
+                            <button class="btn btn-outline-success btn-sm"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#replyForm@(review.GetHashCode())">
+                                <i class="bi bi-reply me-1"></i>
+                                Responder
+                            </button>
+
+                            <div class="collapse mt-3" id="replyForm@(review.GetHashCode())">
+                                <form method="post" asp-action="ReplyReview">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="reviewId" value="@review.GetHashCode()" />
+                                    <div class="mb-2">
+                                        <textarea class="form-control" name="reply" rows="3"
+                                      placeholder="Escreva sua resposta..." required></textarea>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="bi bi-send me-1"></i>
+                                            Enviar Resposta
+                                        </button>
+                                        <button type="button" class="btn btn-secondary btn-sm"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#replyForm@(review.GetHashCode())">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-chat-left-text" style="font-size: 4rem; color: #d1d5db;"></i>
+            <h5 class="mt-3 text-muted">Ainda não há avaliações</h5>
+            <p class="text-muted">As avaliações dos clientes aparecerão aqui</p>
+        </div>
+    </div>
+}

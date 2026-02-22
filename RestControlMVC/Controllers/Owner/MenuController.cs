@@ -43,7 +43,7 @@ namespace RestControlMVC.Controllers.Owner
                 }
 
                 var dto = new { Name = name };
-                var success = await _apiService.PostAsync("api/owner/categories", dto);
+                var success = await _apiService.PostAsync("owner/categories", dto);
 
                 if (success)
                     TempData["Success"] = "Categoria criada com sucesso!";
@@ -58,7 +58,7 @@ namespace RestControlMVC.Controllers.Owner
             [ValidateAntiForgeryToken]
             public async Task<IActionResult> DeleteCategory(int id)
             {
-                var success = await _apiService.DeleteAsync($"api/owner/categories/{id}");
+                var success = await _apiService.DeleteAsync($"owner/categories/{id}");
 
                 if (success)
                     TempData["Success"] = "Categoria removida!";
@@ -73,13 +73,14 @@ namespace RestControlMVC.Controllers.Owner
             [ValidateAntiForgeryToken]
             public async Task<IActionResult> CreateProduct(ProductDto dto)
             {
-                if (!ModelState.IsValid)
-                {
-                    TempData["Error"] = "Preencha todos os campos obrigatórios.";
-                    return RedirectToAction(nameof(Index));
-                }
+            //PRODUTO APARECE COM 0 DE PRICE
+                //if (!ModelState.IsValid)
+                //{
+                //    TempData["Error"] = "Preencha todos os campos obrigatórios.";
+                //    return RedirectToAction(nameof(Index));
+                //}
 
-                var success = await _apiService.PostAsync("api/owner/products", dto);
+                var success = await _apiService.PostAsync("owner/products", dto);
 
                 if (success)
                     TempData["Success"] = "Produto criado com sucesso!";
@@ -89,27 +90,32 @@ namespace RestControlMVC.Controllers.Owner
                 return RedirectToAction(nameof(Index));
             }
 
-            // POST: Owner/Menu/UpdateProduct/5
-            [HttpPost]
-            [ValidateAntiForgeryToken]
-            public async Task<IActionResult> UpdateProduct(int id, ProductDto dto)
+        // POST: Owner/Menu/UpdateProduct/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProduct(int id, ProductDto dto)
+        {
+            if (!ModelState.IsValid)
             {
-                var success = await _apiService.PutAsync($"api/owner/products/{id}", dto);
-
-                if (success)
-                    TempData["Success"] = "Produto atualizado!";
-                else
-                    TempData["Error"] = "Erro ao atualizar produto.";
-
+                TempData["Error"] = "Dados inválidos.";
                 return RedirectToAction(nameof(Index));
             }
+            var success = await _apiService.PutAsync($"owner/products/{id}", dto);
 
-            // POST: Owner/Menu/DeleteProduct/5
-            [HttpPost]
+            if (success)
+                TempData["Success"] = "Produto atualizado!";
+            else
+                TempData["Error"] = "Erro ao atualizar produto.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Owner/Menu/DeleteProduct/5
+        [HttpPost]
             [ValidateAntiForgeryToken]
             public async Task<IActionResult> DeleteProduct(int id)
             {
-                var success = await _apiService.DeleteAsync($"api/owner/products/{id}");
+                var success = await _apiService.DeleteAsync($"owner/products/{id}");
 
                 if (success)
                     TempData["Success"] = "Produto removido!";

@@ -1,0 +1,210 @@
+﻿
+@{
+    ViewData["Title"] = "Pedido Submetido com Sucesso";
+    Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+}
+
+<section class="py-6 min-vh-100 d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center" data-aos="zoom-in">
+
+                <!-- Success Icon -->
+                <div class="success-icon mb-4">
+                    <div class="check-circle">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <h1 class="display-4 fw-bold mb-3">Pedido Submetido!</h1>
+                <p class="lead text-muted mb-4">
+                    Obrigado por se registar no RestFlow. O seu pedido foi recebido com sucesso.
+                </p>
+
+                <!-- Info Card -->
+                <div class="card border-0 shadow-lg mb-5 text-start">
+                    <div class="card-body p-5">
+                        <h5 class="fw-bold mb-4">
+                            <i class="bi bi-info-circle text-primary me-2"></i>
+                            Próximos Passos
+                        </h5>
+
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-success">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1">Pedido Recebido</h6>
+                                    <p class="text-muted small mb-0">
+                                        O seu pedido foi submetido e está na nossa base de dados.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-warning">
+                                    <i class="bi bi-clock"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1">Em Análise</h6>
+                                    <p class="text-muted small mb-0">
+                                        A nossa equipa irá analisar os dados do seu restaurante.
+                                        <br /><strong>Tempo estimado: 24-48 horas</strong>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-primary">
+                                    <i class="bi bi-envelope"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1">Notificação por Email</h6>
+                                    <p class="text-muted small mb-0">
+                                        Receberá um email quando o pedido for aprovado.
+                                        Verifique também a pasta de spam.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-icon bg-info">
+                                    <i class="bi bi-rocket-takeoff"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="fw-bold mb-1">Comece a Usar</h6>
+                                    <p class="text-muted small mb-0">
+                                        Após aprovação, poderá fazer login e começar a gerir o seu restaurante.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-lg px-5 py-3">
+                        <i class="bi bi-house me-2"></i>
+                        Voltar à Página Inicial
+                    </a>
+                    <a href="mailto:suporte@restflow.com" class="btn btn-outline-primary btn-lg px-5 py-3">
+                        <i class="bi bi-envelope me-2"></i>
+                        Contactar Suporte
+                    </a>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="mt-5 pt-4 border-top">
+                    <p class="text-muted small mb-3">
+                        <i class="bi bi-question-circle me-1"></i>
+                        <strong>Tem dúvidas?</strong>
+                    </p>
+                    <p class="text-muted small">
+                        Email: <a href="mailto:suporte@restflow.com">suporte@restflow.com</a>
+                        <span class="mx-2">|</span>
+                        Telefone: <a href="tel:+351912345678">+351 912 345 678</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .success-icon {
+        animation: scaleIn 0.5s ease-out;
+    }
+
+    .check-circle {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 40px rgba(16, 185, 129, 0.3);
+    }
+
+        .check-circle i {
+            font-size: 4rem;
+            color: white;
+            animation: checkPop 0.6s ease-out 0.3s backwards;
+        }
+
+    .timeline {
+        position: relative;
+        padding-left: 60px;
+    }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #10b981, #3b82f6);
+        }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .timeline-icon {
+        position: absolute;
+        left: -50px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .timeline-content h6 {
+        color: #1e293b;
+    }
+
+    @@keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes checkPop {
+        from {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 600, once: true });
+    </script>
+}

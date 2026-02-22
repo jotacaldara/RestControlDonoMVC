@@ -1,0 +1,211 @@
+﻿
+@model RestControlMVC.DTOs.RestaurantRegistrationDTO
+
+@{
+    ViewData["Title"] = "Registar Restaurante";
+    Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+}
+
+<section class="py-6 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <!-- Header -->
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary mb-3">
+                        <i class="bi bi-arrow-left me-2"></i>Voltar
+                    </a>
+                    <h1 class="display-5 fw-bold mb-3">Registar Restaurante</h1>
+                    <p class="lead text-muted">
+                        Preencha o formulário abaixo. O seu pedido será analisado pelo nosso administrador.
+                    </p>
+                </div>
+
+                <!-- Form Card -->
+                <div class="card border-0 shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card-body p-5">
+                        <form asp-action="Register" method="post">
+                            @Html.AntiForgeryToken()
+
+                            @if (TempData["Error"] != null)
+                            {
+                                <div class="alert alert-danger alert-dismissible fade show">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>
+                                    @TempData["Error"]
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            }
+
+                            <!-- Passo 1: Dados do Proprietário -->
+                            <div class="registration-step mb-5">
+                                <div class="step-header mb-4">
+                                    <span class="step-number">1</span>
+                                    <h4 class="fw-bold mb-1">Dados do Proprietário</h4>
+                                    <p class="text-muted small mb-0">Informações da pessoa responsável</p>
+                                </div>
+
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label asp-for="OwnerName" class="form-label fw-semibold">
+                                            Nome Completo <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="OwnerName" class="form-control form-control-lg"
+                                               placeholder="João Silva" />
+                                        <span asp-validation-for="OwnerName" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="OwnerPhone" class="form-label fw-semibold">
+                                            Telefone <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="OwnerPhone" class="form-control form-control-lg"
+                                               placeholder="+351 912 345 678" />
+                                        <span asp-validation-for="OwnerPhone" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="OwnerEmail" class="form-label fw-semibold">
+                                            Email <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="OwnerEmail" class="form-control form-control-lg"
+                                               placeholder="joao@exemplo.com" type="email" />
+                                        <span asp-validation-for="OwnerEmail" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6"></div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="Password" class="form-label fw-semibold">
+                                            Password <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Password" class="form-control form-control-lg"
+                                               type="password" placeholder="Mínimo 6 caracteres" />
+                                        <span asp-validation-for="Password" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="ConfirmPassword" class="form-label fw-semibold">
+                                            Confirmar Password <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="ConfirmPassword" class="form-control form-control-lg"
+                                               type="password" placeholder="Repita a password" />
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-5" />
+
+                            <!-- Passo 2: Dados do Restaurante -->
+                            <div class="registration-step mb-5">
+                                <div class="step-header mb-4">
+                                    <span class="step-number">2</span>
+                                    <h4 class="fw-bold mb-1">Dados do Restaurante</h4>
+                                    <p class="text-muted small mb-0">Informações sobre o seu estabelecimento</p>
+                                </div>
+
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <label asp-for="RestaurantName" class="form-label fw-semibold">
+                                            Nome do Restaurante <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="RestaurantName" class="form-control form-control-lg"
+                                               placeholder="Restaurante Sabores de Portugal" />
+                                        <span asp-validation-for="RestaurantName" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="City" class="form-label fw-semibold">
+                                            Cidade <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="City" class="form-control form-control-lg"
+                                               placeholder="Lisboa" />
+                                        <span asp-validation-for="City" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label asp-for="Description" class="form-label fw-semibold">
+                                            Descrição <span class="text-danger">*</span>
+                                        </label>
+                                        <textarea asp-for="Description" class="form-control" rows="4"
+                                                  placeholder="Descreva o seu restaurante, especialidades, ambiente..."></textarea>
+                                        <span asp-validation-for="Description" class="text-danger small"></span>
+                                        <small class="text-muted">Mínimo 20 caracteres</small>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label asp-for="Address" class="form-label fw-semibold">
+                                            Morada Completa <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Address" class="form-control form-control-lg"
+                                               placeholder="Rua das Flores, 123, 1º Andar" />
+                                        <span asp-validation-for="Address" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="RestaurantPhone" class="form-label fw-semibold">
+                                            Telefone do Restaurante <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="RestaurantPhone" class="form-control form-control-lg"
+                                               placeholder="+351 21 123 4567" />
+                                        <span asp-validation-for="RestaurantPhone" class="text-danger small"></span>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label asp-for="RestaurantEmail" class="form-label fw-semibold">
+                                            Email do Restaurante <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="RestaurantEmail" class="form-control form-control-lg"
+                                               placeholder="contato@restaurante.com" type="email" />
+                                        <span asp-validation-for="RestaurantEmail" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Info Box -->
+                            <div class="alert alert-info d-flex align-items-start mb-4">
+                                <i class="bi bi-info-circle fs-4 me-3 mt-1"></i>
+                                <div>
+                                    <strong>Processo de Aprovação:</strong>
+                                    <p class="mb-0 small mt-1">
+                                        Após submeter o pedido, a nossa equipa irá analisá-lo.
+                                        Receberá um email de confirmação quando o seu restaurante for aprovado.
+                                        O processo costuma demorar 24-48 horas.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-3">
+                                <button type="submit" class="btn btn-primary btn-lg py-3 shadow">
+                                    <i class="bi bi-send me-2"></i>
+                                    Submeter Pedido
+                                </button>
+                                <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+                                    Cancelar
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Help Text -->
+                <div class="text-center mt-4">
+                    <p class="text-muted small">
+                        Já tem conta?
+                        <a href="@Url.Action("Login", "Home")" class="fw-semibold">Entrar</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 600, once: true });
+    </script>
+}

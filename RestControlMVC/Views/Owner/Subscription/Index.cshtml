@@ -1,0 +1,309 @@
+﻿@model RestControlMVC.DTOs.SubscriptionDTO
+
+@{
+    ViewData["Title"] = "Minha Subscrição";
+}
+
+<style>
+    .subscription-card {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+    }
+
+    .info-card {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        transition: transform 0.2s;
+    }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+    .status-badge {
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .status-active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-expiring {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-expired {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+</style>
+
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
+            <i class="bi bi-credit-card-2-front me-2" style="color: #10b981;"></i>
+            Minha Subscrição
+        </h1>
+        <p class="text-muted mb-0">
+            Gerencie seu plano e acompanhe pagamentos
+        </p>
+    </div>
+</div>
+
+@if (Model == null || Model.SubscriptionId == 0)
+{
+    <!-- Sem Subscrição Ativa -->
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center p-5">
+                    <i class="bi bi-exclamation-circle" style="font-size: 4rem; color: #f59e0b;"></i>
+                    <h3 class="mt-4 fw-bold">Nenhuma Subscrição Ativa</h3>
+                    <p class="text-muted mb-4">
+                        Entre em contato com o administrador para ativar uma subscrição.
+                    </p>
+                    <a href="mailto:suporte@restflow.com" class="btn btn-primary btn-lg">
+                        <i class="bi bi-envelope me-2"></i>
+                        Contactar Suporte
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        <!-- Plano Atual (Card Principal) -->
+        <div class="col-lg-8">
+            <div class="card subscription-card border-0">
+                <div class="card-body p-5">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div>
+                            <h2 class="mb-1 fw-bold">Plano @Model.PlanName</h2>
+                            <p class="mb-0 opacity-75">Subscrição Ativa</p>
+                        </div>
+                        <span class="status-badge @(Model.IsExpiring ? "status-expiring" : "status-active")">
+                            @if (Model.IsExpiring)
+                            {
+                                <i class="bi bi-exclamation-triangle me-1"></i>
+                                <span>A Expirar</span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-check-circle me-1"></i>
+                                <span>Ativo</span>
+                            }
+                        </span>
+                    </div>
+
+                    <!-- Preço e Comissão -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="p-3 bg-white bg-opacity-25 rounded-3 me-3">
+                                    <i class="bi bi-cash-coin" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <small class="d-block opacity-75 mb-1">Pagamento Mensal</small>
+                                    <h3 class="mb-0 fw-bold">
+                                        €@Model.monthlyPrice.ToString()
+                                        <small class="fs-6 fw-normal opacity-75">/mês</small>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="p-3 bg-white bg-opacity-25 rounded-3 me-3">
+                                    <i class="bi bi-percent" style="font-size: 2rem;"></i>
+                                </div>
+                                <div>
+                                    <small class="d-block opacity-75 mb-1">Comissão por Reserva</small>
+                                    <h3 class="mb-0 fw-bold">
+                                        @Model.Commission.ToString("F0")%
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Datas -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="p-3 bg-white bg-opacity-10 rounded-3">
+                                <small class="d-block opacity-75 mb-1">
+                                    <i class="bi bi-calendar-check me-1"></i>
+                                    Data de Início
+                                </small>
+                                <p class="mb-0 fw-semibold">@Model.StartDate.ToString("dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-white bg-opacity-10 rounded-3">
+                                <small class="d-block opacity-75 mb-1">
+                                    <i class="bi bi-calendar-x me-1"></i>
+                                    Data de Vencimento
+                                </small>
+                                <p class="mb-0 fw-semibold">
+
+                                        @Model.EndDate.ToString("dd/MM/yyyy")
+                                
+                                   
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-white bg-opacity-10 rounded-3">
+                                <small class="d-block opacity-75 mb-1">
+                                    <i class="bi bi-hourglass-split me-1"></i>
+                                    Dias Restantes
+                                </small>
+                                <p class="mb-0 fw-bold fs-4">
+                                    @Model.DaysRemaining
+                                    <small class="fs-6 fw-normal">dias</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerta de Expiração -->
+                    @if (Model.IsExpiring)
+                    {
+                        <div class="alert alert-warning bg-white d-flex align-items-start mb-4">
+                            <i class="bi bi-exclamation-triangle me-3 mt-1" style="font-size: 1.5rem; color: #92400e;"></i>
+                            <div style="color: #1e293b;">
+                                <strong>Atenção!</strong> Sua subscrição expira em <strong>@Model.DaysRemaining dias</strong>.
+                                <br />
+                                Renove agora para evitar interrupções no serviço.
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Botão Renovar -->
+                    <div class="d-grid">
+                        <form method="post" asp-action="RequestRenewal">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-light btn-lg fw-semibold" style="color: #10b981;">
+                                <i class="bi bi-arrow-repeat me-2"></i>
+                                Solicitar Renovação
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Benefícios do Plano -->
+            <div class="card info-card mb-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi bi-star-fill me-2" style="color: #10b981;"></i>
+                        Benefícios Inclusos
+                    </h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                            <span>Acesso completo ao sistema de gestão</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                            <span>Gestão ilimitada de menu e produtos</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                            <span>Sistema de reservas online</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                            <span>Dashboard com estatísticas em tempo real</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                            <span>Suporte técnico prioritário</span>
+                        </li>
+                        <li class="d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                            <span>Atualizações automáticas do sistema</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Como Funciona a Comissão -->
+            <div class="card info-card mb-4" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3" style="color: #1e40af;">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Como Funciona a Comissão?
+                    </h6>
+                    <p class="small mb-2" style="color: #1e40af;">
+                        A comissão de <strong>@Model.Commission%</strong> é calculada automaticamente sobre o valor total de cada reserva confirmada.
+                    </p>
+                    <p class="small mb-0" style="color: #1e40af;">
+                        <strong>Exemplo:</strong><br />
+                        Reserva de €100 → Comissão: €@((Model.Commission / 100) * 100)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Contactar Suporte -->
+            <div class="card info-card border-0">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-headset" style="font-size: 3rem; color: #10b981;"></i>
+                    <h6 class="fw-bold mt-3 mb-2">Precisa de Ajuda?</h6>
+                    <p class="text-muted small mb-3">
+                        Nossa equipe está pronta para ajudar com renovações ou dúvidas sobre seu plano.
+                    </p>
+                    <a href="mailto:nextplayerapps@gmail.com" class="btn btn-outline-success btn-sm w-100 mb-2">
+                        <i class="bi bi-envelope me-1"></i>
+                        suporte@restflow.com
+                    </a>
+                    <a href="tel:+351912345678" class="btn btn-outline-success btn-sm w-100">
+                        <i class="bi bi-telephone me-1"></i>
+                        +351 912 345 678
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Histórico de Pagamentos (Futuro) -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card info-card">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-clock-history me-2" style="color: #10b981;"></i>
+                        Histórico de Pagamentos
+                    </h5>
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Funcionalidade em breve! Aqui você verá todo o histórico de pagamentos da sua subscrição.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        // Auto-hide alerts após 5 segundos
+        setTimeout(() => {
+            $('.alert-dismissible').fadeOut('slow');
+        }, 5000);
+    </script>
+}

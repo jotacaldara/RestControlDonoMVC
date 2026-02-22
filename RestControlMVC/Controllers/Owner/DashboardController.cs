@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestControlMVC.DTOs;
 using RestControlMVC.DTOs.Owner;
 using RestControlMVC.Services;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
-namespace RestControlMVC.Areas.Owner.Controllers
+namespace RestControlMVC.Owner.Controllers
 {
     [Area("Owner")]
     [Authorize(Roles = "Owner")]
@@ -26,9 +29,10 @@ namespace RestControlMVC.Areas.Owner.Controllers
 
                 if (dashboardData == null)
                 {
-                    // Se falhar, retorna a view com caminho absoluto para evitar erro 404
+                    TempData["Error"] = "Erro ao carregar dados do dashboard.";
                     return View("~/Views/Owner/Dashboard/Index.cshtml", new OwnerDashboardDTO());
                 }
+
                 return View("~/Views/Owner/Dashboard/Index.cshtml", dashboardData);
             }
             catch (Exception ex)
@@ -36,12 +40,10 @@ namespace RestControlMVC.Areas.Owner.Controllers
                 TempData["Error"] = $"Erro ao carregar dashboard: {ex.Message}";
                 return View(new OwnerDashboardDTO());
             }
-
-
         }
 
-        // GET: /Owner/Dashboard/RestaurantDetails
-        public async Task<IActionResult> RestaurantDetails()
+        // GET: /Owner/Dashboard/RestaurantDetail
+        public async Task<IActionResult> RestaurantDetail()
         {
             try
             {
@@ -53,7 +55,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
                     return RedirectToAction("Index");
                 }
 
-                return View("~/Views/Owner/Dashboard/RestaurantDetails.cshtml", restaurant);
+                return View("~/Views/Owner/Dashboard/RestaurantDetail.cshtml", restaurant);
             }
             catch (Exception ex)
             {
@@ -76,7 +78,7 @@ namespace RestControlMVC.Areas.Owner.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // Mapeia para o DTO de edição (apenas campos permitidos)
+                // Mapeia para o DTO de edição
                 var editDto = new RestaurantEditDTO
                 {
                     Description = restaurant.Description,
@@ -113,12 +115,12 @@ namespace RestControlMVC.Areas.Owner.Controllers
                 if (success)
                 {
                     TempData["Success"] = "Restaurante atualizado com sucesso!";
-                    return RedirectToAction("RestaurantDetails");
+                    return RedirectToAction("RestaurantDetail");
                 }
                 else
                 {
                     TempData["Error"] = "Erro ao atualizar o restaurante.";
-                    return View("~/Views/Owner/Dashboard/Edit.cshtml", model);
+                    return View(model);
                 }
             }
             catch (Exception ex)
@@ -126,6 +128,50 @@ namespace RestControlMVC.Areas.Owner.Controllers
                 TempData["Error"] = $"Erro: {ex.Message}";
                 return View(model);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Reviews()
+        {
+            try
+            {
+                var reviews = await _apiService.GetAsync<List<ReviewDTO>>("owner/reviews");
+                return View("~/Views/Owner/Dashboard/Reviews.cshtml", reviews);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Erro: {ex.Message}";
+                return View(new List<ReviewDTO>());
+            }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ReplyReview(int reviewId, string reply)
+        {
+            if (string.IsNullOrWhiteSpace(reply))
+            {
+                TempData["Error"] = "A resposta não pode estar vazia.";
+                return RedirectToAction("Reviews");
+            }
+
+            try
+            {
+                var dto = new { Reply = reply };
+                var success = await _apiService.PostAsync($"owner/reviews/{reviewId}/reply", dto);
+
+                if (success)
+                    TempData["Success"] = "Resposta enviada com sucesso!";
+                else
+                    TempData["Error"] = "Erro ao enviar resposta.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Erro: {ex.Message}";
+            }
+
+            return RedirectToAction("Reviews");
         }
     }
 }

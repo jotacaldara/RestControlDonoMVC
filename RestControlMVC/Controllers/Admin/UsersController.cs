@@ -25,7 +25,6 @@ namespace RestControlMVC.Controllers.Admin
 
                 if (users == null || !users.Any())
                 {
-                    // Isso aparecerá na janela "Output" (Saída) do Visual Studio
                     System.Diagnostics.Debug.WriteLine("DEBUG: A lista retornou vazia da API.");
                     return View("~/Views/Admin/Users/Index.cshtml", new List<UserDTO>());
                 }
@@ -34,7 +33,6 @@ namespace RestControlMVC.Controllers.Admin
             }
             catch (Exception ex)
             {
-                // Se houver erro de rede ou desserialização, você verá aqui
                 System.Diagnostics.Debug.WriteLine($"CRITICAL ERROR: {ex.Message}");
                 return View("~/Views/Admin/Users/Index.cshtml", new List<UserDTO>());
             }
@@ -51,14 +49,15 @@ namespace RestControlMVC.Controllers.Admin
             return View("~/Views/Admin/Users/Edit.cshtml", user);
         }
 
+
         // POST: Admin/Users/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UserDTO user)
         {
             if (!ModelState.IsValid) return View("~/Views/Admin/Users/Edit.cshtml", user);
 
-            // Envia a atualização para a API (usando Put ou Post conforme sua API aceite)
-            var success = await _apiService.PostAsync<bool>($"user/{user.id}", user);
+            var success = await _apiService.PutAsync($"user/{user.id}", user);
 
             if (success)
             {
@@ -72,17 +71,25 @@ namespace RestControlMVC.Controllers.Admin
 
         // POST: Admin/Users/Delete/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var success = await _apiService.DeleteAsync($"user/{id}");
+            try
+            {
+                var success = await _apiService.DeleteAsync($"user/{id}");
 
-            if (success)
-            {
-                TempData["Success"] = "Utilizador removido com sucesso!";
+                if (success)
+                {
+                    TempData["Success"] = "Utilizador removido com sucesso!";
+                }
+                else
+                {
+                    TempData["Warning"] = "Utilizador desativado (possui histórico no sistema).";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                TempData["Error"] = "Não foi possível remover o utilizador.";
+                TempData["Error"] = $"Erro ao eliminar: {ex.Message}";
             }
 
             return RedirectToAction(nameof(Index));

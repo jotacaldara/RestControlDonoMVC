@@ -22,7 +22,15 @@ namespace RestControlMVC.Controllers
         {
             if (User.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Home");
+                if (User.IsInRole("Owner"))
+                {
+                    return RedirectToAction("Dashboard", "Owner");
+                }
+
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Dashboard", "Admin");
+                }
             }
 
 

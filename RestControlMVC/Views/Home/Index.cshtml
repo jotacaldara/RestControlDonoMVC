@@ -1,0 +1,349 @@
+﻿
+@{
+    ViewData["Title"] = "RestFlow - Sistema de Gestão para Restaurantes";
+    Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center min-vh-100 py-5">
+            <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                <span class="badge bg-gradient-primary mb-3 px-4 py-2">
+                    <i class="bi bi-star-fill me-2"></i>Solução Completa
+                </span>
+                <h1 class="display-3 fw-bold mb-4 hero-title">
+                    Transforme a gestão do seu
+                    <span class="text-gradient">restaurante</span>
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Do pedido ao controlo do food cost, o seu restaurante na palma da sua mão.
+                    Gerencie reservas, menu, staff e muito mais numa única plataforma.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="@Url.Action("Register", "RestaurantRegistration")"
+                       class="btn btn-primary btn-lg px-5 py-3 shadow-lg">
+                        <i class="bi bi-rocket-takeoff me-2"></i>
+                        Comece Agora Grátis
+                    </a>
+                    <a href="@Url.Action("Login", "Home")"
+                       class="btn btn-outline-primary btn-lg px-5 py-3">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Entrar
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <p class="small text-muted mb-2">Confiado por mais de 100+ restaurantes</p>
+                    <div class="d-flex gap-2">
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-fill text-warning"></i>
+                        <i class="bi bi-star-half text-warning"></i>
+                        <span class="ms-2 small fw-semibold">4.8/5</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="hero-image-container">
+                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=800"
+                         alt="Gestão de Restaurante"
+                         class="img-fluid rounded-4 shadow-2xl">
+                    <div class="floating-card card-1">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="icon-box bg-success">
+                                <i class="bi bi-graph-up-arrow text-white"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Receita Mensal</small>
+                                <strong class="fs-5">+32% <span class="text-success">↑</span></strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="floating-card card-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="icon-box bg-primary">
+                                <i class="bi bi-calendar-check text-white"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Reservas Hoje</small>
+                                <strong class="fs-5">24</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-gradient"></div>
+</section>
+
+<!-- Features Section -->
+<section class="py-6 bg-light" id="features">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="badge bg-gradient-primary mb-3">Funcionalidades</span>
+            <h2 class="display-5 fw-bold mb-3">Tudo o que precisa num só lugar</h2>
+            <p class="lead text-muted">Ferramentas poderosas para gerir cada aspeto do seu restaurante</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card h-100">
+                    <div class="feature-icon bg-gradient-primary">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Gestão de Reservas</h4>
+                    <p class="text-muted mb-4">
+                        Sistema completo de reservas online. Aceite, confirme e organize mesas em tempo real.
+                    </p>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Reservas online 24/7</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Confirmação automática</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Notificações por email</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-card h-100">
+                    <div class="feature-icon bg-gradient-success">
+                        <i class="bi bi-menu-button-wide"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Menu Digital</h4>
+                    <p class="text-muted mb-4">
+                        Crie e atualize o menu do seu restaurante facilmente. Organize por categorias.
+                    </p>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Gestão de categorias</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Controlo de preços</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Disponibilidade em tempo real</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-card h-100">
+                    <div class="feature-icon bg-gradient-warning">
+                        <i class="bi bi-graph-up"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Dashboard Inteligente</h4>
+                    <p class="text-muted mb-4">
+                        Visualize estatísticas em tempo real. Tome decisões baseadas em dados.
+                    </p>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Estatísticas em tempo real</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Relatórios de faturamento</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Análise de performance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-card h-100">
+                    <div class="feature-icon bg-gradient-danger">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Gestão de Equipa</h4>
+                    <p class="text-muted mb-4">
+                        Organize turnos, permissões e controlo de acesso para a sua equipa.
+                    </p>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Controlo de acesso</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Gestão de turnos</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Histórico de atividade</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="feature-card h-100">
+                    <div class="feature-icon bg-gradient-info">
+                        <i class="bi bi-star-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Sistema de Avaliações</h4>
+                    <p class="text-muted mb-4">
+                        Receba feedback dos clientes e responda às avaliações diretamente.
+                    </p>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Avaliações verificadas</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Responder clientes</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Análise de satisfação</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                <div class="feature-card h-100">
+                    <div class="feature-icon bg-gradient-purple">
+                        <i class="bi bi-credit-card"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Pagamentos Integrados</h4>
+                    <p class="text-muted mb-4">
+                        Registe pagamentos, comissões e acompanhe o faturamento total.
+                    </p>
+                    <ul class="feature-list">
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Registo de pagamentos</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Cálculo automático de comissões</li>
+                        <li><i class="bi bi-check-circle-fill text-success me-2"></i>Histórico completo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-6 bg-gradient-primary text-white">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-lg-3 col-6" data-aos="zoom-in" data-aos-delay="100">
+                <div class="stat-number">100+</div>
+                <p class="mb-0 opacity-90">Restaurantes</p>
+            </div>
+            <div class="col-lg-3 col-6" data-aos="zoom-in" data-aos-delay="200">
+                <div class="stat-number">5.000+</div>
+                <p class="mb-0 opacity-90">Reservas/Mês</p>
+            </div>
+            <div class="col-lg-3 col-6" data-aos="zoom-in" data-aos-delay="300">
+                <div class="stat-number">98%</div>
+                <p class="mb-0 opacity-90">Satisfação</p>
+            </div>
+            <div class="col-lg-3 col-6" data-aos="zoom-in" data-aos-delay="400">
+                <div class="stat-number">24/7</div>
+                <p class="mb-0 opacity-90">Suporte</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section class="py-6" id="pricing">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="badge bg-gradient-primary mb-3">Planos</span>
+            <h2 class="display-5 fw-bold mb-3">Escolha o plano ideal</h2>
+            <p class="lead text-muted">Sem custos escondidos. Cancele quando quiser.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Básico -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h4 class="fw-bold mb-2">Básico</h4>
+                        <p class="text-muted small mb-4">Para começar</p>
+                        <div class="price">
+                            <span class="currency">€</span>
+                            <span class="amount">29</span>
+                            <span class="period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Até 50 reservas/mês</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Menu digital ilimitado</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>1 utilizador</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Suporte por email</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>5% comissão/reserva</li>
+                    </ul>
+                    <a href="@Url.Action("Register", "RestaurantRegistration")"
+                       class="btn btn-outline-primary w-100 py-3">
+                        Começar Agora
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pro (Destacado) -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="pricing-card featured">
+                    <div class="badge-featured">Mais Popular</div>
+                    <div class="pricing-header">
+                        <h4 class="fw-bold mb-2">Pro</h4>
+                        <p class="text-muted small mb-4">Para crescer</p>
+                        <div class="price">
+                            <span class="currency">€</span>
+                            <span class="amount">79</span>
+                            <span class="period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Reservas ilimitadas</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Menu digital ilimitado</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>5 utilizadores</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Suporte prioritário</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>10% comissão/reserva</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Dashboard avançado</li>
+                    </ul>
+                    <a href="@Url.Action("Register", "RestaurantRegistration")"
+                       class="btn btn-primary w-100 py-3 shadow">
+                        Começar Agora
+                    </a>
+                </div>
+            </div>
+
+            <!-- Premium -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h4 class="fw-bold mb-2">Premium</h4>
+                        <p class="text-muted small mb-4">Para escalar</p>
+                        <div class="price">
+                            <span class="currency">€</span>
+                            <span class="amount">199</span>
+                            <span class="period">/mês</span>
+                        </div>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Tudo do Pro +</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Utilizadores ilimitados</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Aplicação Desktop</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>Suporte 24/7</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>15% comissão/reserva</li>
+                        <li><i class="bi bi-check-circle-fill text-success"></i>API personalizada</li>
+                    </ul>
+                    <a href="@Url.Action("Register", "RestaurantRegistration")"
+                       class="btn btn-outline-primary w-100 py-3">
+                        Começar Agora
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-6 bg-gradient-primary text-white">
+    <div class="container text-center" data-aos="zoom-in">
+        <h2 class="display-4 fw-bold mb-4">Pronto para começar?</h2>
+        <p class="lead mb-5 opacity-90">
+            Junte-se a centenas de restaurantes que já transformaram a gestão do seu negócio
+        </p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a href="@Url.Action("Register", "RestaurantRegistration")"
+               class="btn btn-light btn-lg px-5 py-3 shadow-lg">
+                <i class="bi bi-rocket-takeoff me-2"></i>
+                Criar Conta Grátis
+            </a>
+            <a href="#features" class="btn btn-outline-light btn-lg px-5 py-3">
+                Saber Mais
+            </a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+}

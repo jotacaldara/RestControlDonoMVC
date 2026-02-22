@@ -104,6 +104,11 @@ namespace RestControlMVC.Services
         {
             AddAuthorizationHeader();
             var response = await _httpClient.DeleteAsync(endpoint);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"API DELETE ERROR: {response.StatusCode} - {errorContent}");
+            }
             return response.IsSuccessStatusCode;
         }
 

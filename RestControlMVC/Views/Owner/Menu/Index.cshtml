@@ -1,225 +1,219 @@
-﻿ @model List<RestControlMVC.DTOs.CategoryDTO>
+﻿
+@model List<RestControlMVC.DTOs.CategoryDTO>
 
 @{
-    ViewData["Title"] = "Gestão de Menu";
+    ViewData["Title"] = "Gerir Menu";
+    var ptPT = new System.Globalization.CultureInfo("pt-PT");
 }
 
 <style>
-    .product-card {
-        transition: all 0.2s;
-        border-left: 4px solid #10b981;
+    .menu-card {
+        border-radius: 16px;
+        transition: transform 0.2s, box-shadow 0.2s;
     }
 
-        .product-card:hover {
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
         }
 
     .category-header {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%);
         color: white;
-        padding: 1rem 1.5rem;
         border-radius: 12px 12px 0 0;
     }
 
     .badge-available {
-        background: #d1fae5;
-        color: #065f46;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
+        background: #10b981;
     }
 
     .badge-unavailable {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
+        background: #ef4444;
     }
 </style>
 
-<!-- Page Header -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
-                    <i class="bi bi-ui-checks-grid me-2" style="color: #10b981;"></i>
-                    Gestão de Menu
-                </h1>
-                <p class="text-muted mb-0">
-                    Gerencie categorias e produtos do seu restaurante
-                </p>
-            </div>
-            <div>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalNovaCategoria">
-                    <i class="bi bi-plus-circle me-1"></i>
-                    Nova Categoria
-                </button>
-            </div>
-        </div>
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 fw-bold mb-1" style="color: #1e293b;">
+            <i class="bi bi-ui-checks-grid me-2" style="color: #10b981;"></i>
+            Gerir Menu
+        </h1>
+        <p class="text-muted mb-0">Crie categorias e adicione produtos ao menu</p>
     </div>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+        <i class="bi bi-plus-circle me-1"></i>
+        Nova Categoria
+    </button>
 </div>
 
-<!-- Menu Content -->
-@if (Model == null || !Model.Any())
-{
-    <div class="alert alert-info">
-        <i class="bi bi-info-circle me-2"></i>
-        Você ainda não tem categorias. Comece criando uma categoria!
-    </div>
-}
-else
-{
-    @foreach (var category in Model)
+<!-- Categorias e Produtos -->
+<div class="row g-4">
+    @if (Model != null && Model.Any())
     {
-        <div class="card card-custom border-0 mb-4">
-            <div class="category-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="bi bi-folder me-2"></i>
-                    @category.Name
-                </h5>
-                <div>
-                    <button class="btn btn-sm btn-light"
-                            data-bs-toggle="modal"
-                            data-bs-target="#modalNovoProduto"
-                            onclick="setCategory(@category.CategoryId, '@category.Name')">
-                        <i class="bi bi-plus me-1"></i>
-                        Adicionar Produto
-                    </button>
-                    <form method="post" asp-action="DeleteCategory" class="d-inline" onsubmit="return confirm('Tem certeza? Todos os produtos desta categoria serão removidos!')">
-                        <input type="hidden" name="id" value="@category.CategoryId" />
-                        <button type="submit" class="btn btn-sm btn-danger">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
+        @foreach (var category in Model)
+        {
+            <div class="col-12">
+                <div class="card menu-card border-0 shadow-sm">
+                    <!-- Category Header -->
+                    <div class="category-header p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">
+                                <i class="bi bi-folder me-2"></i>
+                                @category.Name
+                            </h5>
+                            <div>
+                                <button class="btn btn-light btn-sm me-2"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#createProductModal"
+                                        onclick="setCategory(@category.CategoryId)">
+                                    <i class="bi bi-plus"></i> Produto
+                                </button>
+                                <form method="post" asp-action="DeleteCategory" class="d-inline">
+                                    <input type="hidden" name="id" value="@category.CategoryId" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Eliminar categoria @category.Name?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="card-body p-4">
-                @if (!category.Products.Any())
-                {
-                    <p class="text-muted mb-0">
-                        <i class="bi bi-inbox me-1"></i>
-                        Nenhum produto nesta categoria.
-                    </p>
-                }
-                else
-                {
-                    <div class="row g-3">
-                        @foreach (var product in category.Products)
+                    <!-- Products -->
+                    <div class="card-body p-3">
+                        @if (category.Products != null && category.Products.Any())
                         {
-                            <div class="col-md-6 col-lg-4">
-                                <div class="product-card card h-100 border">
-                                    <div class="card-body">
-                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                            <h6 class="fw-bold mb-0">@product.Name</h6>
-                                            <span class="@(product.IsAvailable ? "badge-available" : "badge-unavailable")">
-                                                @(product.IsAvailable ? "Disponível" : "Indisponível")
-                                            </span>
-                                        </div>
-                                        <p class="text-muted small mb-2">@product.Description</p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="h5 mb-0 text-success">€@product.Price.ToString("F2")</span>
-                                            <div class="btn-group btn-group-sm">
-                                                <button class="btn btn-outline-primary"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#modalEditarProduto"
-                                                        onclick="editProduct(@product.ProductId, '@product.Name', '@product.Description', @product.Price, @category.CategoryId, @product.IsAvailable.ToString().ToLower())">
-                                                    <i class="bi bi-pencil"></i>
-                                                </button>
-                                                <form method="post" asp-action="DeleteProduct" class="d-inline">
-                                                    <input type="hidden" name="id" value="@product.ProductId" />
-                                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Remover este produto?')">
-                                                        <i class="bi bi-trash"></i>
+                            <div class="row g-3">
+                                @foreach (var product in category.Products)
+                                {
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card h-100 border">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <h6 class="fw-bold mb-0">@product.Name</h6>
+                                                    <span class="badge @(product.IsAvailable ? "badge-available" : "badge-unavailable")">
+                                                        @(product.IsAvailable ? "Disponível" : "Indisponível")
+                                                    </span>
+                                                </div>
+                                                <p class="text-muted small mb-2">
+                                                    @(string.IsNullOrEmpty(product.Description) ? "Sem descrição" : product.Description)
+                                                </p>
+                                                <p class="fw-bold text-success mb-3">
+                                                    @product.Price.ToString("C2", ptPT)
+                                                </p>
+                                                <div class="d-flex gap-2">
+                                                    <button class="btn btn-outline-primary btn-sm flex-fill"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editProductModal"
+                                                            onclick="fillEditForm(@product.ProductId, '@product.Name', '@product.Description', @product.Price.ToString(System.Globalization.CultureInfo.InvariantCulture), @product.IsAvailable.ToString().ToLower(), @category.CategoryId)">
+                                                        <i class="bi bi-pencil"></i> Editar
                                                     </button>
-                                                </form>
+                                                    <form method="post" asp-action="DeleteProduct" class="d-inline m-0">
+                                                        <input type="hidden" name="id" value="@product.ProductId" />
+                                                        @Html.AntiForgeryToken()
+                                                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                                onclick="return confirm('Eliminar @product.Name?')">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                         }
+                        else
+                        {
+                            <p class="text-muted text-center py-3 mb-0">
+                                <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+                                Nenhum produto nesta categoria
+                            </p>
+                        }
                     </div>
-                }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-folder-x" style="font-size: 4rem; color: #d1d5db;"></i>
+                    <h5 class="mt-3 text-muted">Nenhuma categoria criada</h5>
+                    <p class="text-muted">Comece criando uma categoria para organizar o menu</p>
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Criar Primeira Categoria
+                    </button>
+                </div>
             </div>
         </div>
     }
-}
+</div>
 
-<!-- Modal: Nova Categoria -->
-<div class="modal fade" id="modalNovaCategoria" tabindex="-1">
+<!-- Modal: Criar Categoria -->
+<div class="modal fade" id="createCategoryModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" asp-action="CreateCategory">
+                @Html.AntiForgeryToken()
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-folder-plus me-2"></i>
-                        Nova Categoria
-                    </h5>
+                    <h5 class="modal-title fw-bold">Nova Categoria</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Nome da Categoria</label>
-                        <input type="text" name="name" class="form-control" placeholder="Ex: Entradas, Pratos Principais..." required />
+                        <label class="form-label fw-semibold">Nome da Categoria</label>
+                        <input type="text" class="form-control" name="name" required
+                               placeholder="Ex: Entradas, Pratos Principais, Sobremesas" />
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Criar Categoria</button>
+                    <button type="submit" class="btn btn-success">Criar</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal: Novo Produto -->
-<div class="modal fade" id="modalNovoProduto" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+<!-- Modal: Criar Produto -->
+<div class="modal fade" id="createProductModal" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" asp-action="CreateProduct">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="createCategoryId" name="CategoryId" />
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-plus-circle me-2"></i>
-                        Novo Produto
-                    </h5>
+                    <h5 class="modal-title fw-bold">Novo Produto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="newProductCategoryId" name="CategoryId" />
                     <div class="mb-3">
-                        <label class="form-label">Categoria</label>
-                        <input type="text" id="newProductCategoryName" class="form-control" readonly />
+                        <label class="form-label fw-semibold">Nome</label>
+                        <input type="text" class="form-control" name="Name" required />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Nome do Produto</label>
-                        <input type="text" name="Name" class="form-control" required />
+                        <label class="form-label fw-semibold">Descrição</label>
+                        <textarea class="form-control" name="Description" rows="2"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Descrição</label>
-                        <textarea name="Description" class="form-control" rows="3"></textarea>
+                        <label class="form-label fw-semibold">Preço (€)</label>
+                        <!-- ✅ CORRIGIDO: step="0.01" para permitir centavos -->
+                        <input type="number" class="form-control" name="Price" step="0.01" min="0" required />
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Preço (€)</label>
-                            <input type="number" name="Price" class="form-control" step="0.01" min="0.01" required />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Disponibilidade</label>
-                            <select name="IsAvailable" class="form-select">
-                                <option value="true">Disponível</option>
-                                <option value="false">Indisponível</option>
-                            </select>
-                        </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="IsAvailable" checked />
+                        <label class="form-check-label">Disponível</label>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Criar Produto</button>
+                    <button type="submit" class="btn btn-success">Criar</button>
                 </div>
             </form>
         </div>
@@ -227,45 +221,38 @@ else
 </div>
 
 <!-- Modal: Editar Produto -->
-<div class="modal fade" id="modalEditarProduto" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+<div class="modal fade" id="editProductModal" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" asp-action="UpdateProduct">
-                <input type="hidden" id="editProductId" name="id" />
+            <form method="post" id="editProductForm">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="editCategoryId" name="CategoryId" />
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="bi bi-pencil-square me-2"></i>
-                        Editar Produto
-                    </h5>
+                    <h5 class="modal-title fw-bold">Editar Produto</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="editProductCategoryId" name="CategoryId" />
                     <div class="mb-3">
-                        <label class="form-label">Nome do Produto</label>
-                        <input type="text" id="editProductName" name="Name" class="form-control" required />
+                        <label class="form-label fw-semibold">Nome</label>
+                        <input type="text" class="form-control" id="editName" name="Name" required />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Descrição</label>
-                        <textarea id="editProductDescription" name="Description" class="form-control" rows="3"></textarea>
+                        <label class="form-label fw-semibold">Descrição</label>
+                        <textarea class="form-control" id="editDescription" name="Description" rows="2"></textarea>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Preço (€)</label>
-                            <input type="number" id="editProductPrice" name="Price" class="form-control" step="0.01" min="0.01" required />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Disponibilidade</label>
-                            <select id="editProductAvailable" name="IsAvailable" class="form-select">
-                                <option value="true">Disponível</option>
-                                <option value="false">Indisponível</option>
-                            </select>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Preço (€)</label>
+                        <!-- ✅ CORRIGIDO: step="0.01" para mostrar centavos -->
+                        <input type="number" class="form-control" id="editPrice" name="Price" step="0.01" min="0" required />
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="editIsAvailable" name="IsAvailable" />
+                        <label class="form-check-label">Disponível</label>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
             </form>
         </div>
@@ -274,18 +261,18 @@ else
 
 @section Scripts {
     <script>
-        function setCategory(categoryId, categoryName) {
-            document.getElementById('newProductCategoryId').value = categoryId;
-            document.getElementById('newProductCategoryName').value = categoryName;
+        function setCategory(categoryId) {
+            document.getElementById('createCategoryId').value = categoryId;
         }
 
-        function editProduct(id, name, description, price, categoryId, isAvailable) {
-            document.getElementById('editProductId').value = id;
-            document.getElementById('editProductName').value = name;
-            document.getElementById('editProductDescription').value = description;
-            document.getElementById('editProductPrice').value = price;
-            document.getElementById('editProductCategoryId').value = categoryId;
-            document.getElementById('editProductAvailable').value = isAvailable.toString();
+        function fillEditForm(productId, name, description, price, isAvailable, categoryId) {
+            // ✅ CORRIGIDO: formatar preço com 2 casas decimais
+            document.getElementById('editName').value = name;
+            document.getElementById('editDescription').value = description || '';
+            document.getElementById('editPrice').value = parseFloat(price).toFixed(2);
+            document.getElementById('editIsAvailable').checked = isAvailable;
+            document.getElementById('editCategoryId').value = categoryId;
+            document.getElementById('editProductForm').action = '/Owner/Menu/UpdateProduct/' + productId;
         }
     </script>
 }

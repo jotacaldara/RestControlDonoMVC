@@ -55,9 +55,9 @@
                                 <i class="bi bi-pencil"></i>
                             </a>
 
-                            <form asp-action="Delete" asp-route-id="@user.id" method="post" class="d-inline" onsubmit="return confirmAction('Tem certeza que deseja excluir este utilizador?');">
-                                <button type="submit" class="btn btn-sm btn-outline-danger border-0 ms-2" title="Excluir">
-                                    <i class="bi bi-trash"></i>
+                            <form asp-action="Delete" asp-route-id="@user.id" method="post" onsubmit="return confirm('Tem a certeza que deseja eliminar?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> Eliminar
                                 </button>
                             </form>
                         </td>

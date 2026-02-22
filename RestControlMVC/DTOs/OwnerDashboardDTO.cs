@@ -14,6 +14,12 @@ namespace RestControlMVC.DTOs.Owner
         public int TotalReviews { get; set; }
         public decimal AverageRating { get; set; }
         public int TotalProducts { get; set; }
+
+        public decimal TotalRevenue { get; set; }
+        public decimal TotalCommissions { get; set; }
+        public decimal NetRevenue { get; set; }
+
+        public SubscriptionDTO Subscription { get; set; }
     }
 
     // DTO para edição do restaurante (apenas campos permitidos para Owner)
@@ -48,5 +54,25 @@ namespace RestControlMVC.DTOs.Owner
         public string CustomerPhone { get; set; }
 
         public decimal TotalAmount { get; set; }
+    }
+
+    public class RevenueDTO
+    { 
+        public decimal TotalRevenue { get; set; }
+        public decimal TotalCommissions { get; set; }
+        public decimal NetRevenue { get; set; }
+        public int TotalReservations { get; set; }
+        public decimal AverageReservationValue { get; set; }
+        public List<MonthlyRevenueDTO> MonthlyData { get; set; } = new();
+    }
+
+    public class MonthlyRevenueDTO
+    {
+        public int Month { get; set; }
+        public int Year { get; set; }
+        public string MonthName { get; set; }
+        public decimal Revenue { get; set; }
+        public decimal Commissions { get; set; }
+        public decimal Net { get; set; }
     }
 }

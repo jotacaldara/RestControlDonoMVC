@@ -1,0 +1,186 @@
+﻿
+@model List<RestControlMVC.DTOs.AdminSubscriptionListDTO>
+
+@{
+    ViewData["Title"] = "Gerir Subscrições";
+
+    var totalAtivas = Model?.Count(s => s.IsActive) ?? 0;
+    var totalExpiring = Model?.Count(s => s.IsExpiring && s.IsActive) ?? 0;
+    var totalInativas = Model?.Count(s => !s.IsActive) ?? 0;
+    var ptPT = new System.Globalization.CultureInfo("pt-PT");
+}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h2 fw-bold mb-1" style="color: #1e293b;">
+            <i class="bi bi-credit-card-2-front me-2 text-primary"></i>
+            Gerir Subscrições
+        </h1>
+        <p class="text-muted mb-0">Renove planos e envie lembretes de pagamento aos donos</p>
+    </div>
+    <a href="@Url.Action("Index", "Earnings", new { area = "Admin" })"
+       class="btn btn-outline-success">
+        <i class="bi bi-cash-stack me-1"></i>
+        Ver Ganhos
+    </a>
+</div>
+
+<!-- Resumo Rápido -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #10b981 !important;">
+            <div class="card-body py-3 px-4">
+                <small class="text-muted text-uppercase fw-bold d-block">Ativas</small>
+                <h3 class="fw-bold mb-0 text-success">@totalAtivas</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #f59e0b !important;">
+            <div class="card-body py-3 px-4">
+                <small class="text-muted text-uppercase fw-bold d-block">A Vencer (≤5 dias)</small>
+                <h3 class="fw-bold mb-0 text-warning">@totalExpiring</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #ef4444 !important;">
+            <div class="card-body py-3 px-4">
+                <small class="text-muted text-uppercase fw-bold d-block">Inativas / Expiradas</small>
+                <h3 class="fw-bold mb-0 text-danger">@totalInativas</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabela de Subscrições -->
+<div class="card border-0 shadow-sm" style="border-radius: 16px;">
+    <div class="card-body p-0">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead style="background: #f8f9fa;">
+                        <tr>
+                            <th class="px-4 py-3">Restaurante</th>
+                            <th class="py-3">Plano</th>
+                            <th class="text-center py-3">Mensalidade</th>
+                            <th class="text-center py-3">Comissão</th>
+                            <th class="text-center py-3">Vencimento</th>
+                            <th class="text-center py-3">Estado</th>
+                            <th class="text-center py-3 px-4">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sub in Model.OrderBy(s => s.DaysRemaining))
+                        {
+                            var rowBg = !sub.IsActive ? "table-secondary"
+                            : sub.IsExpiring ? "table-warning"
+                            : "";
+                            <tr class="@rowBg">
+                                <td class="px-4 py-3 fw-semibold">
+                                    <i class="bi bi-shop me-2 text-muted"></i>
+                                    @sub.RestaurantName
+                                </td>
+                                <td class="py-3">
+                                    <span class="badge bg-primary rounded-pill px-3">
+                                        @sub.PlanName
+                                    </span>
+                                </td>
+                                <td class="text-center py-3 fw-bold text-success">
+                                    @sub.MonthlyPrice.ToString("C2", ptPT)
+                                </td>
+                                <td class="text-center py-3">
+                                    <span class="badge bg-info text-dark rounded-pill px-3">
+                                        @sub.Commission%
+                                    </span>
+                                </td>
+                                <td class="text-center py-3">
+                                    @if (sub.EndDate.HasValue)
+                                    {
+                                        <span class="@(sub.DaysRemaining < 0 ? "text-danger fw-bold" : sub.IsExpiring ? "text-warning fw-bold" : "")">
+                                            @sub.EndDate.Value.ToString("dd/MM/yyyy")
+                                        </span>
+                                        <br />
+                                        @if (sub.DaysRemaining < 0)
+                                        {
+                                            <small class="text-danger fw-bold">EXPIRADA</small>
+                                        }
+                                        else if (sub.IsActive)
+                                        {
+                                            <small class="@(sub.IsExpiring ? "text-warning fw-bold" : "text-muted")">
+                                                @sub.DaysRemaining dias restantes
+                                            </small>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td class="text-center py-3">
+                                    @if (!sub.IsActive)
+                                    {
+                                        <span class="badge bg-danger rounded-pill">Inativa</span>
+                                    }
+                                    else if (sub.IsExpiring)
+                                    {
+                                        <span class="badge bg-warning text-dark rounded-pill">
+                                            <i class="bi bi-exclamation-triangle me-1"></i>A Vencer
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success rounded-pill">Ativa</span>
+                                    }
+                                </td>
+                                <td class="text-center py-3 px-4">
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <!-- Renovar -->
+                                        <form method="post"
+                                              asp-area="Admin"
+                                              asp-controller="SubscriptionsAdmin"
+                                              asp-action="Renew"
+                                              class="d-inline m-0">
+                                            <input type="hidden" name="id" value="@sub.SubscriptionId" />
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit"
+                                                    class="btn btn-success btn-sm"
+                                                    title="Renovar 30 dias"
+                                                    onclick="return confirm('Renovar subscrição de @Html.Raw(sub.RestaurantName) por +30 dias?')">
+                                                <i class="bi bi-arrow-repeat me-1"></i>Renovar
+                                            </button>
+                                        </form>
+
+                                        <!-- Email -->
+                                        <form method="post"
+                                              asp-area="Admin"
+                                              asp-controller="SubscriptionsAdmin"
+                                              asp-action="Notify"
+                                              class="d-inline m-0">
+                                            <input type="hidden" name="id" value="@sub.SubscriptionId" />
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit"
+                                                    class="btn btn-outline-warning btn-sm"
+                                                    title="Enviar email de lembrete">
+                                                <i class="bi bi-envelope"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-credit-card fs-1 d-block mb-2"></i>
+                <p>Nenhuma subscrição encontrada.</p>
+            </div>
+        }
+    </div>
+</div>

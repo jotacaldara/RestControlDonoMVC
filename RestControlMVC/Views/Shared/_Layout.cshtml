@@ -90,11 +90,36 @@
                             <i class="bi bi-people me-1"></i> Utilizadores
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Earnings" ? "active" : "")"
+                           asp-area="Admin"
+                           asp-controller="Earnings"
+                           asp-action="Index">
+                            <i class="bi bi-cash-stack me-1"></i>
+                            Ganhos
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SubscriptionsAdmin" ? "active" : "")"
+                           asp-area="Admin"
+                           asp-controller="SubscriptionsAdmin"
+                           asp-action="Index">
+                            <i class="bi bi-credit-card me-1"></i>
+                            Subscrições
+                        </a>
+                    </li>
                 </ul>
 
                 <div class="d-flex align-items-center">
                     <span class="user-badge"><i class="bi bi-person-circle me-1"></i> @User.Identity.Name</span>
-                    <a class="btn btn-link text-danger ms-2" asp-controller="Auth" asp-action="Logout"><i class="bi bi-box-arrow-right"></i></a>
+
+                    <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post" id="logoutForm" class="d-inline ms-2">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-link text-danger p-0" title="Sair">
+                            <i class="bi bi-box-arrow-right fs-5"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
