@@ -1,5 +1,4 @@
-﻿
-@model List<RestControlMVC.DTOs.CategoryDTO>
+﻿@model IEnumerable<RestControlMVC.DTOs.CategoryDTO>
 
 @{
     ViewData["Title"] = "Gerir Menu";
@@ -101,13 +100,13 @@
                                                     @(string.IsNullOrEmpty(product.Description) ? "Sem descrição" : product.Description)
                                                 </p>
                                                 <p class="fw-bold text-success mb-3">
-                                                    @product.Price.ToString("C2", ptPT)
+                                                    @product.Price?.ToString("C2", ptPT)
                                                 </p>
                                                 <div class="d-flex gap-2">
                                                     <button class="btn btn-outline-primary btn-sm flex-fill"
                                                             data-bs-toggle="modal"
                                                             data-bs-target="#editProductModal"
-                                                            onclick="fillEditForm(@product.ProductId, '@product.Name', '@product.Description', @product.Price.ToString(System.Globalization.CultureInfo.InvariantCulture), @product.IsAvailable.ToString().ToLower(), @category.CategoryId)">
+                                                            onclick="fillEditForm(@product.ProductId, '@product.Name', '@product.Description', @product.Price?.ToString(System.Globalization.CultureInfo.InvariantCulture), @product.IsAvailable.ToString().ToLower(), @category.CategoryId)">
                                                         <i class="bi bi-pencil"></i> Editar
                                                     </button>
                                                     <form method="post" asp-action="DeleteProduct" class="d-inline m-0">
@@ -203,7 +202,6 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Preço (€)</label>
-                        <!-- ✅ CORRIGIDO: step="0.01" para permitir centavos -->
                         <input type="number" class="form-control" name="Price" step="0.01" min="0" required />
                     </div>
                     <div class="form-check">
@@ -242,8 +240,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Preço (€)</label>
-                        <!-- ✅ CORRIGIDO: step="0.01" para mostrar centavos -->
-                        <input type="number" class="form-control" id="editPrice" name="Price" step="0.01" min="0" required />
+                        <input type="number" class="form-control" id="editPrice" name="Price" step="0.01" min="0.00" required />
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="editIsAvailable" name="IsAvailable" />
@@ -266,7 +263,6 @@
         }
 
         function fillEditForm(productId, name, description, price, isAvailable, categoryId) {
-            // ✅ CORRIGIDO: formatar preço com 2 casas decimais
             document.getElementById('editName').value = name;
             document.getElementById('editDescription').value = description || '';
             document.getElementById('editPrice').value = parseFloat(price).toFixed(2);

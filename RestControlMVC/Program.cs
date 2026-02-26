@@ -1,60 +1,51 @@
-using RestControlMVC.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;
+using RestControlMVC.Services;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7149/";
-if (!apiBaseUrl.EndsWith("/"))
-    apiBaseUrl += "/";
+// Configuração da URL da API
+var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7149/api/";
+if (!apiBaseUrl.EndsWith("/")) apiBaseUrl += "/";
 
-builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("pt-PT") };
+builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    client.BaseAddress = new Uri(apiBaseUrl ?? "https://localhost:7149/api/");
+    options.DefaultRequestCulture = new RequestCulture("en-US"); 
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
 });
 
-builder.Services.AddHttpClient<ApiService>(client =>
+// 1. Serviços de Cookies (Obrigatório para o Banner)
+builder.Services.Configure<CookiePolicyOptions>(options =>
 {
-    client.BaseAddress = new Uri(apiBaseUrl ?? "https://localhost:7149/api/");
+    options.CheckConsentNeeded = context => true; 
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
 });
 
-builder.Services.AddHttpContextAccessor();
-
+// 2. Autenticação
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Auth/Login";
-        options.LogoutPath = "/Auth/Logout";
-        options.AccessDeniedPath = "/Auth/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.Cookie.Name = "RestControlAuth"; 
+        options.Cookie.Name = "RestControlAuth";
     });
 
-builder.Services.Configure<CookiePolicyOptions>(options =>
+// 3. Injeção de Dependência (Sem duplicatas)
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// HttpClient Centralizado
+builder.Services.AddHttpClient<ApiService>(client =>
 {
-    options.CheckConsentNeeded = context => false;
-    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+    client.BaseAddress = new Uri(apiBaseUrl);
 });
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthorization();
-
-
-
-// 4. Injeção de Dependência
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-// 5. HttpClient + ApiService
-builder.Services.AddHttpClient<ApiService>(client =>
-{
-    var baseUrl = builder.Configuration["ApiSettings:BaseUrl"];
-    client.BaseAddress = new Uri(baseUrl ?? "https://localhost:7149/api/");
-});
-
 var app = builder.Build();
 
-// Configuração do Pipeline (A ORDEM IMPORTA)
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -63,15 +54,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 
-// O CookiePolicy deve vir antes da Autenticação para o banner funcionar
-app.UseCookiePolicy();
+app.UseCookiePolicy(); // Antes de Authentication
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Rotas
 app.MapControllerRoute(
     name: "MyAreas",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");

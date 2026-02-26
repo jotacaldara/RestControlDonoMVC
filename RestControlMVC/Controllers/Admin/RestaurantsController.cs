@@ -35,11 +35,7 @@ namespace RestControlMVC.Controllers.Admin
             return View("~/Views/Admin/Restaurants/Details.cshtml", restaurant);
         }
 
-        public async Task<IActionResult> Pending()
-        {
-            var pending = await _apiService.GetAsync<IEnumerable<RestaurantListDTO>>("admin/admindashboard/pending");
-            return View("~/Views/Admin/Restaurants/Pending.cshtml", pending ?? new List<RestaurantListDTO>());
-        }
+       
 
         // Método para processar a aprovação
         [HttpPost]

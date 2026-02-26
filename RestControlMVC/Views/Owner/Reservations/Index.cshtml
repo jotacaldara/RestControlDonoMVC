@@ -54,9 +54,9 @@
                 <label class="form-label fw-semibold">Filtrar por Status</label>
                 <select class="form-select" onchange="filterByStatus(this.value)">
                     <option value="">Todas as Reservas</option>
-                    <option value="Pendente" selected="@(statusFilter == "Pendente")">Pendentes</option>
-                    <option value="Confirmada" selected="@(statusFilter == "Confirmada")">Confirmadas</option>
-                    <option value="Cancelada" selected="@(statusFilter == "Cancelada")">Canceladas</option>
+                    <option value="Pendent" selected="@(statusFilter == "Pendent")">Pendent</option>
+                    <option value="Confirmed" selected="@(statusFilter == "Confirmed")">Confirmed</option>
+                    <option value="Canceled" selected="@(statusFilter == "Canceled")">Canceled</option>
                 </select>
             </div>
             <div class="col-md-8 text-end">
@@ -64,14 +64,14 @@
                     <a href="@Url.Action("Index", new { status = "" })" class="btn @(string.IsNullOrEmpty(statusFilter) ? "btn-success" : "btn-outline-secondary")">
                         Todas (@Model.Count)
                     </a>
-                    <a href="@Url.Action("Index", new { status = "Pendente" })" class="btn @(statusFilter == "Pendente" ? "btn-warning" : "btn-outline-warning")">
-                        Pendentes (@Model.Count(r => r.Status == "Pendente"))
+                    <a href="@Url.Action("Index", new { status = "Pendent" })" class="btn @(statusFilter == "Pendent" ? "btn-warning" : "btn-outline-warning")">
+                        Pendentes (@Model.Count(r => r.Status == "Pendent"))
                     </a>
-                    <a href="@Url.Action("Index", new { status = "Confirmada" })" class="btn @(statusFilter == "Confirmada" ? "btn-success" : "btn-outline-success")">
-                        Confirmadas (@Model.Count(r => r.Status == "Confirmada"))
+                    <a href="@Url.Action("Index", new { status = "Confirmed" })" class="btn @(statusFilter == "Confirmed" ? "btn-success" : "btn-outline-success")">
+                        Confirmadas (@Model.Count(r => r.Status == "Confirmed"))
                     </a>
-                    <a href="@Url.Action("Index", new { status = "Cancelada" })" class="btn @(statusFilter == "Cancelada" ? "btn-danger" : "btn-outline-danger")">
-                        Canceladas (@Model.Count(r => r.Status == "Cancelada"))
+                    <a href="@Url.Action("Index", new { status = "Canceled" })" class="btn @(statusFilter == "Canceled" ? "btn-danger" : "btn-outline-danger")">
+                        Canceladas (@Model.Count(r => r.Status == "Canceled"))
                     </a>
                 </div>
             </div>
@@ -144,28 +144,28 @@ else
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm">
-                                        @if (reservation.Status == "Pendente")
+                                        @if (reservation.Status == "Pendent")
                                         {
                                             <form method="post" asp-action="ConfirmReservation" class="d-inline">
-                                                <input type="hidden" name="id" value="@reservation.Id" />
+                                                <input type="hidden" name="Id" value="@reservation.ReservationId" />
                                                 <button type="submit" class="btn btn-outline-success" title="Confirmar">
                                                     <i class="bi bi-check-circle"></i>
                                                 </button>
                                             </form>
                                             <form method="post" asp-action="CancelReservation" class="d-inline">
-                                                <input type="hidden" name="id" value="@reservation.Id" />
+                                                <input type="hidden" name="Id" value="@reservation.ReservationId" />
                                                 <button type="submit" class="btn btn-outline-danger" title="Cancelar" onclick="return confirm('Cancelar esta reserva?')">
                                                     <i class="bi bi-x-circle"></i>
                                                 </button>
                                             </form>
                                         }
 
-                                        @if (reservation.Status == "Confirmada" && reservation.TotalAmount == 0)
+                                        @if (reservation.Status == "Confirmed" && reservation.TotalAmount == 0)
                                         {
                                             <button class="btn btn-outline-primary"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalAdicionarValor"
-                                                    onclick="setReservation(@reservation.Id, '@reservation.CustomerName')">
+                                                    onclick="setReservation(@reservation.ReservationId, '@reservation.CustomerName')">
                                                 <i class="bi bi-cash-coin"></i> Adicionar Valor
                                             </button>
                                         }

@@ -40,7 +40,7 @@ namespace RestControlMVC.DTOs.Owner
     // DTO para reservas
     public class ReservationDTO
     {
-        public int Id { get; set; }
+        public int ReservationId { get; set; }
         public string RestaurantName { get; set; } = string.Empty;
         public DateTime ReservationDate { get; set; }
         public int NumberOfPeople { get; set; }

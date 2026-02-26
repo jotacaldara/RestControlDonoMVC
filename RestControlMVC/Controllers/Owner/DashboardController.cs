@@ -158,7 +158,24 @@ namespace RestControlMVC.Owner.Controllers
 
             try
             {
-                var dto = new { Reply = reply };
+
+                System.Diagnostics.Debug.WriteLine($"reviewId recebido: {reviewId}");
+                System.Diagnostics.Debug.WriteLine($"reply recebido: {reply}");
+
+                if (reviewId <= 0)
+                {
+                    TempData["Error"] = "ID da review inválido.";
+                    return RedirectToAction("Reviews");
+                }
+
+                if (string.IsNullOrWhiteSpace(reply))
+                {
+                    TempData["Error"] = "A resposta não pode estar vazia.";
+                    return RedirectToAction("Reviews");
+                }
+
+
+                var dto = new ReplyReviewDTO { Reply = reply };
                 var success = await _apiService.PostAsync($"owner/reviews/{reviewId}/reply", dto);
 
                 if (success)
@@ -169,6 +186,7 @@ namespace RestControlMVC.Owner.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = $"Erro: {ex.Message}";
+                System.Diagnostics.Debug.WriteLine($"ERRO COMPLETO: {ex}");
             }
 
             return RedirectToAction("Reviews");

@@ -26,7 +26,7 @@ namespace RestControlMVC.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("~/Views/Home/Register.cshtml", model);
             }
 
             try
@@ -35,25 +35,23 @@ namespace RestControlMVC.Controllers
 
                 if (success)
                 {
-                    return RedirectToAction("RegisterSuccess");
+                    return View("~/Views/Home/RegisterSuccess.cshtml");
                 }
                 else
                 {
                     TempData["Error"] = "Erro ao submeter pedido. Tente novamente.";
-                    return View(model);
+                    return View("~/Views/Home/Register.cshtml", model);
                 }
             }
             catch (Exception ex)
             {
                 TempData["Error"] = $"Erro: {ex.Message}";
-                return View(model);
+                return View("~/Views/Home/Register.cshtml", model);
             }
         }
-
-        // GET: /RestaurantRegistration/Success
         public IActionResult Success()
         {
-            return View();
+            return View("~/Views/Home/RegisterSuccess.cshtml");
         }
     }
 }

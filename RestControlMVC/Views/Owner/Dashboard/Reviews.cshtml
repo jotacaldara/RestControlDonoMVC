@@ -117,21 +117,23 @@
                         }
                         else
                         {
-                            <!-- Reply Form -->
                             <button class="btn btn-outline-success btn-sm"
                                     data-bs-toggle="collapse"
-                                    data-bs-target="#replyForm@(review.GetHashCode())">
+                                    data-bs-target="#replyForm@(review.ReviewId)">
+                             
                                 <i class="bi bi-reply me-1"></i>
                                 Responder
                             </button>
 
-                            <div class="collapse mt-3" id="replyForm@(review.GetHashCode())">
+                            <div class="collapse mt-3" id="replyForm@(review.ReviewId)">
+                         
                                 <form method="post" asp-action="ReplyReview">
                                     @Html.AntiForgeryToken()
-                                    <input type="hidden" name="reviewId" value="@review.GetHashCode()" />
+                                    <input type="hidden" name="reviewId" value="@review.ReviewId" />
+                           
                                     <div class="mb-2">
                                         <textarea class="form-control" name="reply" rows="3"
-                                      placeholder="Escreva sua resposta..." required></textarea>
+                                                  placeholder="Escreva sua resposta..." required></textarea>
                                     </div>
                                     <div class="d-flex gap-2">
                                         <button type="submit" class="btn btn-success btn-sm">
@@ -140,7 +142,8 @@
                                         </button>
                                         <button type="button" class="btn btn-secondary btn-sm"
                                                 data-bs-toggle="collapse"
-                                                data-bs-target="#replyForm@(review.GetHashCode())">
+                                                data-bs-target="#replyForm@(review.ReviewId)">
+                                           
                                             Cancelar
                                         </button>
                                     </div>

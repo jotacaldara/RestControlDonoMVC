@@ -40,7 +40,14 @@ namespace RestControlMVC.Owner.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmReservation(int id)
         {
-            var dto = new { Status = "Confirmada" };
+            if (id <= 0)
+            {
+                System.Diagnostics.Debug.WriteLine("[ERRO MVC] O ID recebido é zero ou nulo!");
+                TempData["Error"] = "ID da reserva inválido.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var dto = new { Status = "Confirmed" };
             var success = await _apiService.PutAsync($"owner/reservations/{id}/status", dto);
 
             if (success)

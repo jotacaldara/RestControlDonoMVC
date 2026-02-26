@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -6,6 +7,8 @@ namespace RestControlMVC.Services
 {
     public class ApiService
     {
+
+
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -15,14 +18,19 @@ namespace RestControlMVC.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
+
         private void AddAuthorizationHeader()
         {
             var token = _httpContextAccessor.HttpContext?.User.FindFirst("Token")?.Value;
 
-            if (!string.IsNullOrEmpty(token))
+            if (string.IsNullOrEmpty(token))
             {
-                _httpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
+                System.Diagnostics.Debug.WriteLine("[ALERTA] Nenhum token encontrado nas Claims do usuário!");
+            }
+            else
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                System.Diagnostics.Debug.WriteLine("[DEBUG] Token anexado com sucesso.");
             }
         }
 
@@ -59,6 +67,13 @@ namespace RestControlMVC.Services
             AddAuthorizationHeader();
             var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(endpoint, content);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorDetails = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"API ERROR {response.StatusCode}: {errorDetails}");
+            }
+
             return await HandleResponse<T>(response);
         }
 
@@ -66,8 +81,19 @@ namespace RestControlMVC.Services
         public async Task<bool> PostAsync(string endpoint, object data)
         {
             AddAuthorizationHeader();
-            var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+            var jsonPayload = JsonSerializer.Serialize(data);
+            System.Diagnostics.Debug.WriteLine($"[DEBUG POST] Enviando para {endpoint}: {jsonPayload}");
+
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(endpoint, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"[API ERROR] Status: {response.StatusCode} | Detalhes: {errorContent}");
+            }
+
             return response.IsSuccessStatusCode;
         }
 
@@ -87,6 +113,11 @@ namespace RestControlMVC.Services
             AddAuthorizationHeader();
             var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(endpoint, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"[API ERROR] Status: {response.StatusCode} | Detalhes: {errorContent}");
+            }
             return await HandleResponse<T>(response);
         }
 
@@ -94,8 +125,18 @@ namespace RestControlMVC.Services
         public async Task<bool> PutAsync(string endpoint, object data)
         {
             AddAuthorizationHeader();
-            var content = new StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json");
+
+            var jsonPayload = JsonSerializer.Serialize(data);
+            System.Diagnostics.Debug.WriteLine($"[DEBUG PUT] Enviando para {endpoint}: {jsonPayload}");
+
+            var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
             var response = await _httpClient.PutAsync(endpoint, content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"[API ERROR PUT] Status: {response.StatusCode} | Detalhes: {errorContent}");
+            }
             return response.IsSuccessStatusCode;
         }
 
@@ -111,6 +152,8 @@ namespace RestControlMVC.Services
             }
             return response.IsSuccessStatusCode;
         }
+
+
 
         // Método auxiliar para processar respostas
         private async Task<T> HandleResponse<T>(HttpResponseMessage response)
