@@ -1,7 +1,9 @@
 ﻿@model RestControlMVC.DTOs.RestaurantDetailDTO
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<RestControlMVC.AdminSharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Meu Restaurante";
+    ViewData["Title"] = Localizer["RestaurantDetail_Title"].Value;
 }
 
 <!-- Page Header -->
@@ -11,22 +13,20 @@
             <div>
                 <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
                     <i class="bi bi-shop me-2" style="color: #10b981;"></i>
-                    Meu Restaurante
+                    @Localizer["RestaurantDetail_Title"]
                 </h1>
-                <p class="text-muted mb-0">
-                    Informações detalhadas do seu estabelecimento
-                </p>
+                <p class="text-muted mb-0">@Localizer["RestaurantDetail_DetailedInfo"]</p>
             </div>
             <div>
-                <a href="@Url.Action("Index", "Dashboard", new { area = "Owner" })"
+                <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })"
                    class="btn btn-outline-secondary me-2">
                     <i class="bi bi-arrow-left me-1"></i>
-                    Voltar
+                    @Localizer["Back"]
                 </a>
-                <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
+                <a href="@Url.Action("Edit", "Restaurants", new { area = "Admin", id = Model.Id })"
                    class="btn btn-success">
                     <i class="bi bi-pencil me-1"></i>
-                    Editar Informações
+                    @Localizer["RestaurantDetail_EditInfo"]
                 </a>
             </div>
         </div>
@@ -35,57 +35,47 @@
 
 <!-- Restaurant Info -->
 <div class="row g-4 mb-4">
-    <!-- Main Info Card -->
     <div class="col-lg-8">
         <div class="card card-custom border-0">
             <div class="card-header bg-white border-0 py-3">
                 <h5 class="mb-0 fw-bold">
                     <i class="bi bi-info-circle me-2" style="color: #10b981;"></i>
-                    Informações Gerais
+                    @Localizer["RestaurantDetail_GeneralInfo"]
                 </h5>
             </div>
             <div class="card-body p-4">
-                <!-- Nome -->
                 <div class="mb-4">
                     <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
-                        Nome do Restaurante
+                        @Localizer["RestaurantDetail_RestaurantName"]
                     </label>
                     <h4 class="mb-0 fw-bold" style="color: #1e293b;">@Model.Name</h4>
                 </div>
 
-                <!-- Descrição -->
                 <div class="mb-4">
                     <label class="text-muted small text-uppercase mb-2" style="letter-spacing: 0.5px;">
-                        Descrição
+                        @Localizer["Description"]
                     </label>
-                    <p class="mb-0" style="line-height: 1.7;">
-                        @Model.Description
-                    </p>
+                    <p class="mb-0" style="line-height: 1.7;">@Model.Description</p>
                 </div>
 
-                <!-- Endereço -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-8">
                         <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
-                            <i class="bi bi-geo-alt me-1"></i>
-                            Endereço
+                            <i class="bi bi-geo-alt me-1"></i>@Localizer["Address"]
                         </label>
                         <p class="mb-0 fw-semibold">@Model.Address</p>
                     </div>
                     <div class="col-md-4">
                         <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
-                            <i class="bi bi-pin-map me-1"></i>
-                            Cidade
+                            <i class="bi bi-pin-map me-1"></i>@Localizer["City"]
                         </label>
                         <p class="mb-0 fw-semibold">@Model.City</p>
                     </div>
                 </div>
 
-                <!-- Telefone -->
                 <div class="mb-4">
                     <label class="text-muted small text-uppercase mb-1" style="letter-spacing: 0.5px;">
-                        <i class="bi bi-telephone me-1"></i>
-                        Telefone
+                        <i class="bi bi-telephone me-1"></i>@Localizer["Phone"]
                     </label>
                     <p class="mb-0 fw-semibold">
                         <a href="tel:@Model.Phone" class="text-decoration-none" style="color: #10b981;">
@@ -94,22 +84,18 @@
                     </p>
                 </div>
 
-                <!-- Alert Info -->
                 <div class="alert alert-info d-flex align-items-start mb-0">
                     <i class="bi bi-info-circle me-2 mt-1"></i>
                     <div>
-                        <strong>Nota Importante:</strong>
-                        Nome, endereço e cidade só podem ser alterados pelo administrador do sistema.
-                        Você pode editar a descrição e o telefone.
+                        <strong>@Localizer["RestaurantDetail_ImportantNote"]:</strong>
+                        @Localizer["RestaurantDetail_AdminOnlyNote"]
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Stats Sidebar -->
     <div class="col-lg-4">
-        <!-- Avaliações -->
         <div class="card card-custom border-0 mb-4">
             <div class="card-body p-4 text-center">
                 <div class="mb-3">
@@ -134,25 +120,24 @@
                         }
                     </div>
                     <p class="text-muted mb-0">
-                        Baseado em @Model.TotalReviews avaliações
+                        @string.Format(Localizer["RestaurantDetail_BasedOnReviews"].Value, Model.TotalReviews)
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Menu Stats -->
         <div class="card card-custom border-0">
             <div class="card-body p-4">
                 <h6 class="fw-bold mb-3">
                     <i class="bi bi-ui-checks-grid me-1" style="color: #10b981;"></i>
-                    Estatísticas do Menu
+                    @Localizer["RestaurantDetail_MenuStats"]
                 </h6>
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="text-muted">Categorias:</span>
+                    <span class="text-muted">@Localizer["RestaurantDetail_Categories"]</span>
                     <span class="fw-bold">@Model.MenuCategories.Count</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="text-muted">Total de Produtos:</span>
+                    <span class="text-muted">@Localizer["RestaurantDetail_TotalProducts"]</span>
                     <span class="fw-bold">@Model.MenuCategories.Sum(c => c.Products.Count)</span>
                 </div>
             </div>
@@ -160,7 +145,6 @@
     </div>
 </div>
 
-<!-- Images Gallery -->
 @if (Model.Images != null && Model.Images.Any())
 {
     <div class="row mb-4">
@@ -169,7 +153,7 @@
                 <div class="card-header bg-white border-0 py-3">
                     <h5 class="mb-0 fw-bold">
                         <i class="bi bi-images me-2" style="color: #10b981;"></i>
-                        Galeria de Imagens
+                        @Localizer["RestaurantDetail_ImageGallery"]
                     </h5>
                 </div>
                 <div class="card-body p-4">
@@ -179,7 +163,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="position-relative overflow-hidden rounded" style="padding-top: 66.67%;">
                                     <img src="@image"
-                                         alt="Imagem do restaurante"
+                                         alt="@Localizer["RestaurantDetail_ImageAlt"]"
                                          class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
                                          style="cursor: pointer;"
                                          onclick="window.open('@image', '_blank')">
@@ -193,7 +177,6 @@
     </div>
 }
 
-<!-- Menu Preview -->
 @if (Model.MenuCategories != null && Model.MenuCategories.Any())
 {
     <div class="row">
@@ -202,12 +185,12 @@
                 <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold">
                         <i class="bi bi-book me-2" style="color: #10b981;"></i>
-                        Pré-visualização do Menu
+                        @Localizer["RestaurantDetail_MenuPreview"]
                     </h5>
                     <a href="@Url.Action("Index", "Menu", new { area = "Owner" })"
                        class="btn btn-outline-success btn-sm">
                         <i class="bi bi-pencil me-1"></i>
-                        Editar Menu
+                        @Localizer["RestaurantDetail_EditMenu"]
                     </a>
                 </div>
                 <div class="card-body p-4">

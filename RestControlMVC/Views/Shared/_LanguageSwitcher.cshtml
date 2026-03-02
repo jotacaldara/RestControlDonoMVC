@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Localization
+
+@{
+    var currentCulture = Context.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name ?? "pt";
+    var isPt = currentCulture.StartsWith("pt");
+}
+
+<div class="d-flex align-items-center gap-1">
+    <!-- Português -->
+    <form method="post" asp-area="" asp-controller="Language" asp-action="SetLanguage" class="d-inline">
+        <input type="hidden" name="culture" value="pt" />
+        <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+        <button type="submit"
+                class="btn btn-sm px-2 py-1 @(isPt ? "btn-success" : "btn-outline-secondary")"
+                title="Português"
+                style="font-size: 0.75rem; min-width: 32px;">
+            🇵🇹
+        </button>
+    </form>
+
+    <!-- English -->
+    <form method="post" asp-area="" asp-controller="Language" asp-action="SetLanguage" class="d-inline">
+        <input type="hidden" name="culture" value="en" />
+        <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+        <button type="submit"
+                class="btn btn-sm px-2 py-1 @(!isPt ? "btn-success" : "btn-outline-secondary")"
+                title="English"
+                style="font-size: 0.75rem; min-width: 32px;">
+            en
+        </button>
+    </form>
+</div>

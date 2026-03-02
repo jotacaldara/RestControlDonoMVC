@@ -1,114 +1,91 @@
-﻿@model RestControlMVC.DTOs.Owner.RestaurantEditDTO
+﻿@model RestControlMVC.DTOs.RestaurantDetailDTO
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<RestControlMVC.AdminSharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Editar Restaurante";
+    ViewData["Title"] = "Editar Restaurante (Admin)";
 }
 
-<!-- Page Header -->
 <div class="row mb-4">
     <div class="col-12">
         <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
             <i class="bi bi-pencil-square me-2" style="color: #10b981;"></i>
-            Editar Informações do Restaurante
+            Editar Restaurante
         </h1>
-        <p class="text-muted mb-0">
-            Atualize a descrição e telefone do seu restaurante
-        </p>
+        <p class="text-muted mb-0">Gestão administrativa de informações do estabelecimento</p>
     </div>
 </div>
 
-<!-- Edit Form -->
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card card-custom border-0">
+        <div class="card card-custom border-0 shadow-sm">
             <div class="card-body p-4">
-                <form asp-action="Edit" method="post">
+                <form asp-action="Update" method="post">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
-                    <!-- Descrição -->
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-4">
+                        <label asp-for="Name" class="form-label fw-semibold">
+                            <i class="bi bi-shop me-1" style="color: #10b981;"></i>
+                            Nome do Restaurante
+                        </label>
+                        <input asp-for="Name" class="form-control form-control-lg" style="border-radius: 12px; border: 2px solid #e5e7eb;" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
                     <div class="mb-4">
                         <label asp-for="Description" class="form-label fw-semibold">
                             <i class="bi bi-card-text me-1" style="color: #10b981;"></i>
-                            Descrição do Restaurante
+                            @Localizer["EditRestaurant_DescriptionLabel"]
                         </label>
                         <textarea asp-for="Description"
                                   class="form-control form-control-lg"
                                   rows="5"
-                                  style="border-radius: 12px; border: 2px solid #e5e7eb;"
-                                  placeholder="Descreva o seu restaurante, especialidades, ambiente..."></textarea>
+                                  style="border-radius: 12px; border: 2px solid #e5e7eb;"></textarea>
                         <span asp-validation-for="Description" class="text-danger small"></span>
-                        <small class="form-text text-muted">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Esta descrição aparecerá para os clientes quando visualizarem seu restaurante.
-                        </small>
                     </div>
 
-                    <!-- Telefone -->
-                    <div class="mb-4">
-                        <label asp-for="Phone" class="form-label fw-semibold">
-                            <i class="bi bi-telephone me-1" style="color: #10b981;"></i>
-                            Telefone de Contacto
-                        </label>
-                        <input asp-for="Phone"
-                               class="form-control form-control-lg"
-                               style="border-radius: 12px; border: 2px solid #e5e7eb;"
-                               placeholder="+351 XXX XXX XXX" />
-                        <span asp-validation-for="Phone" class="text-danger small"></span>
-                        <small class="form-text text-muted">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Formato: +351 XXX XXX XXX (com código do país)
-                        </small>
-                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="City" class="form-label fw-semibold">
+                                <i class="bi bi-geo-alt me-1" style="color: #10b981;"></i>
+                                Cidade
+                            </label>
+                            <input asp-for="City" class="form-control form-control-lg" style="border-radius: 12px; border: 2px solid #e5e7eb;" />
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
 
-                    <!-- Info Alert -->
-                    <div class="alert alert-info d-flex align-items-start mb-4">
-                        <i class="bi bi-shield-lock me-2 mt-1" style="font-size: 1.25rem;"></i>
-                        <div>
-                            <strong>Campos restritos:</strong>
-                            <p class="mb-0 mt-1">
-                                Nome, endereço e cidade do restaurante só podem ser alterados pelo administrador do sistema.
-                                Contacte o suporte se precisar alterar essas informações.
-                            </p>
+                        <div class="col-md-6 mb-4">
+                            <label asp-for="Phone" class="form-label fw-semibold">
+                                <i class="bi bi-telephone me-1" style="color: #10b981;"></i>
+                                @Localizer["EditRestaurant_PhoneLabel"]
+                            </label>
+                            <input asp-for="Phone" class="form-control form-control-lg" style="border-radius: 12px; border: 2px solid #e5e7eb;" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
                         </div>
                     </div>
 
-                    <!-- Buttons -->
-                    <div class="d-flex gap-2">
+                    <div class="mb-4">
+                        <label asp-for="Address" class="form-label fw-semibold">
+                            <i class="bi bi-map me-1" style="color: #10b981;"></i>
+                            Morada Completa
+                        </label>
+                        <input asp-for="Address" class="form-control form-control-lg" style="border-radius: 12px; border: 2px solid #e5e7eb;" />
+                        <span asp-validation-for="Address" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
                         <button type="submit" class="btn btn-success btn-lg px-4">
                             <i class="bi bi-check-circle me-1"></i>
-                            Guardar Alterações
+                            @Localizer["Save"]
                         </button>
-                        <a href="@Url.Action("RestaurantDetail", "Dashboard", new { area = "Owner" })"
-                           class="btn btn-outline-secondary btn-lg px-4">
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-lg px-4">
                             <i class="bi bi-x-circle me-1"></i>
-                            Cancelar
+                            @Localizer["Cancel"]
                         </a>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <!-- Tips Card -->
-        <div class="card card-custom border-0 mt-4" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);">
-            <div class="card-body p-4">
-                <h5 class="fw-bold mb-3" style="color: #1e40af;">
-                    <i class="bi bi-lightbulb me-2"></i>
-                    Dicas para uma Boa Descrição
-                </h5>
-                <ul class="mb-0" style="color: #1e40af;">
-                    <li class="mb-2">
-                        <strong>Seja específico:</strong> Mencione o tipo de cozinha, especialidades da casa e pratos populares.
-                    </li>
-                    <li class="mb-2">
-                        <strong>Destaque o ambiente:</strong> Descreva a atmosfera do restaurante (familiar, romântico, casual, etc.).
-                    </li>
-                    <li class="mb-2">
-                        <strong>Mencione diferenciais:</strong> Vista para o mar, música ao vivo, chef premiado, ingredientes orgânicos, etc.
-                    </li>
-                    <li>
-                        <strong>Seja conciso:</strong> Entre 2 a 4 linhas é o ideal para manter a atenção dos clientes.
-                    </li>
-                </ul>
             </div>
         </div>
     </div>
@@ -118,28 +95,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        // Character counter for description
-        const descriptionTextarea = document.querySelector('textarea[name="Description"]');
-        const maxLength = 500;
-
-        if (descriptionTextarea) {
-            const counter = document.createElement('div');
-            counter.className = 'text-muted small mt-1 text-end';
-            counter.textContent = `${descriptionTextarea.value.length} / ${maxLength} caracteres`;
-
-            descriptionTextarea.parentElement.appendChild(counter);
-
-            descriptionTextarea.addEventListener('input', function() {
-                counter.textContent = `${this.value.length} / ${maxLength} caracteres`;
-
-                if (this.value.length > maxLength * 0.9) {
-                    counter.classList.add('text-warning');
-                } else {
-                    counter.classList.remove('text-warning');
-                }
-            });
-        }
-    </script>
 }

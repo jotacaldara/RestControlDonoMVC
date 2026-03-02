@@ -1,131 +1,92 @@
-﻿
-@model RestControlMVC.DTOs.AdminEarningsDTO
+﻿@model RestControlMVC.DTOs.AdminEarningsDTO
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<RestControlMVC.AdminSharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Ganhos da Plataforma";
-
-    var monthLabelsJson = System.Text.Json.JsonSerializer.Serialize(
-        Model.ByMonth != null
-            ? Model.ByMonth.Select(m => m.MonthName).ToList()
-            : new List<string>()
-    );
-
-    var monthValuesJson = System.Text.Json.JsonSerializer.Serialize(
-        Model.ByMonth != null
-            ? Model.ByMonth.Select(m => (double)m.Total).ToList()
-            : new List<double>()
-    );
-
+    ViewData["Title"] = Localizer["Earnings_Title"].Value;
+    var monthLabelsJson = System.Text.Json.JsonSerializer.Serialize(Model.ByMonth != null ? Model.ByMonth.Select(m => m.MonthName).ToList() : new List<string>());
+    var monthValuesJson = System.Text.Json.JsonSerializer.Serialize(Model.ByMonth != null ? Model.ByMonth.Select(m => (double)m.Total).ToList() : new List<double>());
     var ptPT = new System.Globalization.CultureInfo("pt-PT");
 }
 
-<!-- Header -->
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h1 class="h2 fw-bold mb-1" style="color: #1e293b;">
             <i class="bi bi-cash-stack me-2 text-success"></i>
-            Ganhos da Plataforma
+            @Localizer["Earnings_Title"]
         </h1>
-        <p class="text-muted mb-0">
-            Receita total: mensalidades dos planos + comissões de reservas
-        </p>
+        <p class="text-muted mb-0">@Localizer["Earnings_Subtitle"]</p>
     </div>
-    <a href="@Url.Action("Index", "SubscriptionsAdmin", new { area = "Admin" })"
-       class="btn btn-outline-primary">
+    <a href="@Url.Action("Index", "SubscriptionsAdmin", new { area = "Admin" })" class="btn btn-outline-primary">
         <i class="bi bi-credit-card me-1"></i>
-        Gerir Subscrições
+        @Localizer["Earnings_ManageSubscriptions"]
     </a>
 </div>
 
-<!-- Cards de Receita -->
 <div class="row g-4 mb-4">
-
-    <!-- Total Geral -->
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm h-100"
-             style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px;">
+        <div class="card border-0 shadow-sm h-100" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 16px;">
             <div class="card-body p-4 text-white">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="p-2 bg-white bg-opacity-25 rounded-3 me-2">
-                        <i class="bi bi-wallet2 fs-5"></i>
-                    </div>
-                    <p class="mb-0 small fw-bold text-uppercase opacity-75">Receita Total</p>
+                    <div class="p-2 bg-white bg-opacity-25 rounded-3 me-2"><i class="bi bi-wallet2 fs-5"></i></div>
+                    <p class="mb-0 small fw-bold text-uppercase opacity-75">@Localizer["Earnings_TotalRevenue"]</p>
                 </div>
-                <h2 class="fw-bold mb-1">
-                    @Model.TotalEarnings.ToString("C2", ptPT)
-                </h2>
-                <small class="opacity-75">Mensalidades + Comissões</small>
+                <h2 class="fw-bold mb-1">@Model.TotalEarnings.ToString("C2", ptPT)</h2>
+                <small class="opacity-75">@Localizer["Earnings_TotalRevenueSubtitle"]</small>
             </div>
         </div>
     </div>
-
-    <!-- Mensalidades -->
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="p-2 bg-primary bg-opacity-10 rounded-3 me-2">
-                        <i class="bi bi-credit-card fs-5 text-primary"></i>
-                    </div>
-                    <p class="mb-0 small fw-bold text-uppercase text-muted">Mensalidades</p>
+                    <div class="p-2 bg-primary bg-opacity-10 rounded-3 me-2"><i class="bi bi-credit-card fs-5 text-primary"></i></div>
+                    <p class="mb-0 small fw-bold text-uppercase text-muted">@Localizer["Earnings_MonthlyFees"]</p>
                 </div>
-                <h2 class="fw-bold mb-1 text-primary">
-                    @Model.TotalSubscriptionRevenue.ToString("C2", ptPT)
-                </h2>
-                <small class="text-muted">Receita dos planos de subscrição</small>
+                <h2 class="fw-bold mb-1 text-primary">@Model.TotalSubscriptionRevenue.ToString("C2", ptPT)</h2>
+                <small class="text-muted">@Localizer["Earnings_MonthlyFeesSubtitle"]</small>
             </div>
         </div>
     </div>
-
-    <!-- Comissões de Reservas -->
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
             <div class="card-body p-4">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="p-2 bg-warning bg-opacity-10 rounded-3 me-2">
-                        <i class="bi bi-percent fs-5 text-warning"></i>
-                    </div>
-                    <p class="mb-0 small fw-bold text-uppercase text-muted">Comissões de Reservas</p>
+                    <div class="p-2 bg-warning bg-opacity-10 rounded-3 me-2"><i class="bi bi-percent fs-5 text-warning"></i></div>
+                    <p class="mb-0 small fw-bold text-uppercase text-muted">@Localizer["Earnings_ReservationCommissions"]</p>
                 </div>
-                <h2 class="fw-bold mb-1 text-warning">
-                    @Model.TotalReservationCommissions.ToString("C2", ptPT)
-                </h2>
-                <small class="text-muted">% por reserva concluída (conforme plano)</small>
+                <h2 class="fw-bold mb-1 text-warning">@Model.TotalReservationCommissions.ToString("C2", ptPT)</h2>
+                <small class="text-muted">@Localizer["Earnings_ReservationCommissionsSubtitle"]</small>
             </div>
         </div>
     </div>
-
 </div>
 
-<!-- Gráfico Mensal -->
 <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px;">
     <div class="card-body p-4">
         <h5 class="fw-bold mb-4">
             <i class="bi bi-bar-chart-line me-2 text-success"></i>
-            Comissões por Mês (Últimos 6 Meses)
+            @Localizer["Earnings_ChartTitle"]
         </h5>
         @if (Model.ByMonth != null && Model.ByMonth.Any())
         {
-            <div style="max-height: 300px;">
-                <canvas id="earningsChart"></canvas>
-            </div>
+            <div style="max-height: 300px;"><canvas id="earningsChart"></canvas></div>
         }
         else
         {
             <div class="text-center py-4 text-muted">
                 <i class="bi bi-bar-chart fs-1 d-block mb-2"></i>
-                Ainda não há dados para o gráfico.
+                @Localizer["Earnings_NoChartData"]
             </div>
         }
     </div>
 </div>
 
-<!-- Tabela por Restaurante -->
 <div class="card border-0 shadow-sm" style="border-radius: 16px;">
     <div class="card-header bg-white border-0 py-3 px-4">
         <h5 class="fw-bold mb-0">
             <i class="bi bi-shop me-2 text-success"></i>
-            Comissões por Restaurante
+            @Localizer["Earnings_ByRestaurant"]
         </h5>
     </div>
     <div class="card-body p-0">
@@ -135,39 +96,26 @@
                 <table class="table table-hover mb-0">
                     <thead style="background: #f8f9fa;">
                         <tr>
-                            <th class="px-4 py-3">Restaurante</th>
-                            <th class="text-center py-3">Reservas Concluídas</th>
-                            <th class="text-end px-4 py-3">Comissões</th>
+                            <th class="px-4 py-3">@Localizer["Earnings_Restaurant"]</th>
+                            <th class="text-center py-3">@Localizer["Earnings_CompletedReservations"]</th>
+                            <th class="text-end px-4 py-3">@Localizer["Earnings_Commissions"]</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.ByRestaurant)
                         {
                             <tr>
-                                <td class="px-4 py-3 fw-semibold">
-                                    <i class="bi bi-shop me-2 text-muted"></i>
-                                    @item.RestaurantName
-                                </td>
-                                <td class="text-center py-3">
-                                    <span class="badge bg-primary rounded-pill px-3">
-                                        @item.TotalReservations
-                                    </span>
-                                </td>
-                                <td class="text-end px-4 py-3 fw-bold text-success">
-                                    @item.TotalEarnings.ToString("C2", ptPT)
-                                </td>
+                                <td class="px-4 py-3 fw-semibold"><i class="bi bi-shop me-2 text-muted"></i>@item.RestaurantName</td>
+                                <td class="text-center py-3"><span class="badge bg-primary rounded-pill px-3">@item.TotalReservations</span></td>
+                                <td class="text-end px-4 py-3 fw-bold text-success">@item.TotalEarnings.ToString("C2", ptPT)</td>
                             </tr>
                         }
                     </tbody>
                     <tfoot style="background: #f0fdf4;">
                         <tr>
-                            <td class="px-4 py-3 fw-bold">Total</td>
-                            <td class="text-center py-3 fw-bold">
-                                @Model.ByRestaurant.Sum(x => x.TotalReservations)
-                            </td>
-                            <td class="text-end px-4 py-3 fw-bold text-success fs-6">
-                                @Model.ByRestaurant.Sum(x => x.TotalEarnings).ToString("C2", ptPT)
-                            </td>
+                            <td class="px-4 py-3 fw-bold">@Localizer["Total"]</td>
+                            <td class="text-center py-3 fw-bold">@Model.ByRestaurant.Sum(x => x.TotalReservations)</td>
+                            <td class="text-end px-4 py-3 fw-bold text-success fs-6">@Model.ByRestaurant.Sum(x => x.TotalEarnings).ToString("C2", ptPT)</td>
                         </tr>
                     </tfoot>
                 </table>
@@ -177,9 +125,8 @@
         {
             <div class="text-center py-5 text-muted">
                 <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                Nenhuma comissão registada.
-                <br />
-                <small>As comissões aparecem quando reservas são concluídas com valor registado.</small>
+                @Localizer["Earnings_NoCommissions"]<br />
+                <small>@Localizer["Earnings_NoCommissionsHint"]</small>
             </div>
         }
     </div>
@@ -188,10 +135,8 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        
         const monthLabels = @Html.Raw(monthLabelsJson);
         const monthValues = @Html.Raw(monthValuesJson);
-
         if (monthLabels && monthLabels.length > 0) {
             const canvas = document.getElementById('earningsChart');
             if (canvas) {
@@ -199,44 +144,12 @@
                     type: 'bar',
                     data: {
                         labels: monthLabels,
-                        datasets: [{
-                            label: 'Comissões (€)',
-                            data: monthValues,
-                            backgroundColor: 'rgba(16, 185, 129, 0.85)',
-                            borderColor: 'rgba(16, 185, 129, 1)',
-                            borderWidth: 2,
-                            borderRadius: 8,
-                            borderSkipped: false
-                        }]
+                        datasets: [{ label: '@Localizer["Earnings_ChartLabel"]', data: monthValues, backgroundColor: 'rgba(16, 185, 129, 0.85)', borderColor: 'rgba(16, 185, 129, 1)', borderWidth: 2, borderRadius: 8, borderSkipped: false }]
                     },
                     options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        return new Intl.NumberFormat('pt-PT', {
-                                            style: 'currency',
-                                            currency: 'EUR'
-                                        }).format(context.raw);
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: { color: '#e9ecef' },
-                                ticks: {
-                                    callback: function (value) {
-                                        return value + ' €';
-                                    }
-                                }
-                            },
-                            x: { grid: { display: false } }
-                        }
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(c.raw); } } } },
+                        scales: { y: { beginAtZero: true, grid: { color: '#e9ecef' }, ticks: { callback: v => v + ' €' } }, x: { grid: { display: false } } }
                     }
                 });
             }

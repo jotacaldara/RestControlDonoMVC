@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RestControlMVC.Services;
 using RestControlMVC.DTOs;
+using RestControlMVC.Services;
+using System.Numerics;
 
 namespace RestControlMVC.Controllers.Admin
 {
@@ -21,27 +22,36 @@ namespace RestControlMVC.Controllers.Admin
             {
                 try
                 {
-                    var pending = await _apiService.GetAsync<List<PendingRestaurantDTO>>("admin/pending-restaurants");
-                 return View("~/Views/Admin/PendingRestaurants/Index.cshtml", pending);
-                 }
+                    var pending = await _apiService.GetAsync<List<PendingRestaurantsDTO>>("admin/admindashboard/pending-restaurants");
+                return View("~/Views/Admin/PendingRestaurants/Index.cshtml", pending ?? new List<PendingRestaurantsDTO>());
+            }
 
                 catch (Exception ex)
                 {
+
                     TempData["Error"] = $"Erro: {ex.Message}";
-                    return View("~/Views/Admin/PendingRestaurants/Index.cshtml", new List<PendingRestaurantDTO>());
+                    return View("~/Views/Admin/PendingRestaurants/Index.cshtml", new List<PendingRestaurantsDTO>());
                 }
             }
 
             // POST: /Admin/PendingRestaurants/Approve/5
             [HttpPost]
             [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Approve(int id)
+            public async Task<IActionResult> Approve(int id, int planId)
             {
                 try
                 {
-                    var success = await _apiService.PostAsync($"admin/pending-restaurants/{id}/approve", new { });
+                if (planId <= 0)
+                {
+                    TempData["Error"] = "Por favor, selecione um plano.";
+                    return RedirectToAction(nameof(Index));
+                }
 
-                    if (success)
+                var dto = new { PlanId = planId };
+
+                var success = await _apiService.PostAsync($"admin/admindashboard/pending-restaurants/{id}/approve", dto);
+
+                if (success)
                         TempData["Success"] = "Restaurante aprovado com sucesso!";
                     else
                         TempData["Error"] = "Erro ao aprovar restaurante.";
@@ -61,7 +71,7 @@ namespace RestControlMVC.Controllers.Admin
             {
                 try
                 {
-                    var success = await _apiService.PostAsync($"admin/pending-restaurants/{id}/reject", new { reason });
+                    var success = await _apiService.PostAsync($"admin/admindashboard/pending-restaurants/{id}/reject", new { reason });
 
                     if (success)
                         TempData["Success"] = "Pedido rejeitado.";

@@ -37,12 +37,16 @@
                                 </div>
                             }
 
-                            <!-- Passo 1: Dados do Proprietário -->
+                            <!-- ============================================================ -->
+                            <!-- PASSO 1: DADOS DO PROPRIETÁRIO -->
+                            <!-- ============================================================ -->
                             <div class="registration-step mb-5">
                                 <div class="step-header mb-4">
                                     <span class="step-number">1</span>
-                                    <h4 class="fw-bold mb-1">Dados do Proprietário</h4>
-                                    <p class="text-muted small mb-0">Informações da pessoa responsável</p>
+                                    <div>
+                                        <h4 class="fw-bold mb-1">Dados do Proprietário</h4>
+                                        <p class="text-muted small mb-0">Informações da pessoa responsável</p>
+                                    </div>
                                 </div>
 
                                 <div class="row g-4">
@@ -97,12 +101,16 @@
 
                             <hr class="my-5" />
 
-                            <!-- Passo 2: Dados do Restaurante -->
+                            <!-- ============================================================ -->
+                            <!-- PASSO 2: DADOS DO RESTAURANTE -->
+                            <!-- ============================================================ -->
                             <div class="registration-step mb-5">
                                 <div class="step-header mb-4">
                                     <span class="step-number">2</span>
-                                    <h4 class="fw-bold mb-1">Dados do Restaurante</h4>
-                                    <p class="text-muted small mb-0">Informações sobre o seu estabelecimento</p>
+                                    <div>
+                                        <h4 class="fw-bold mb-1">Dados do Restaurante</h4>
+                                        <p class="text-muted small mb-0">Informações sobre o seu estabelecimento</p>
+                                    </div>
                                 </div>
 
                                 <div class="row g-4">
@@ -163,6 +171,91 @@
                                 </div>
                             </div>
 
+                            <hr class="my-5" />
+
+                            <!-- ============================================================ -->
+                            <!-- ✅ PASSO 3: ESCOLHA DO PLANO -->
+                            <!-- ============================================================ -->
+                            <div class="registration-step mb-5">
+                                <div class="step-header mb-4">
+                                    <span class="step-number">3</span>
+                                    <div>
+                                        <h4 class="fw-bold mb-1">Escolha o Seu Plano</h4>
+                                        <p class="text-muted small mb-0">Selecione o plano que melhor se adequa ao seu negócio</p>
+                                    </div>
+                                </div>
+
+                                <div class="row g-4 mb-3">
+                                    <div class="col-md-4">
+                                        <div class="plan-card" onclick="selectPlan(this, 1)">
+                                            <input type="radio" asp-for="PlanId" value="1" id="plan1" class="plan-radio" />
+                                            <label for="plan1" class="plan-label w-100">
+                                                <div class="plan-header">
+                                                    <h5 class="fw-bold mb-1">Básico</h5>
+                                                    <p class="text-muted small mb-0">Para começar</p>
+                                                </div>
+                                                <div class="plan-price my-3">
+                                                    <span class="price-amount">€29</span>
+                                                    <span class="price-period">/mês</span>
+                                                </div>
+                                                <ul class="plan-features">
+                                                    <li><i class="bi bi-check text-success"></i> Até 50 reservas/mês</li>
+                                                    <li><i class="bi bi-check text-success"></i> Menu digital ilimitado</li>
+                                                    <li><i class="bi bi-check text-success"></i> <strong>5% comissão</strong></li>
+                                                </ul>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="plan-card featured" onclick="selectPlan(this, 2)">
+                                            <div class="plan-badge">Recomendado</div>
+                                            <input type="radio" asp-for="PlanId" value="2" id="plan2" class="plan-radio" />
+                                            <label for="plan2" class="plan-label w-100">
+                                                <div class="plan-header">
+                                                    <h5 class="fw-bold mb-1">Pro</h5>
+                                                    <p class="text-muted small mb-0">Para crescer</p>
+                                                </div>
+                                                <div class="plan-price my-3">
+                                                    <span class="price-amount">€79</span>
+                                                    <span class="price-period">/mês</span>
+                                                </div>
+                                                <ul class="plan-features">
+                                                    <li><i class="bi bi-check text-success"></i> Reservas ilimitadas</li>
+                                                    <li><i class="bi bi-check text-success"></i> Menu digital ilimitado</li>
+                                                    <li><i class="bi bi-check text-success"></i> <strong>10% comissão</strong></li>
+                                                </ul>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="plan-card" onclick="selectPlan(this, 3)">
+                                            <input type="radio" asp-for="PlanId" value="3" id="plan3" class="plan-radio" />
+                                            <label for="plan3" class="plan-label w-100">
+                                                <div class="plan-header">
+                                                    <h5 class="fw-bold mb-1">Premium</h5>
+                                                    <p class="text-muted small mb-0">Para escalar</p>
+                                                </div>
+                                                <div class="plan-price my-3">
+                                                    <span class="price-amount">€199</span>
+                                                    <span class="price-period">/mês</span>
+                                                </div>
+                                                <ul class="plan-features">
+                                                    <li><i class="bi bi-check text-success"></i> Tudo do Pro +</li>
+                                                    <li><i class="bi bi-check text-success"></i> <strong>15% comissão</strong></li>
+                                                    <li><i class="bi bi-check text-success"></i> Suporte 24/7</li>
+                                                </ul>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="text-center">
+                                    <span asp-validation-for="PlanId" class="text-danger small"></span>
+                                </div>
+                            </div>
+
                             <!-- Info Box -->
                             <div class="alert alert-info d-flex align-items-start mb-4">
                                 <i class="bi bi-info-circle fs-4 me-3 mt-1"></i>
@@ -171,7 +264,7 @@
                                     <p class="mb-0 small mt-1">
                                         Após submeter o pedido, a nossa equipa irá analisá-lo.
                                         Receberá um email de confirmação quando o seu restaurante for aprovado.
-                                        O processo costuma demorar 24-48 horas.
+                                        O processo costuma demorar 24-48 horas. O pagamento será processado após aprovação.
                                     </p>
                                 </div>
                             </div>
@@ -202,10 +295,162 @@
     </div>
 </section>
 
+<style>
+    .step-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    /* Plan Cards */
+    .plan-card {
+        position: relative;
+        border: 2px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 1.5rem;
+        transition: all 0.3s;
+        cursor: pointer;
+        height: 100%;
+    }
+
+        .plan-card.selected {
+            border-color: #3b82f6 !important;
+            background-color: #eff6ff !important;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+        }
+
+    .plan-radio {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .plan-card:hover {
+        border-color: #3b82f6;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+    }
+
+    .plan-card.featured {
+        border-color: #3b82f6;
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+    }
+
+    .plan-radio:checked + .plan-label {
+        background: #eff6ff;
+    }
+
+    .plan-radio:checked ~ .plan-label,
+    .plan-card:has(.plan-radio:checked) {
+        border-color: #3b82f6;
+        background: #eff6ff;
+    }
+
+    .plan-label {
+        cursor: pointer;
+        margin: 0;
+        display: block;
+    }
+
+    .plan-badge {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .plan-price {
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 1rem 0;
+    }
+
+    .price-amount {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #1e293b;
+    }
+
+    .price-period {
+        font-size: 1rem;
+        color: #64748b;
+    }
+
+    .plan-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .plan-features li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .plan-features i {
+        font-size: 1.25rem;
+    }
+</style>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ duration: 600, once: true });
+
+        function selectPlan(cardElement, planId) {
+            // 1. Desmarcar todos os cartões visualmente
+            document.querySelectorAll('.plan-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // 2. Marcar o cartão atual
+            cardElement.classList.add('selected');
+
+            // 3. Encontrar o rádio dentro do cartão e marcar como checked
+            const radio = cardElement.querySelector('input[type="radio"]');
+            if (radio) {
+                radio.checked = true;
+
+                // Forçar a validação do jQuery a entender que o valor mudou
+                $(radio).valid();
+            }
+        }
+
+        // Caso o usuário clique diretamente na label, atualizar o visual do card
+        document.querySelectorAll('.plan-radio').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if(this.checked) {
+                    document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+                    this.closest('.plan-card').classList.add('selected');
+                }
+            });
+        });
     </script>
 }

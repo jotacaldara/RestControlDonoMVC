@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RestControlMVC.DTOs;
 using RestControlMVC.DTOs.Owner;
 using RestControlMVC.Services;
+using System.Diagnostics;
+using System.Globalization;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -25,6 +27,7 @@ namespace RestControlMVC.Owner.Controllers
         {
             try
             {
+
                 var dashboardData = await _apiService.GetAsync<OwnerDashboardDTO>("owner/dashboard");
 
                 if (dashboardData == null)
@@ -54,6 +57,22 @@ namespace RestControlMVC.Owner.Controllers
                     TempData["Error"] = "Restaurante não encontrado.";
                     return RedirectToAction("Index");
                 }
+
+                var reviews = await _apiService.GetAsync<List<ReviewDTO>>("owner/reviews");
+
+                if (reviews != null && reviews.Any())
+                {
+                  
+                    restaurant.TotalReviews = reviews.Count;
+                    restaurant.AverageRating = (decimal)reviews.Average(r => r.Rating);
+                }
+                else
+                {
+                    restaurant.TotalReviews = 0;
+                    restaurant.AverageRating = 0;
+                }
+
+
 
                 return View("~/Views/Owner/Dashboard/RestaurantDetail.cshtml", restaurant);
             }

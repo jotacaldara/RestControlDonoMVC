@@ -59,11 +59,12 @@ namespace RestControlMVC.Controllers.Admin
             return RedirectToAction("Details", new { id = id });
         }
 
-        // GET: Admin/Restaurants/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var restaurant = await _apiService.GetAsync<RestaurantDetailDTO>($"restaurants/{id}");
+
             if (restaurant == null) return NotFound();
+
             return View("~/Views/Admin/Restaurants/Edit.cshtml", restaurant);
         }
 
@@ -75,7 +76,7 @@ namespace RestControlMVC.Controllers.Admin
                 return View("~/Views/Admin/Restaurants/Edit.cshtml", model);
             }
 
-            var result = await _apiService.PostAsync<bool>($"restaurants/update/{model.Id}", model);
+            var result = await _apiService.PutAsync<bool>($"restaurants/edit/{model.Id}", model);
 
             if (result)
             {

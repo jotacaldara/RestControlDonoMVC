@@ -1,10 +1,10 @@
-﻿«
-
-@model List<RestControlMVC.DTOs.PendingRestaurantDTO>
+﻿@model List<RestControlMVC.DTOs.PendingRestaurantsDTO>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<RestControlMVC.AdminSharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Restaurantes Pendentes";
-    var pendingList = Model ?? new List<RestControlMVC.DTOs.PendingRestaurantDTO>();
+    ViewData["Title"] = Localizer["Pending_Title"].Value;
+    var pendingList = Model ?? new List<RestControlMVC.DTOs.PendingRestaurantsDTO>();
     var totalPending = pendingList.Count;
     var recentPending = pendingList.Count(r => r.DaysWaiting <= 2);
 }
@@ -13,25 +13,43 @@
     .pending-badge {
         animation: pulse 2s infinite;
     }
-    
+
     @@keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.7; }
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.7;
+        }
     }
-    
+
     .info-row {
         border-left: 3px solid #e5e7eb;
         padding-left: 1rem;
         margin-bottom: 0.5rem;
     }
-    
+
     .hover-lift {
         transition: transform 0.2s, box-shadow 0.2s;
     }
-    
-    .hover-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1) !important;
+        }
+
+    .plan-badge {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     }
 </style>
 
@@ -42,11 +60,9 @@
             <div>
                 <h1 class="h2 fw-bold mb-1" style="color: #1e293b;">
                     <i class="bi bi-hourglass-split me-2 text-warning"></i>
-                    Restaurantes Pendentes
+                    @Localizer["Pending_Title"]
                 </h1>
-                <p class="text-muted mb-0">
-                    Analise e aprove novos pedidos de registo
-                </p>
+                <p class="text-muted mb-0">@Localizer["Pending_Subtitle"]</p>
             </div>
             @if (totalPending > 0)
             {
@@ -64,7 +80,7 @@
     <div class="col-md-6">
         <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #f59e0b !important;">
             <div class="card-body py-3 px-4">
-                <small class="text-muted text-uppercase fw-bold d-block">Total Pendente</small>
+                <small class="text-muted text-uppercase fw-bold d-block">@Localizer["Pending_TotalPending"]</small>
                 <h3 class="fw-bold mb-0 text-warning">@totalPending</h3>
             </div>
         </div>
@@ -72,14 +88,13 @@
     <div class="col-md-6">
         <div class="card border-0 shadow-sm" style="border-radius: 12px; border-left: 4px solid #3b82f6 !important;">
             <div class="card-body py-3 px-4">
-                <small class="text-muted text-uppercase fw-bold d-block">Novos (últimos 2 dias)</small>
+                <small class="text-muted text-uppercase fw-bold d-block">@Localizer["Pending_RecentNew"]</small>
                 <h3 class="fw-bold mb-0 text-primary">@recentPending</h3>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Pending List -->
 @if (pendingList.Any())
 {
     <div class="row g-4">
@@ -88,7 +103,6 @@
             <div class="col-12">
                 <div class="card border-0 shadow-sm hover-lift" style="border-radius: 16px;">
                     <div class="card-body p-4">
-                        <!-- Header -->
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <h5 class="fw-bold mb-2">
@@ -98,155 +112,97 @@
                                 <div class="d-flex gap-2 flex-wrap">
                                     <span class="badge bg-warning text-dark">
                                         <i class="bi bi-clock me-1"></i>
-                                        Há @restaurant.DaysWaiting dia@(restaurant.DaysWaiting != 1 ? "s" : "")
+                                        @string.Format(Localizer["Pending_WaitingDays"].Value, restaurant.DaysWaiting)
                                     </span>
                                     <span class="badge bg-light text-dark">
-                                        <i class="bi bi-geo-alt me-1"></i>
-                                        @restaurant.City
+                                        <i class="bi bi-geo-alt me-1"></i>@restaurant.City
                                     </span>
+                                    @if (!string.IsNullOrEmpty(restaurant.PlanName))
+                                    {
+                                        <span class="plan-badge">
+                                            <i class="bi bi-star-fill"></i>
+                                            @Localizer["Pending_PlanLabel"] @restaurant.PlanName — €@restaurant.MonthlyPrice@Localizer["Pending_PerMonth"]
+                                        </span>
+                                    }
                                 </div>
                             </div>
-                            
                             @if (restaurant.CreatedAt.HasValue)
                             {
-                                <small class="text-muted">
-                                    @restaurant.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm")
-                                </small>
+                                <small class="text-muted">@restaurant.CreatedAt.Value.ToString("dd/MM/yyyy HH:mm")</small>
                             }
                         </div>
 
                         <hr />
 
-                        <!-- Restaurant Info -->
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <div class="info-section">
-                                    <h6 class="text-uppercase small fw-bold text-muted mb-2">
-                                        <i class="bi bi-building me-1"></i>
-                                        Informações do Restaurante
-                                    </h6>
-                                    <div class="info-row">
-                                        <small class="text-muted d-block">Descrição:</small>
-                                        <p class="mb-2 small">@restaurant.Description</p>
-                                    </div>
-                                    <div class="info-row">
-                                        <small class="text-muted d-block">Morada:</small>
-                                        <p class="mb-2 small">@restaurant.Address, @restaurant.City</p>
-                                    </div>
-                                    <div class="info-row">
-                                        <small class="text-muted d-block">Telefone:</small>
-                                        <p class="mb-0 small">
-                                            <a href="tel:@restaurant.Phone">@restaurant.Phone</a>
-                                        </p>
-                                    </div>
-                                    <div class="info-row">
-                                        <small class="text-muted d-block">Email:</small>
-                                        <p class="mb-0 small">
-                                            <a href="mailto:@restaurant.Email">@restaurant.Email</a>
-                                        </p>
-                                    </div>
+                                <h6 class="text-uppercase small fw-bold text-muted mb-2">
+                                    <i class="bi bi-building me-1"></i>@Localizer["Pending_RestaurantInfo"]
+                                </h6>
+                                <div class="info-row">
+                                    <small class="text-muted d-block">@Localizer["Description"]:</small>
+                                    <p class="mb-2 small">@restaurant.Description</p>
+                                </div>
+                                <div class="info-row">
+                                    <small class="text-muted d-block">@Localizer["Address"]:</small>
+                                    <p class="mb-2 small">@restaurant.Address, @restaurant.City</p>
+                                </div>
+                                <div class="info-row">
+                                    <small class="text-muted d-block">@Localizer["Phone"]:</small>
+                                    <p class="mb-0 small"><a href="tel:@restaurant.Phone">@restaurant.Phone</a></p>
+                                </div>
+                                <div class="info-row">
+                                    <small class="text-muted d-block">@Localizer["Email"]:</small>
+                                    <p class="mb-0 small"><a href="mailto:@restaurant.Email">@restaurant.Email</a></p>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
-                                <div class="info-section">
-                                    <h6 class="text-uppercase small fw-bold text-muted mb-2">
-                                        <i class="bi bi-person me-1"></i>
-                                        Dados do Proprietário
-                                    </h6>
-                                    <div class="info-row">
-                                        <small class="text-muted d-block">Nome:</small>
-                                        <p class="mb-2 small fw-semibold">@restaurant.OwnerName</p>
-                                    </div>
-                                    <div class="info-row">
-                                        <small class="text-muted d-block">Email:</small>
-                                        <p class="mb-2 small">
-                                            <a href="mailto:@restaurant.OwnerEmail">@restaurant.OwnerEmail</a>
-                                        </p>
-                                    </div>
-                                    <div class="info-row">
-                                        <small class="text-muted d-block">Telefone:</small>
+                                <h6 class="text-uppercase small fw-bold text-muted mb-2">
+                                    <i class="bi bi-person me-1"></i>@Localizer["Pending_OwnerInfo"]
+                                </h6>
+                                <div class="info-row">
+                                    <small class="text-muted d-block">@Localizer["Pending_OwnerName"]</small>
+                                    <p class="mb-2 small fw-semibold">@restaurant.OwnerName</p>
+                                </div>
+                                <div class="info-row">
+                                    <small class="text-muted d-block">@Localizer["Pending_OwnerEmail"]</small>
+                                    <p class="mb-2 small"><a href="mailto:@restaurant.OwnerEmail">@restaurant.OwnerEmail</a></p>
+                                </div>
+                                <div class="info-row">
+                                    <small class="text-muted d-block">@Localizer["Pending_OwnerPhone"]</small>
+                                    <p class="mb-0 small"><a href="tel:@restaurant.OwnerPhone">@restaurant.OwnerPhone</a></p>
+                                </div>
+                                @if (!string.IsNullOrEmpty(restaurant.PlanName))
+                                {
+                                    <div class="info-row mt-3">
+                                        <small class="text-muted d-block">@Localizer["Pending_ChosenPlan"]</small>
+                                        <p class="mb-1 small fw-semibold">@restaurant.PlanName</p>
                                         <p class="mb-0 small">
-                                            <a href="tel:@restaurant.OwnerPhone">@restaurant.OwnerPhone</a>
+                                            <span class="badge bg-primary">€@restaurant.MonthlyPrice/mês</span>
+                                            <span class="badge bg-success">@restaurant.CommissionRate% comissão</span>
                                         </p>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
 
-                        <!-- Actions -->
                         <div class="d-flex gap-2 justify-content-end pt-3 border-top">
-                            <!-- Approve with Plan Selection -->
-                            <button type="button" 
-                                    class="btn btn-success px-4"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#approveModal@(restaurant.RestaurantId)">
-                                <i class="bi bi-check-circle me-2"></i>
-                                Aprovar
-                            </button>
-
-                            <!-- Reject -->
-                            <button type="button" 
-                                    class="btn btn-outline-danger px-4"
-                                    data-bs-toggle="modal" 
+                            <form method="post" asp-action="Approve" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@restaurant.RestaurantId" />
+                                <input type="hidden" name="planId" value="@restaurant.PlanId" />
+                                <button type="submit" class="btn btn-success px-4"
+                                        onclick="return confirm('@Localizer["Pending_ConfirmApprove"]')">
+                                    <i class="bi bi-check-circle me-2"></i>@Localizer["Approve"]
+                                </button>
+                            </form>
+                            <button type="button" class="btn btn-outline-danger px-4"
+                                    data-bs-toggle="modal"
                                     data-bs-target="#rejectModal@(restaurant.RestaurantId)">
-                                <i class="bi bi-x-circle me-2"></i>
-                                Rejeitar
+                                <i class="bi bi-x-circle me-2"></i>@Localizer["Reject"]
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Approve Modal with Plan Selection -->
-            <div class="modal fade" id="approveModal@(restaurant.RestaurantId)" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form method="post" asp-action="Approve">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="id" value="@restaurant.RestaurantId" />
-                            
-                            <div class="modal-header bg-success text-white">
-                                <h5 class="modal-title">
-                                    <i class="bi bi-check-circle me-2"></i>
-                                    Aprovar Restaurante
-                                </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                            </div>
-                            
-                            <div class="modal-body">
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle me-2"></i>
-                                    Ao aprovar, o restaurante <strong>@restaurant.RestaurantName</strong> 
-                                    será ativado e o owner poderá fazer login.
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold">
-                                        Escolha o Plano <span class="text-danger">*</span>
-                                    </label>
-                                    <select name="planId" class="form-select form-select-lg" required>
-                                        <option value="">Selecione um plano...</option>
-                                        <option value="1">Básico - €29/mês - 5% comissão</option>
-                                        <option value="2">Pro - €79/mês - 10% comissão</option>
-                                        <option value="3">Premium - €199/mês - 15% comissão</option>
-                                    </select>
-                                    <small class="text-muted">
-                                        O plano pode ser alterado posteriormente.
-                                    </small>
-                                </div>
-                            </div>
-                            
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-success">
-                                    <i class="bi bi-check-lg me-2"></i>
-                                    Aprovar e Criar Subscription
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -258,41 +214,28 @@
                         <form method="post" asp-action="Reject">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="id" value="@restaurant.RestaurantId" />
-                            
                             <div class="modal-header">
-                                <h5 class="modal-title">Rejeitar Pedido</h5>
+                                <h5 class="modal-title">@Localizer["Pending_RejectModal_Title"]</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
-                            
                             <div class="modal-body">
                                 <div class="alert alert-warning">
                                     <i class="bi bi-exclamation-triangle me-2"></i>
-                                    <strong>Atenção:</strong> Esta ação irá eliminar permanentemente 
-                                    o restaurante e o utilizador associado.
+                                    <strong>Atenção:</strong> @Localizer["Pending_RejectWarning"]
                                 </div>
-                                
                                 <div class="mb-3">
-                                    <label class="form-label fw-semibold">
-                                        Motivo da Rejeição
-                                    </label>
-                                    <textarea name="reason" 
-                                              class="form-control" 
-                                              rows="4" 
-                                              required
-                                              placeholder="Explique o motivo da rejeição..."></textarea>
-                                    <small class="text-muted">
-                                        Este motivo será enviado por email ao proprietário.
-                                    </small>
+                                    <label class="form-label fw-semibold">@Localizer["Pending_RejectReason"]</label>
+                                    <textarea name="reason" class="form-control" rows="4" required
+                                      placeholder="@Localizer["Pending_RejectReasonPlaceholder"]"></textarea>
+                                    <small class="text-muted">@Localizer["Pending_RejectReasonHint"]</small>
                                 </div>
                             </div>
-                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    Cancelar
+                                    @Localizer["Cancel"]
                                 </button>
                                 <button type="submit" class="btn btn-danger">
-                                    <i class="bi bi-trash me-2"></i>
-                                    Rejeitar Definitivamente
+                                    <i class="bi bi-trash me-2"></i>@Localizer["Pending_RejectDefinitely"]
                                 </button>
                             </div>
                         </form>
@@ -304,21 +247,13 @@
 }
 else
 {
-    <!-- Empty State -->
     <div class="card border-0 shadow-sm">
         <div class="card-body text-center py-5">
             <div class="mb-4">
                 <i class="bi bi-check-circle" style="font-size: 5rem; color: #10b981;"></i>
             </div>
-            <h4 class="fw-bold mb-2">Tudo em dia!</h4>
-            <p class="text-muted mb-4">
-                Não há restaurantes pendentes de aprovação no momento.
-            </p>
-            <a href="@Url.Action("Index", "Restaurants", new { area = "Admin" })" 
-               class="btn btn-primary">
-                <i class="bi bi-shop me-2"></i>
-                Ver Restaurantes Ativos
-            </a>
+            <h4 class="fw-bold mb-2">@Localizer["Pending_EmptyTitle"]</h4>
+            <p class="text-muted mb-4">@Localizer["Pending_EmptySubtitle"]</p>
         </div>
     </div>
 }

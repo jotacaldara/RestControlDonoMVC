@@ -1,13 +1,16 @@
 ﻿@model IEnumerable<RestControlMVC.DTOs.UserDTO>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<RestControlMVC.AdminSharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["Users_Title"].Value;
+}
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h3 class="fw-bold mb-0">Gestão de Utilizadores</h3>
-        <p class="text-muted small">Administre as contas de clientes e administradores.</p>
+        <h3 class="fw-bold mb-0">@Localizer["Users_Title"]</h3>
+        <p class="text-muted small">@Localizer["Users_Subtitle"]</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
-        <i class="bi bi-person-plus me-2"></i>Novo Utilizador
-    </a>
 </div>
 
 <div class="card border-0 shadow-sm rounded-4">
@@ -15,11 +18,11 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Perfil (Role)</th>
-                    <th>Estado</th>
-                    <th class="text-end">Ações</th>
+                    <th>@Localizer["Name"]</th>
+                    <th>@Localizer["Email"]</th>
+                    <th>@Localizer["Users_Role"]</th>
+                    <th>@Localizer["Status"]</th>
+                    <th class="text-end">@Localizer["Actions"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +31,8 @@
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
-                                <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 35px; height: 35px;">
+                                <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                                     style="width: 35px; height: 35px;">
                                     @user.name.Substring(0, 1).ToUpper()
                                 </div>
                                 <span class="fw-medium">@user.name</span>
@@ -43,23 +47,26 @@
                         <td>
                             @if (user.isActive)
                             {
-                                <span class="text-success small"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> Ativo</span>
+                                <span class="text-success small">
+                                    <i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i>
+                                    @Localizer["Active"]
+                                </span>
                             }
                             else
                             {
-                                <span class="text-danger small"><i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i> Inativo</span>
+                                <span class="text-danger small">
+                                    <i class="bi bi-circle-fill me-1" style="font-size: 8px;"></i>
+                                    @Localizer["Inactive"]
+                                </span>
                             }
                         </td>
                         <td class="text-end">
-                            <a asp-action="Edit" asp-route-id="@user.id" class="btn btn-sm btn-outline-secondary border-0" title="Editar">
+                            <a asp-action="Edit" asp-route-id="@user.id"
+                               class="btn btn-sm btn-outline-secondary border-0"
+                               title="@Localizer["Edit"]">
                                 <i class="bi bi-pencil"></i>
                             </a>
-
-                            <form asp-action="Delete" asp-route-id="@user.id" method="post" onsubmit="return confirm('Tem a certeza que deseja eliminar?')">
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    <i class="bi bi-trash"></i> Eliminar
-                                </button>
-                            </form>
+                           
                         </td>
                     </tr>
                 }

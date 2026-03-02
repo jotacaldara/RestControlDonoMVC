@@ -1,0 +1,618 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Back" xml:space="preserve">
+    <value>Voltar</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Guardar Alterações</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Ver</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Configurações</value>
+  </data>
+  <data name="UpdatedNow" xml:space="preserve">
+    <value>Atualizado agora</value>
+  </data>
+  <data name="Note" xml:space="preserve">
+    <value>Nota</value>
+  </data>
+  <data name="ImportantNote" xml:space="preserve">
+    <value>Nota Importante</value>
+  </data>
+  <data name="Dashboard_Title" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Dashboard_SubscriptionExpiring" xml:space="preserve">
+    <value>Atenção!</value>
+  </data>
+  <data name="Dashboard_SubscriptionExpiresIn" xml:space="preserve">
+    <value>Sua subscrição expira em</value>
+  </data>
+  <data name="Dashboard_Days" xml:space="preserve">
+    <value>dias</value>
+  </data>
+  <data name="Dashboard_RenewNow" xml:space="preserve">
+    <value>Renovar agora</value>
+  </data>
+  <data name="Dashboard_TotalReservations" xml:space="preserve">
+    <value>Total de Reservas</value>
+  </data>
+  <data name="Dashboard_Pending" xml:space="preserve">
+    <value>Pendentes</value>
+  </data>
+  <data name="Dashboard_ViewPending" xml:space="preserve">
+    <value>Ver pendentes</value>
+  </data>
+  <data name="Dashboard_AverageRating" xml:space="preserve">
+    <value>Avaliação Média</value>
+  </data>
+  <data name="Dashboard_Reviews" xml:space="preserve">
+    <value>avaliações</value>
+  </data>
+  <data name="Dashboard_MenuProducts" xml:space="preserve">
+    <value>Produtos no Menu</value>
+  </data>
+  <data name="Dashboard_ManageMenu" xml:space="preserve">
+    <value>Gerenciar menu</value>
+  </data>
+  <data name="Dashboard_TotalRevenue" xml:space="preserve">
+    <value>Receita Total</value>
+  </data>
+  <data name="Dashboard_GrossRevenue" xml:space="preserve">
+    <value>Valor bruto de todas as reservas</value>
+  </data>
+  <data name="Dashboard_CommissionsPaid" xml:space="preserve">
+    <value>Comissões Pagas</value>
+  </data>
+  <data name="Dashboard_CommissionPerReservation" xml:space="preserve">
+    <value>Comissão de {0}% por reserva</value>
+  </data>
+  <data name="Dashboard_PerPlan" xml:space="preserve">
+    <value>Conforme plano contratado</value>
+  </data>
+  <data name="Dashboard_NetRevenue" xml:space="preserve">
+    <value>Receita Líquida</value>
+  </data>
+  <data name="Dashboard_AfterCommissions" xml:space="preserve">
+    <value>Receita após comissões</value>
+  </data>
+  <data name="Dashboard_Plan" xml:space="preserve">
+    <value>Plano</value>
+  </data>
+  <data name="Dashboard_ActiveSubscription" xml:space="preserve">
+    <value>Subscrição Ativa</value>
+  </data>
+  <data name="Dashboard_MonthlyFee" xml:space="preserve">
+    <value>Mensalidade</value>
+  </data>
+  <data name="Dashboard_DaysRemaining" xml:space="preserve">
+    <value>Dias Restantes</value>
+  </data>
+  <data name="Dashboard_ExpiresIn" xml:space="preserve">
+    <value>Expira em {0} dias!</value>
+  </data>
+  <data name="Dashboard_ViewSubscriptionDetails" xml:space="preserve">
+    <value>Ver Detalhes da Subscrição</value>
+  </data>
+  <data name="Dashboard_MyRestaurant" xml:space="preserve">
+    <value>Meu Restaurante</value>
+  </data>
+  <data name="Dashboard_RestaurantSubtitle" xml:space="preserve">
+    <value>Informações e configurações</value>
+  </data>
+  <data name="Dashboard_RestaurantDescription" xml:space="preserve">
+    <value>Visualize e edite as informações do seu restaurante.</value>
+  </data>
+  <data name="Dashboard_Reservations" xml:space="preserve">
+    <value>Reservas</value>
+  </data>
+  <data name="Dashboard_ReservationsSubtitle" xml:space="preserve">
+    <value>Gestão de reservas</value>
+  </data>
+  <data name="Dashboard_ReservationsDescription" xml:space="preserve">
+    <value>Confirme, cancele e gerencie as reservas do seu restaurante.</value>
+  </data>
+  <data name="Dashboard_ViewAllReservations" xml:space="preserve">
+    <value>Ver Todas as Reservas</value>
+  </data>
+  <data name="Restaurant_PageTitle" xml:space="preserve">
+    <value>Meu Restaurante</value>
+  </data>
+  <data name="Restaurant_DetailedInfo" xml:space="preserve">
+    <value>Informações detalhadas do seu estabelecimento</value>
+  </data>
+  <data name="Restaurant_EditInfo" xml:space="preserve">
+    <value>Editar Informações</value>
+  </data>
+  <data name="Restaurant_GeneralInfo" xml:space="preserve">
+    <value>Informações Gerais</value>
+  </data>
+  <data name="Restaurant_Name" xml:space="preserve">
+    <value>Nome do Restaurante</value>
+  </data>
+  <data name="Restaurant_Description" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="Restaurant_Address" xml:space="preserve">
+    <value>Endereço</value>
+  </data>
+  <data name="Restaurant_City" xml:space="preserve">
+    <value>Cidade</value>
+  </data>
+  <data name="Restaurant_Phone" xml:space="preserve">
+    <value>Telefone</value>
+  </data>
+  <data name="Restaurant_AdminOnlyNote" xml:space="preserve">
+    <value>Nome, endereço e cidade só podem ser alterados pelo administrador do sistema. Você pode editar a descrição e o telefone.</value>
+  </data>
+  <data name="Restaurant_BasedOnReviews" xml:space="preserve">
+    <value>Baseado em {0} avaliações</value>
+  </data>
+  <data name="Restaurant_MenuStats" xml:space="preserve">
+    <value>Estatísticas do Menu</value>
+  </data>
+  <data name="Restaurant_Categories" xml:space="preserve">
+    <value>Categorias:</value>
+  </data>
+  <data name="Restaurant_TotalProducts" xml:space="preserve">
+    <value>Total de Produtos:</value>
+  </data>
+  <data name="Restaurant_ImageGallery" xml:space="preserve">
+    <value>Galeria de Imagens</value>
+  </data>
+  <data name="Restaurant_ImageAlt" xml:space="preserve">
+    <value>Imagem do restaurante</value>
+  </data>
+  <data name="Restaurant_MenuPreview" xml:space="preserve">
+    <value>Pré-visualização do Menu</value>
+  </data>
+  <data name="Restaurant_EditMenu" xml:space="preserve">
+    <value>Editar Menu</value>
+  </data>
+  <data name="EditRestaurant_Title" xml:space="preserve">
+    <value>Editar Restaurante</value>
+  </data>
+  <data name="EditRestaurant_Header" xml:space="preserve">
+    <value>Editar Informações do Restaurante</value>
+  </data>
+  <data name="EditRestaurant_DescriptionPlaceholder" xml:space="preserve">
+    <value>Descreva o seu restaurante...</value>
+  </data>
+  <data name="EditRestaurant_PhoneFormat" xml:space="preserve">
+    <value>Formato: +351 XXX XXX XXX</value>
+  </data>
+  <data name="EditRestaurant_AdminNote" xml:space="preserve">
+    <value>Nome, morada e cidade só podem ser alterados pelo Administrador.</value>
+  </data>
+  <data name="Reviews_Title" xml:space="preserve">
+    <value>Avaliações do Restaurante</value>
+  </data>
+  <data name="Reviews_Header" xml:space="preserve">
+    <value>Avaliações</value>
+  </data>
+  <data name="Reviews_Subtitle" xml:space="preserve">
+    <value>Veja o que os clientes dizem sobre o seu restaurante</value>
+  </data>
+  <data name="Reviews_AverageRating" xml:space="preserve">
+    <value>Avaliação Média</value>
+  </data>
+  <data name="Reviews_Total" xml:space="preserve">
+    <value>Total de Avaliações</value>
+  </data>
+  <data name="Reviews_CustomerFeedback" xml:space="preserve">
+    <value>Feedback de clientes</value>
+  </data>
+  <data name="Reviews_OwnerReply" xml:space="preserve">
+    <value>Resposta do Restaurante:</value>
+  </data>
+  <data name="Reviews_RepliedOn" xml:space="preserve">
+    <value>Respondido em</value>
+  </data>
+  <data name="Reviews_Reply" xml:space="preserve">
+    <value>Responder</value>
+  </data>
+  <data name="Reviews_ReplyPlaceholder" xml:space="preserve">
+    <value>Escreva sua resposta...</value>
+  </data>
+  <data name="Reviews_SendReply" xml:space="preserve">
+    <value>Enviar Resposta</value>
+  </data>
+  <data name="Reviews_NoReviews" xml:space="preserve">
+    <value>Ainda não há avaliações</value>
+  </data>
+  <data name="Reviews_NoReviewsSubtitle" xml:space="preserve">
+    <value>As avaliações dos clientes aparecerão aqui</value>
+  </data>
+  <data name="Language_Portuguese" xml:space="preserve">
+    <value>Português</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="ReservationsDescription" xml:space="preserve">
+    <value>Confirme, cancele e gerencie todas as reservas</value>
+  </data>
+  <data name="ReservationsTitle" xml:space="preserve">
+    <value>Gestão de Reservas</value>
+  </data>
+  <data name="ReservationFiltrar" xml:space="preserve">
+    <value>Filtrar por Status</value>
+  </data>
+  <data name="ReservationDateHour" xml:space="preserve">
+    <value>Data/Hora</value>
+  </data>
+  <data name="ReservationCliente" xml:space="preserve">
+    <value>Cliente</value>
+  </data>
+  <data name="Reservationpessoas" xml:space="preserve">
+    <value>Pessoas</value>
+  </data>
+  <data name="ReservationValor" xml:space="preserve">
+    <value>Valor Gasto </value>
+  </data>
+  <data name="ReservationAction" xml:space="preserve">
+    <value>Ações</value>
+  </data>
+  <data name="ReservationAdicionarValor" xml:space="preserve">
+    <value>Adicionar Valor</value>
+  </data>
+  <data name="ReservationTodasAsReservas" xml:space="preserve">
+    <value>Todas as Reservas</value>
+  </data>
+  <data name="ReservationTodas" xml:space="preserve">
+    <value>Todas</value>
+  </data>
+  <data name="Subscription_Title" xml:space="preserve">
+    <value>Minha Subscrição</value>
+  </data>
+  <data name="Subscription_Subtitle" xml:space="preserve">
+    <value>Gerencie seu plano e acompanhe pagamentos</value>
+  </data>
+  <data name="Subscription_NoActive" xml:space="preserve">
+    <value>Nenhuma Subscrição Ativa</value>
+  </data>
+  <data name="Subscription_NoActiveDesc" xml:space="preserve">
+    <value>Entre em contato com o administrador para ativar uma subscrição.</value>
+  </data>
+  <data name="Subscription_ContactSupport" xml:space="preserve">
+    <value>Contactar Suporte</value>
+  </data>
+  <data name="Subscription_Active" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="Subscription_Expiring" xml:space="preserve">
+    <value>A Expirar</value>
+  </data>
+  <data name="Subscription_MonthlyPayment" xml:space="preserve">
+    <value>Pagamento Mensal</value>
+  </data>
+  <data name="Subscription_PerMonth" xml:space="preserve">
+    <value>/mês</value>
+  </data>
+  <data name="Subscription_CommissionPerReservation" xml:space="preserve">
+    <value>Comissão por Reserva</value>
+  </data>
+  <data name="Subscription_StartDate" xml:space="preserve">
+    <value>Data de Início</value>
+  </data>
+  <data name="Subscription_EndDate" xml:space="preserve">
+    <value>Data de Vencimento</value>
+  </data>
+  <data name="Subscription_AttentionExpires" xml:space="preserve">
+    <value>Atenção! Sua subscrição expira em {0} dias.</value>
+  </data>
+  <data name="Subscription_RenewToAvoid" xml:space="preserve">
+    <value>Renove agora para evitar interrupções no serviço.</value>
+  </data>
+  <data name="Subscription_RequestRenewal" xml:space="preserve">
+    <value>Solicitar Renovação</value>
+  </data>
+  <data name="Subscription_IncludedBenefits" xml:space="preserve">
+    <value>Benefícios Inclusos</value>
+  </data>
+  <data name="Subscription_Benefit1" xml:space="preserve">
+    <value>Acesso completo ao sistema de gestão</value>
+  </data>
+  <data name="Subscription_Benefit2" xml:space="preserve">
+    <value>Gestão ilimitada de menu e produtos</value>
+  </data>
+  <data name="Subscription_Benefit3" xml:space="preserve">
+    <value>Sistema de reservas online</value>
+  </data>
+  <data name="Subscription_Benefit4" xml:space="preserve">
+    <value>Dashboard com estatísticas em tempo real</value>
+  </data>
+  <data name="Subscription_Benefit5" xml:space="preserve">
+    <value>Suporte técnico prioritário</value>
+  </data>
+  <data name="Subscription_Benefit6" xml:space="preserve">
+    <value>Atualizações automáticas do sistema</value>
+  </data>
+  <data name="Subscription_HowCommission" xml:space="preserve">
+    <value>Como Funciona a Comissão?</value>
+  </data>
+  <data name="Subscription_CommissionDesc" xml:space="preserve">
+    <value>A comissão de {0}% é calculada automaticamente sobre o valor total de cada reserva confirmada.</value>
+  </data>
+  <data name="Subscription_Example" xml:space="preserve">
+    <value>Exemplo:</value>
+  </data>
+  <data name="Subscription_NeedHelp" xml:space="preserve">
+    <value>Precisa de Ajuda?</value>
+  </data>
+  <data name="Subscription_SupportDesc" xml:space="preserve">
+    <value>Nossa equipe está pronta para ajudar com renovações ou dúvidas sobre seu plano.</value>
+  </data>
+  <data name="Subscription_PaymentHistory" xml:space="preserve">
+    <value>Histórico de Pagamentos</value>
+  </data>
+  <data name="Subscription_ComingSoon" xml:space="preserve">
+    <value>Funcionalidade em breve! Aqui você verá todo o histórico de pagamentos da sua subscrição.</value>
+  </data>
+  <data name="Menu_Title" xml:space="preserve">
+    <value>Gerir Menu</value>
+  </data>
+  <data name="Menu_Subtitle" xml:space="preserve">
+    <value>Crie categorias e adicione produtos ao menu</value>
+  </data>
+  <data name="Menu_NewCategory" xml:space="preserve">
+    <value>Nova Categoria</value>
+  </data>
+  <data name="Menu_Available" xml:space="preserve">
+    <value>Disponível</value>
+  </data>
+  <data name="Menu_Unavailable" xml:space="preserve">
+    <value>Indisponível</value>
+  </data>
+  <data name="Menu_AddProduct" xml:space="preserve">
+    <value>Produto</value>
+  </data>
+  <data name="Menu_NoProducts" xml:space="preserve">
+    <value>Nenhum produto nesta categoria</value>
+  </data>
+  <data name="Menu_NoCategories" xml:space="preserve">
+    <value>Nenhuma categoria criada</value>
+  </data>
+  <data name="Menu_NoCategoriesDesc" xml:space="preserve">
+    <value>Comece criando uma categoria para organizar o menu</value>
+  </data>
+  <data name="Menu_CreateFirstCategory" xml:space="preserve">
+    <value>Criar Primeira Categoria</value>
+  </data>
+  <data name="Menu_CategoryNameLabel" xml:space="preserve">
+    <value>Nome da Categoria</value>
+  </data>
+  <data name="Menu_CategoryNamePlaceholder" xml:space="preserve">
+    <value>Ex: Entradas, Pratos Principais, Sobremesas</value>
+  </data>
+  <data name="Menu_NewProduct" xml:space="preserve">
+    <value>Novo Produto</value>
+  </data>
+  <data name="Menu_ProductNameLabel" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Menu_ProductDescLabel" xml:space="preserve">
+    <value>Descrição</value>
+  </data>
+  <data name="Menu_ProductPriceLabel" xml:space="preserve">
+    <value>Preço (€)</value>
+  </data>
+  <data name="Menu_ProductAvailableLabel" xml:space="preserve">
+    <value>Disponível</value>
+  </data>
+  <data name="Menu_EditProduct" xml:space="preserve">
+    <value>Editar Produto</value>
+  </data>
+  <data name="Menu_NoDescription" xml:space="preserve">
+    <value>Sem descrição</value>
+  </data>
+  <data name="Menu_DeleteCategoryConfirm" xml:space="preserve">
+    <value>Eliminar categoria</value>
+  </data>
+  <data name="Menu_DeleteProductConfirm" xml:space="preserve">
+    <value>Eliminar produto</value>
+  </data>
+  <data name="Reservation_NoFound" xml:space="preserve">
+    <value>Nenhuma reserva encontrada.</value>
+  </data>
+  <data name="Reservation_Status_Pendent" xml:space="preserve">
+    <value>Pendente</value>
+  </data>
+  <data name="Reservation_Status_Confirmed" xml:space="preserve">
+    <value>Confirmada</value>
+  </data>
+  <data name="Reservation_Status_Canceled" xml:space="preserve">
+    <value>Cancelada</value>
+  </data>
+  <data name="Reservation_Status_All" xml:space="preserve">
+    <value>Todas</value>
+  </data>
+  <data name="Reservation_People" xml:space="preserve">
+    <value>pessoas</value>
+  </data>
+  <data name="Reservation_Confirm" xml:space="preserve">
+    <value>Confirmar</value>
+  </data>
+  <data name="Reservation_Cancel" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Reservation_CancelConfirm" xml:space="preserve">
+    <value>Cancelar esta reserva?</value>
+  </data>
+  <data name="Reservation_Paid" xml:space="preserve">
+    <value>Pago</value>
+  </data>
+  <data name="Reservation_AddValueModal" xml:space="preserve">
+    <value>Adicionar Valor Gasto</value>
+  </data>
+  <data name="Reservation_ClientLabel" xml:space="preserve">
+    <value>Cliente</value>
+  </data>
+  <data name="Reservation_TotalAmountLabel" xml:space="preserve">
+    <value>Valor Total Gasto (€)</value>
+  </data>
+  <data name="Reservation_CommissionInfo" xml:space="preserve">
+    <value>Este valor será usado para calcular a comissão da plataforma.</value>
+  </data>
+  <data name="Reservation_PaymentMethodLabel" xml:space="preserve">
+    <value>Método de Pagamento</value>
+  </data>
+  <data name="Reservation_ConfirmPayment" xml:space="preserve">
+    <value>Confirmar Pagamento</value>
+  </data>
+  <data name="Reservation_Pay_Cash" xml:space="preserve">
+    <value>Dinheiro</value>
+  </data>
+  <data name="Reservation_Pay_Card" xml:space="preserve">
+    <value>Cartão</value>
+  </data>
+  <data name="Reservation_Pay_MBWay" xml:space="preserve">
+    <value>MB WAY</value>
+  </data>
+  <data name="Reservation_Pay_Transfer" xml:space="preserve">
+    <value>Transferência</value>
+  </data>
+  <data name="Reservation_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="MeuRestaurante" xml:space="preserve">
+    <value>Meu Restaurante</value>
+  </data>
+  <data name="Avaliações" xml:space="preserve">
+    <value>Avaliações</value>
+  </data>
+  <data name="Subscrição" xml:space="preserve">
+    <value>Subscrição</value>
+  </data>
+  <data name="Reservas" xml:space="preserve">
+    <value>Reservas</value>
+  </data>
+  <data name="Sair" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+</root>

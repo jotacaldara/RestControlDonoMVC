@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RestControlMVC.DTOs;
 using RestControlMVC.Services;
-using System.Security.Claims;
 
 namespace RestControlMVC.Controllers.Owner
 {
@@ -16,6 +15,7 @@ namespace RestControlMVC.Controllers.Owner
         {
             _apiService = apiService;
         }
+
         private async Task<int?> GetOwnerRestaurantIdAsync()
         {
             var claim = User.FindFirst("RestaurantId")?.Value;
@@ -115,6 +115,9 @@ namespace RestControlMVC.Controllers.Owner
                     return RedirectToAction(nameof(Index));
                 }
 
+                var isAvailable = Request.Form["IsAvailable"].ToString()
+                    .Contains("true", StringComparison.OrdinalIgnoreCase);
+
                 var apiDto = new
                 {
                     RestaurantId = restaurantId.Value,
@@ -122,7 +125,7 @@ namespace RestControlMVC.Controllers.Owner
                     Name = formDto.Name ?? "",
                     Description = formDto.Description ?? "",
                     Price = formDto.Price ?? 0,
-                    IsAvailable = formDto.IsAvailable
+                    IsAvailable = true  
                 };
 
                 var success = await _apiService.PostAsync("owner/products", apiDto);
@@ -153,6 +156,9 @@ namespace RestControlMVC.Controllers.Owner
                     return RedirectToAction(nameof(Index));
                 }
 
+                var isAvailable = Request.Form["IsAvailable"].ToString()
+                    .Contains("true", StringComparison.OrdinalIgnoreCase);
+
                 var apiDto = new
                 {
                     RestaurantId = restaurantId.Value,
@@ -160,7 +166,7 @@ namespace RestControlMVC.Controllers.Owner
                     Name = formDto.Name ?? "",
                     Description = formDto.Description ?? "",
                     Price = formDto.Price ?? 0,
-                    IsAvailable = formDto.IsAvailable
+                    IsAvailable = true  
                 };
 
                 var success = await _apiService.PutAsync($"owner/products/{id}", apiDto);

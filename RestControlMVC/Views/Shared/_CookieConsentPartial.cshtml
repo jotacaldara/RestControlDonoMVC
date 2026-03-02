@@ -1,5 +1,4 @@
-﻿
-@using Microsoft.AspNetCore.Http.Features
+﻿@using Microsoft.AspNetCore.Http.Features
 
 @{
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
@@ -9,142 +8,65 @@
 
 @if (showBanner)
 {
-    <div id="cookieConsent" class="cookie-consent-banner" role="alert">
-        <div class="cookie-consent-content">
-            <div class="cookie-icon">
-                <i class="bi bi-cookie"></i>
-            </div>
-            <div class="cookie-text">
-                <h6 class="fw-bold mb-2">🍪 Este site utiliza cookies</h6>
-                <p class="mb-0 small">
-                    Utilizamos cookies para melhorar a sua experiência de navegação,
-                    personalizar conteúdo e analisar o tráfego do site.
-                    Ao clicar em "Aceitar", concorda com a utilização de cookies.
-                    <a href="/Home/Privacy" class="text-decoration-underline">Saiba mais</a>
-                </p>
-            </div>
-            <div class="cookie-actions">
-                <button type="button" class="btn btn-light btn-sm me-2" id="cookieDecline">
-                    Recusar
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" id="cookieAccept" data-cookie-string="@cookieString">
-                    <i class="bi bi-check-lg me-1"></i>
-                    Aceitar
-                </button>
+    <div id="cookieConsent"
+         class="fixed-bottom bg-white shadow-lg border-top p-4"
+         style="z-index:1050;">
+
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+                    <h5 class="fw-bold">
+                        <i class="bi bi-cookie text-warning"></i>
+                        Valorizamos sua privacidade
+                    </h5>
+
+                    <p class="text-muted mb-0 small">
+                        Utilizamos cookies para melhorar sua experiência,
+                        manter sua sessão ativa e analisar o tráfego do site.
+                        Ao clicar em "Aceitar", você concorda com o uso de cookies.
+                    </p>
+                </div>
+
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <button type="button"
+                            id="denyCookies"
+                            class="btn btn-outline-secondary btn-sm rounded-pill px-4 me-2">
+                        Negar
+                    </button>
+
+                    <button type="button"
+                            id="acceptCookies"
+                            class="btn btn-primary btn-sm rounded-pill px-4"
+                            data-cookie-string="@cookieString">
+                        Aceitar Cookies
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
-}
 
-<style>
-    .cookie-consent-banner {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        max-width: 500px;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        padding: 1.5rem;
-        z-index: 9999;
-        animation: slideUp 0.5s ease-out;
-    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
 
-    .cookie-consent-content {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
+            const banner = document.getElementById("cookieConsent");
+            const acceptBtn = document.getElementById("acceptCookies");
+            const denyBtn = document.getElementById("denyCookies");
 
-    .cookie-icon {
-        font-size: 2.5rem;
-        text-align: center;
-    }
-
-    .cookie-text {
-        text-align: left;
-    }
-
-    .cookie-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-
-    @@keyframes slideUp {
-        from {
-            transform: translateY(100px);
-            opacity: 0;
-        }
-
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    /* Mobile */
-    @@media (max-width: 768px) {
-        .cookie-consent-banner {
-            bottom: 0;
-            right: 0;
-            left: 0;
-            max-width: 100%;
-            border-radius: 16px 16px 0 0;
-            padding: 1rem;
-        }
-
-        .cookie-actions {
-            width: 100%;
-        }
-
-            .cookie-actions button {
-                flex: 1;
+            if (acceptBtn) {
+                acceptBtn.addEventListener("click", function () {
+                    document.cookie = acceptBtn.dataset.cookieString;
+                    banner.remove();
+                });
             }
-    }
-</style>
 
-<script>
-    (function () {
-        var acceptButton = document.getElementById("cookieAccept");
-        var declineButton = document.getElementById("cookieDecline");
-        var cookieBanner = document.getElementById("cookieConsent");
+            if (denyBtn) {
+                denyBtn.addEventListener("click", function () {
+                    banner.remove();
+                });
+            }
 
-        if (acceptButton) {
-            acceptButton.addEventListener("click", function () {
-                document.cookie = acceptButton.dataset.cookieString;
-                if (cookieBanner) {
-                    cookieBanner.style.animation = 'slideDown 0.3s ease-out';
-                    setTimeout(function() {
-                        cookieBanner.style.display = 'none';
-                    }, 300);
-                }
-            });
-        }
-
-        if (declineButton) {
-            declineButton.addEventListener("click", function () {
-                // Apenas esconde o banner sem aceitar
-                if (cookieBanner) {
-                    cookieBanner.style.animation = 'slideDown 0.3s ease-out';
-                    setTimeout(function() {
-                        cookieBanner.style.display = 'none';
-                    }, 300);
-                }
-            });
-        }
-    })();
-
-    // Animação de saída
-    @@keyframes slideDown {
-        from {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateY(100px);
-            opacity: 0;
-        }
-    }
-</script>
+        });
+    </script>
+}

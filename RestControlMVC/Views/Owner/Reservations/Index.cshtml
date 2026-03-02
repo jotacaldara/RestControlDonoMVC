@@ -1,80 +1,147 @@
 ﻿@model List<RestControlMVC.DTOs.Owner.ReservationDTO>
+@using Microsoft.Extensions.Localization
+@using RestControlMVC
+@inject IStringLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Gestão de Reservas";
+    ViewData["Title"] = Localizer["ReservationsTitle"];
     var statusFilter = ViewBag.StatusFilter as string;
+
+    // Counters always come from ViewBag (full list, never filtered)
+    int totalCount = ViewBag.TotalCount ?? 0;
+    int pendentCount = ViewBag.PendentCount ?? 0;
+    int confirmedCount = ViewBag.ConfirmedCount ?? 0;
+    int canceledCount = ViewBag.CanceledCount ?? 0;
 }
 
 <style>
     .status-badge {
         padding: 6px 16px;
         border-radius: 20px;
-        font-size: 0.875rem;
+        font-size: 0.82rem;
         font-weight: 600;
+        letter-spacing: 0.02em;
     }
 
-    .status-pendente {
-        background: #fef3c7;
-        color: #92400e;
+    .status-pendent {
+        background: #fff3e0;
+        color: #e65100;
+        border: 1px solid #ffb74d;
     }
 
-    .status-confirmada {
-        background: #d1fae5;
-        color: #065f46;
+    .status-confirmed {
+        background: #e8f5e9;
+        color: #1b5e20;
+        border: 1px solid #66bb6a;
     }
 
-    .status-cancelada {
+    .status-canceled {
         background: #fee2e2;
         color: #991b1b;
+        border: 1px solid #f87171;
+    }
+
+    .filter-btn-group .btn {
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 8px !important;
+        margin-left: 4px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .filter-btn-group .count-badge {
+        background: rgba(255,255,255,0.35);
+        border-radius: 20px;
+        padding: 1px 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8fffe;
+    }
+
+    .table th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #64748b;
+        font-weight: 600;
     }
 </style>
 
 <!-- Page Header -->
 <div class="row mb-4">
     <div class="col-12">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
-                    <i class="bi bi-calendar-check me-2" style="color: #10b981;"></i>
-                    Gestão de Reservas
-                </h1>
-                <p class="text-muted mb-0">
-                    Confirme, cancele e gerencie todas as reservas
-                </p>
-            </div>
-        </div>
+        <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
+            <i class="bi bi-calendar-check me-2" style="color: #10b981;"></i>
+            @Localizer["ReservationsTitle"]
+        </h1>
+        <p class="text-muted mb-0">@Localizer["ReservationsDescription"]</p>
     </div>
 </div>
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
 <!-- Filtros -->
-<div class="card card-custom border-0 mb-4">
-    <div class="card-body">
-        <div class="row g-3 align-items-end">
+<div class="card border-0 shadow-sm mb-4" style="border-radius: 14px;">
+    <div class="card-body py-3 px-4">
+        <div class="row g-3 align-items-center">
+
+            <!-- Select (mobile-friendly) -->
             <div class="col-md-4">
-                <label class="form-label fw-semibold">Filtrar por Status</label>
+                <label class="form-label fw-semibold small mb-1">@Localizer["ReservationFiltrar"]</label>
                 <select class="form-select" onchange="filterByStatus(this.value)">
-                    <option value="">Todas as Reservas</option>
-                    <option value="Pendent" selected="@(statusFilter == "Pendent")">Pendent</option>
-                    <option value="Confirmed" selected="@(statusFilter == "Confirmed")">Confirmed</option>
-                    <option value="Canceled" selected="@(statusFilter == "Canceled")">Canceled</option>
+                    <option value="" selected="@(string.IsNullOrEmpty(statusFilter))">@Localizer["ReservationTodasAsReservas"]</option>
+                    <option value="Pending" selected="@(statusFilter == "Pending")">@Localizer["Reservation_Status_Pendent"]</option>
+                    <option value="Confirmed" selected="@(statusFilter == "Confirmed")">@Localizer["Reservation_Status_Confirmed"]</option>
+                    <option value="Canceled" selected="@(statusFilter == "Canceled")">@Localizer["Reservation_Status_Canceled"]</option>
                 </select>
             </div>
-            <div class="col-md-8 text-end">
-                <div class="btn-group">
-                    <a href="@Url.Action("Index", new { status = "" })" class="btn @(string.IsNullOrEmpty(statusFilter) ? "btn-success" : "btn-outline-secondary")">
-                        Todas (@Model.Count)
-                    </a>
-                    <a href="@Url.Action("Index", new { status = "Pendent" })" class="btn @(statusFilter == "Pendent" ? "btn-warning" : "btn-outline-warning")">
-                        Pendentes (@Model.Count(r => r.Status == "Pendent"))
-                    </a>
-                    <a href="@Url.Action("Index", new { status = "Confirmed" })" class="btn @(statusFilter == "Confirmed" ? "btn-success" : "btn-outline-success")">
-                        Confirmadas (@Model.Count(r => r.Status == "Confirmed"))
-                    </a>
-                    <a href="@Url.Action("Index", new { status = "Canceled" })" class="btn @(statusFilter == "Canceled" ? "btn-danger" : "btn-outline-danger")">
-                        Canceladas (@Model.Count(r => r.Status == "Canceled"))
-                    </a>
-                </div>
+
+            <!-- Button group — counters always from ViewBag (stable) -->
+            <div class="col-md-8 text-end filter-btn-group">
+                <a href="@Url.Action("Index", new { status = "" })"
+                   class="btn @(string.IsNullOrEmpty(statusFilter) ? "btn-success" : "btn-outline-secondary")">
+                    <i class="bi bi-list-ul"></i>
+                    @Localizer["ReservationTodasAsReservas"]
+                    <span class="count-badge">@totalCount</span>
+                </a>
+                <a href="@Url.Action("Index", new { status = "Pending" })"
+                   class="btn @(statusFilter == "Pending" ? "btn-warning text-dark" : "btn-outline-warning")">
+                    <i class="bi bi-hourglass-split"></i>
+                    @Localizer["Reservation_Status_Pendent"]
+                    <span class="count-badge">@pendentCount</span>
+                </a>
+                <a href="@Url.Action("Index", new { status = "Confirmed" })"
+                   class="btn @(statusFilter == "Confirmed" ? "btn-success" : "btn-outline-success")">
+                    <i class="bi bi-check-circle"></i>
+                    @Localizer["Reservation_Status_Confirmed"]
+                    <span class="count-badge">@confirmedCount</span>
+                </a>
+                <a href="@Url.Action("Index", new { status = "Canceled" })"
+                   class="btn @(statusFilter == "Canceled" ? "btn-danger" : "btn-outline-danger")">
+                    <i class="bi bi-x-circle"></i>
+                    @Localizer["Reservation_Status_Canceled"]
+                    <span class="count-badge">@canceledCount</span>
+                </a>
             </div>
+
         </div>
     </div>
 </div>
@@ -82,32 +149,34 @@
 <!-- Lista de Reservas -->
 @if (Model == null || !Model.Any())
 {
-    <div class="alert alert-info">
-        <i class="bi bi-info-circle me-2"></i>
-        Nenhuma reserva encontrada.
+    <div class="card border-0 shadow-sm" style="border-radius: 14px;">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-calendar-x" style="font-size: 3.5rem; color: #d1d5db;"></i>
+            <h5 class="mt-3 text-muted">@Localizer["Reservation_NoFound"]</h5>
+        </div>
     </div>
 }
 else
 {
-    <div class="card card-custom border-0">
+    <div class="card border-0 shadow-sm" style="border-radius: 14px; overflow: hidden;">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead style="background: #f8f9fa;">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead style="background: #f8fafc;">
                         <tr>
-                            <th>Data/Hora</th>
-                            <th>Cliente</th>
-                            <th class="text-center">Pessoas</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-end">Valor Gasto</th>
-                            <th class="text-center">Ações</th>
+                            <th class="ps-4">@Localizer["ReservationDateHour"]</th>
+                            <th>@Localizer["ReservationCliente"]</th>
+                            <th class="text-center">@Localizer["Reservationpessoas"]</th>
+                            <th class="text-center">@Localizer["Reservation_Status"]</th>
+                            <th class="text-end">@Localizer["ReservationValor"]</th>
+                            <th class="text-center pe-4">@Localizer["ReservationAction"]</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var reservation in Model)
                         {
                             <tr>
-                                <td>
+                                <td class="ps-4">
                                     <div class="fw-semibold">@reservation.ReservationDate.ToString("dd/MM/yyyy")</div>
                                     <small class="text-muted">@reservation.ReservationDate.ToString("HH:mm")</small>
                                 </td>
@@ -125,11 +194,36 @@ else
                                     }
                                 </td>
                                 <td class="text-center">
-                                    <span class="badge bg-secondary">@reservation.NumberOfPeople pessoas</span>
+                                    <span class="badge bg-secondary rounded-pill">
+                                        @reservation.NumberOfPeople @Localizer["Reservation_People"]
+                                    </span>
                                 </td>
                                 <td class="text-center">
-                                    <span class="status-badge status-@reservation.Status.ToLower()">
-                                        @reservation.Status
+                                    @{
+                                        var badgeClass = reservation.Status switch
+                                        {
+                                            "Pending" => "status-pendent",
+                                            "Confirmed" => "status-confirmed",
+                                            "Canceled" => "status-canceled",
+                                            _ => "status-canceled"
+                                        };
+                                        var statusLabel = reservation.Status switch
+                                        {
+                                            "Pending" => Localizer["Reservation_Status_Pendent"].Value,
+                                            "Confirmed" => Localizer["Reservation_Status_Confirmed"].Value,
+                                            "Canceled" => Localizer["Reservation_Status_Canceled"].Value,
+                                            _ => reservation.Status
+                                        };
+                                        var statusIcon = reservation.Status switch
+                                        {
+                                            "Pending" => "bi-hourglass-split",
+                                            "Confirmed" => "bi-check-circle-fill",
+                                            "Canceled" => "bi-x-circle-fill",
+                                            _ => "bi-dash"
+                                        };
+                                    }
+                                    <span class="status-badge @badgeClass">
+                                        <i class="bi @statusIcon me-1"></i>@statusLabel
                                     </span>
                                 </td>
                                 <td class="text-end">
@@ -139,22 +233,26 @@ else
                                     }
                                     else
                                     {
-                                        <span class="text-muted">-</span>
+                                        <span class="text-muted">—</span>
                                     }
                                 </td>
-                                <td class="text-center">
-                                    <div class="btn-group btn-group-sm">
-                                        @if (reservation.Status == "Pendent")
+                                <td class="text-center pe-4">
+                                    <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                        @if (reservation.Status == "Pending")
                                         {
                                             <form method="post" asp-action="ConfirmReservation" class="d-inline">
+                                                @Html.AntiForgeryToken()
                                                 <input type="hidden" name="Id" value="@reservation.ReservationId" />
-                                                <button type="submit" class="btn btn-outline-success" title="Confirmar">
+                                                <button type="submit" class="btn btn-sm btn-outline-success" title="@Localizer["Reservation_Confirm"]">
                                                     <i class="bi bi-check-circle"></i>
                                                 </button>
                                             </form>
                                             <form method="post" asp-action="CancelReservation" class="d-inline">
+                                                @Html.AntiForgeryToken()
                                                 <input type="hidden" name="Id" value="@reservation.ReservationId" />
-                                                <button type="submit" class="btn btn-outline-danger" title="Cancelar" onclick="return confirm('Cancelar esta reserva?')">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        title="@Localizer["Reservation_Cancel"]"
+                                                        onclick="return confirm('@Localizer["Reservation_CancelConfirm"]')">
                                                     <i class="bi bi-x-circle"></i>
                                                 </button>
                                             </form>
@@ -162,19 +260,18 @@ else
 
                                         @if (reservation.Status == "Confirmed" && reservation.TotalAmount == 0)
                                         {
-                                            <button class="btn btn-outline-primary"
+                                            <button class="btn btn-sm btn-outline-primary"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalAdicionarValor"
                                                     onclick="setReservation(@reservation.ReservationId, '@reservation.CustomerName')">
-                                                <i class="bi bi-cash-coin"></i> Adicionar Valor
+                                                <i class="bi bi-cash-coin me-1"></i>@Localizer["ReservationAdicionarValor"]
                                             </button>
                                         }
 
                                         @if (reservation.TotalAmount > 0)
                                         {
-                                            <span class="badge bg-success">
-                                                <i class="bi bi-check-circle me-1"></i>
-                                                Pago
+                                            <span class="badge bg-success rounded-pill px-3 py-2">
+                                                <i class="bi bi-check-circle me-1"></i>@Localizer["Reservation_Paid"]
                                             </span>
                                         }
                                     </div>
@@ -193,40 +290,44 @@ else
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" asp-action="AddAmount">
+                @Html.AntiForgeryToken()
                 <input type="hidden" id="amountReservationId" name="id" />
                 <div class="modal-header">
-                    <h5 class="modal-title">
+                    <h5 class="modal-title fw-bold">
                         <i class="bi bi-cash-coin me-2"></i>
-                        Adicionar Valor Gasto
+                        @Localizer["Reservation_AddValueModal"]
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Cliente</label>
+                        <label class="form-label fw-semibold">@Localizer["Reservation_ClientLabel"]</label>
                         <input type="text" id="amountCustomerName" class="form-control" readonly />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Valor Total Gasto (€)</label>
-                        <input type="number" name="Amount" class="form-control form-control-lg" step="0.01" min="0.01" required placeholder="0.00" />
+                        <label class="form-label fw-semibold">@Localizer["Reservation_TotalAmountLabel"]</label>
+                        <input type="number" name="Amount" class="form-control form-control-lg"
+                               step="0.01" min="0.01" required placeholder="0.00" />
                         <small class="form-text text-muted">
                             <i class="bi bi-info-circle me-1"></i>
-                            Este valor será usado para calcular a comissão da plataforma.
+                            @Localizer["Reservation_CommissionInfo"]
                         </small>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Método de Pagamento</label>
+                        <label class="form-label fw-semibold">@Localizer["Reservation_PaymentMethodLabel"]</label>
                         <select name="PaymentMethod" class="form-select">
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Cartão">Cartão</option>
-                            <option value="MB WAY">MB WAY</option>
-                            <option value="Transferência">Transferência</option>
+                            <option value="Dinheiro">@Localizer["Reservation_Pay_Cash"]</option>
+                            <option value="Cartão">@Localizer["Reservation_Pay_Card"]</option>
+                            <option value="MB WAY">@Localizer["Reservation_Pay_MBWay"]</option>
+                            <option value="Transferência">@Localizer["Reservation_Pay_Transfer"]</option>
                         </select>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-success">Confirmar Pagamento</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Cancel"]</button>
+                    <button type="submit" class="btn btn-success fw-semibold">
+                        <i class="bi bi-check-circle me-1"></i>@Localizer["Reservation_ConfirmPayment"]
+                    </button>
                 </div>
             </form>
         </div>
@@ -243,8 +344,13 @@ else
             document.getElementById('amountReservationId').value = reservationId;
             document.getElementById('amountCustomerName').value = customerName;
         }
+
+        // Auto-hide alerts
+        setTimeout(() => {
+            document.querySelectorAll('.alert-dismissible').forEach(el => {
+                const alert = bootstrap.Alert.getOrCreateInstance(el);
+                alert.close();
+            });
+        }, 4000);
     </script>
 }
-
-
-               

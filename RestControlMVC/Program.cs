@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
+using RestControlMVC;
 using RestControlMVC.Services;
 using System.Globalization;
 
@@ -9,30 +10,52 @@ var builder = WebApplication.CreateBuilder(args);
 var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"] ?? "https://localhost:7149/api/";
 if (!apiBaseUrl.EndsWith("/")) apiBaseUrl += "/";
 
-var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("pt-PT") };
+ 
+builder.Services.AddLocalization(options =>
+{
+    options.ResourcesPath = "Localization";
+});
+
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    options.DefaultRequestCulture = new RequestCulture("en-US"); 
+    var supportedCultures = new[]
+    {
+        new CultureInfo("pt"),
+        new CultureInfo("en")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("pt");
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
+
+    // Cookie tem prioridade — definido pelo LanguageController
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new CookieRequestCultureProvider(),
+        new AcceptLanguageHeaderRequestCultureProvider()
+    };
 });
 
-// 1. Serviços de Cookies (Obrigatório para o Banner)
-builder.Services.Configure<CookiePolicyOptions>(options =>
-{
-    options.CheckConsentNeeded = context => true; 
-    options.MinimumSameSitePolicy = SameSiteMode.Lax;
-});
 
-// 2. Autenticação
+// Autenticação
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Auth/Login";
         options.Cookie.Name = "RestControlAuth";
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
     });
 
-// 3. Injeção de Dependência (Sem duplicatas)
+// Cookies (necessário para o Banner)
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.Lax;
+});
+
+// Injeção de Dependência
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -42,7 +65,17 @@ builder.Services.AddHttpClient<ApiService>(client =>
     client.BaseAddress = new Uri(apiBaseUrl);
 });
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.ModelBinderProviders.Insert(0, new InvariantDecimalModelBinderProvider());
+
+})
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider = (type, factory) =>
+            factory.Create(typeof(SharedResource));
+    });
 
 var app = builder.Build();
 
@@ -54,11 +87,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseRequestLocalization();
 app.UseRouting();
 
-app.UseCookiePolicy(); // Antes de Authentication
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "MyAreas",

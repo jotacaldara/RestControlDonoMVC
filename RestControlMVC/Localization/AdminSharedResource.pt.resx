@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true"></xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter</value></resheader>
+
+  <!-- ===== GERAL ===== -->
+  <data name="Back" xml:space="preserve"><value>Voltar</value></data>
+  <data name="Save" xml:space="preserve"><value>Guardar Alterações</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancelar</value></data>
+  <data name="Edit" xml:space="preserve"><value>Editar</value></data>
+  <data name="Delete" xml:space="preserve"><value>Eliminar</value></data>
+  <data name="Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Search" xml:space="preserve"><value>Pesquisar</value></data>
+  <data name="Actions" xml:space="preserve"><value>Ações</value></data>
+  <data name="Status" xml:space="preserve"><value>Estado</value></data>
+  <data name="Active" xml:space="preserve"><value>Ativo</value></data>
+  <data name="Inactive" xml:space="preserve"><value>Inativo</value></data>
+  <data name="Name" xml:space="preserve"><value>Nome</value></data>
+  <data name="Email" xml:space="preserve"><value>E-mail</value></data>
+  <data name="Phone" xml:space="preserve"><value>Telefone</value></data>
+  <data name="Address" xml:space="preserve"><value>Endereço</value></data>
+  <data name="City" xml:space="preserve"><value>Cidade</value></data>
+  <data name="Description" xml:space="preserve"><value>Descrição</value></data>
+  <data name="DataUpdated" xml:space="preserve"><value>Dados atualizados</value></data>
+  <data name="Approve" xml:space="preserve"><value>Aprovar</value></data>
+  <data name="Reject" xml:space="preserve"><value>Rejeitar</value></data>
+  <data name="Renew" xml:space="preserve"><value>Renovar</value></data>
+  <data name="Details" xml:space="preserve"><value>Ver Detalhes</value></data>
+  <data name="Reviews" xml:space="preserve"><value>avaliações</value></data>
+  <data name="Plan" xml:space="preserve"><value>Plano</value></data>
+  <data name="Commission" xml:space="preserve"><value>Comissão</value></data>
+  <data name="Expiry" xml:space="preserve"><value>Vencimento</value></data>
+  <data name="Days" xml:space="preserve"><value>dias</value></data>
+  <data name="Day" xml:space="preserve"><value>dia</value></data>
+  <data name="UpdatePlan" xml:space="preserve"><value>Atualizar Plano</value></data>
+
+  <!-- ===== ADMIN DASHBOARD ===== -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>Dashboard Administração</value></data>
+  <data name="Dashboard_TotalRestaurants" xml:space="preserve"><value>Total Restaurantes</value></data>
+  <data name="Dashboard_PlatformRevenue" xml:space="preserve"><value>Receita Plataforma</value></data>
+  <data name="Dashboard_TotalReservations" xml:space="preserve"><value>Total Reservas</value></data>
+  <data name="Dashboard_PendingApprovals" xml:space="preserve"><value>Aprovações Pendentes</value></data>
+  <data name="Dashboard_RevenueEvolution" xml:space="preserve"><value>Evolução de Receita</value></data>
+  <data name="Dashboard_CommissionLabel" xml:space="preserve"><value>Comissão Plataforma</value></data>
+
+  <!-- ===== EARNINGS (Ganhos) ===== -->
+  <data name="Earnings_Title" xml:space="preserve"><value>Ganhos da Plataforma</value></data>
+  <data name="Earnings_Subtitle" xml:space="preserve"><value>Receita total: mensalidades dos planos + comissões de reservas</value></data>
+  <data name="Earnings_ManageSubscriptions" xml:space="preserve"><value>Gerir Subscrições</value></data>
+  <data name="Earnings_TotalRevenue" xml:space="preserve"><value>Receita Total</value></data>
+  <data name="Earnings_TotalRevenueSubtitle" xml:space="preserve"><value>Mensalidades + Comissões</value></data>
+  <data name="Earnings_MonthlyFees" xml:space="preserve"><value>Mensalidades</value></data>
+  <data name="Earnings_MonthlyFeesSubtitle" xml:space="preserve"><value>Receita dos planos de subscrição</value></data>
+  <data name="Earnings_ReservationCommissions" xml:space="preserve"><value>Comissões de Reservas</value></data>
+  <data name="Earnings_ReservationCommissionsSubtitle" xml:space="preserve"><value>% por reserva concluída (conforme plano)</value></data>
+  <data name="Earnings_ChartTitle" xml:space="preserve"><value>Comissões por Mês (Últimos 6 Meses)</value></data>
+  <data name="Earnings_ChartLabel" xml:space="preserve"><value>Comissões (€)</value></data>
+  <data name="Earnings_NoChartData" xml:space="preserve"><value>Ainda não há dados para o gráfico.</value></data>
+  <data name="Earnings_ByRestaurant" xml:space="preserve"><value>Comissões por Restaurante</value></data>
+  <data name="Earnings_Restaurant" xml:space="preserve"><value>Restaurante</value></data>
+  <data name="Earnings_CompletedReservations" xml:space="preserve"><value>Reservas Concluídas</value></data>
+  <data name="Earnings_Commissions" xml:space="preserve"><value>Comissões</value></data>
+  <data name="Earnings_NoCommissions" xml:space="preserve"><value>Nenhuma comissão registada.</value></data>
+  <data name="Earnings_NoCommissionsHint" xml:space="preserve"><value>As comissões aparecem quando reservas são concluídas com valor registado.</value></data>
+
+  <!-- ===== USERS (Utilizadores) ===== -->
+  <data name="Users_Title" xml:space="preserve"><value>Gestão de Utilizadores</value></data>
+  <data name="Users_Subtitle" xml:space="preserve"><value>Administre as contas de clientes e administradores.</value></data>
+  <data name="Users_NewUser" xml:space="preserve"><value>Novo Utilizador</value></data>
+  <data name="Users_Role" xml:space="preserve"><value>Perfil (Role)</value></data>
+  <data name="Users_ConfirmDelete" xml:space="preserve"><value>Tem a certeza que deseja eliminar?</value></data>
+
+  <!-- ===== EDIT USER ===== -->
+  <data name="EditUser_Title" xml:space="preserve"><value>Editar Utilizador</value></data>
+  <data name="EditUser_FullName" xml:space="preserve"><value>Nome Completo</value></data>
+  <data name="EditUser_FullNamePlaceholder" xml:space="preserve"><value>Ex: João Silva</value></data>
+  <data name="EditUser_EmailPlaceholder" xml:space="preserve"><value>email@exemplo.com</value></data>
+  <data name="EditUser_AccessProfile" xml:space="preserve"><value>Perfil de Acesso</value></data>
+  <data name="EditUser_Admin" xml:space="preserve"><value>Administrador Central</value></data>
+  <data name="EditUser_Owner" xml:space="preserve"><value>Dono de Restaurante</value></data>
+  <data name="EditUser_Customer" xml:space="preserve"><value>Cliente</value></data>
+  <data name="EditUser_ActiveAccount" xml:space="preserve"><value>Conta Ativa</value></data>
+
+  <!-- ===== RESTAURANTS (Gestão de Restaurantes) ===== -->
+  <data name="Restaurants_Title" xml:space="preserve"><value>Gestão de Restaurantes</value></data>
+  <data name="Restaurants_FilterCity" xml:space="preserve"><value>Filtrar por cidade...</value></data>
+  <data name="Restaurants_NoRestaurants" xml:space="preserve"><value>Nenhum restaurante encontrado.</value></data>
+
+  <!-- ===== RESTAURANT DETAILS ===== -->
+  <data name="RestaurantDetail_Title" xml:space="preserve"><value>Meu Restaurante</value></data>
+  <data name="RestaurantDetail_DetailedInfo" xml:space="preserve"><value>Informações detalhadas do seu estabelecimento</value></data>
+  <data name="RestaurantDetail_EditInfo" xml:space="preserve"><value>Editar Informações</value></data>
+  <data name="RestaurantDetail_GeneralInfo" xml:space="preserve"><value>Informações Gerais</value></data>
+  <data name="RestaurantDetail_RestaurantName" xml:space="preserve"><value>Nome do Restaurante</value></data>
+  <data name="RestaurantDetail_AdminOnlyNote" xml:space="preserve"><value>Nome, endereço e cidade só podem ser alterados pelo administrador do sistema. Você pode editar a descrição e o telefone.</value></data>
+  <data name="RestaurantDetail_ImportantNote" xml:space="preserve"><value>Nota Importante</value></data>
+  <data name="RestaurantDetail_BasedOnReviews" xml:space="preserve"><value>Baseado em {0} avaliações</value></data>
+  <data name="RestaurantDetail_MenuStats" xml:space="preserve"><value>Estatísticas do Menu</value></data>
+  <data name="RestaurantDetail_Categories" xml:space="preserve"><value>Categorias:</value></data>
+  <data name="RestaurantDetail_TotalProducts" xml:space="preserve"><value>Total de Produtos:</value></data>
+  <data name="RestaurantDetail_ImageGallery" xml:space="preserve"><value>Galeria de Imagens</value></data>
+  <data name="RestaurantDetail_ImageAlt" xml:space="preserve"><value>Imagem do restaurante</value></data>
+  <data name="RestaurantDetail_MenuPreview" xml:space="preserve"><value>Pré-visualização do Menu</value></data>
+  <data name="RestaurantDetail_EditMenu" xml:space="preserve"><value>Editar Menu</value></data>
+
+  <!-- ===== EDIT RESTAURANT (Owner Edit) ===== -->
+  <data name="EditRestaurant_Title" xml:space="preserve"><value>Editar Informações do Restaurante</value></data>
+  <data name="EditRestaurant_Subtitle" xml:space="preserve"><value>Atualize a descrição e telefone do seu restaurante</value></data>
+  <data name="EditRestaurant_DescriptionLabel" xml:space="preserve"><value>Descrição do Restaurante</value></data>
+  <data name="EditRestaurant_DescriptionPlaceholder" xml:space="preserve"><value>Descreva o seu restaurante, especialidades, ambiente...</value></data>
+  <data name="EditRestaurant_DescriptionHint" xml:space="preserve"><value>Esta descrição aparecerá para os clientes quando visualizarem seu restaurante.</value></data>
+  <data name="EditRestaurant_PhoneLabel" xml:space="preserve"><value>Telefone de Contacto</value></data>
+  <data name="EditRestaurant_PhoneHint" xml:space="preserve"><value>Formato: +351 XXX XXX XXX (com código do país)</value></data>
+  <data name="EditRestaurant_RestrictedFields" xml:space="preserve"><value>Campos restritos:</value></data>
+  <data name="EditRestaurant_RestrictedNote" xml:space="preserve"><value>Nome, endereço e cidade do restaurante só podem ser alterados pelo administrador do sistema. Contacte o suporte se precisar alterar essas informações.</value></data>
+  <data name="EditRestaurant_TipsTitle" xml:space="preserve"><value>Dicas para uma Boa Descrição</value></data>
+  <data name="EditRestaurant_Tip1Title" xml:space="preserve"><value>Seja específico:</value></data>
+  <data name="EditRestaurant_Tip1" xml:space="preserve"><value>Mencione o tipo de cozinha, especialidades da casa e pratos populares.</value></data>
+  <data name="EditRestaurant_Tip2Title" xml:space="preserve"><value>Destaque o ambiente:</value></data>
+  <data name="EditRestaurant_Tip2" xml:space="preserve"><value>Descreva a atmosfera do restaurante (familiar, romântico, casual, etc.).</value></data>
+  <data name="EditRestaurant_Tip3Title" xml:space="preserve"><value>Mencione diferenciais:</value></data>
+  <data name="EditRestaurant_Tip3" xml:space="preserve"><value>Vista para o mar, música ao vivo, chef premiado, ingredientes orgânicos, etc.</value></data>
+  <data name="EditRestaurant_Tip4Title" xml:space="preserve"><value>Seja conciso:</value></data>
+  <data name="EditRestaurant_Tip4" xml:space="preserve"><value>Entre 2 a 4 linhas é o ideal para manter a atenção dos clientes.</value></data>
+  <data name="EditRestaurant_CharCounter" xml:space="preserve"><value>caracteres</value></data>
+
+  <!-- ===== SUBSCRIPTIONS ===== -->
+  <data name="Subs_Title" xml:space="preserve"><value>Gerir Subscrições</value></data>
+  <data name="Subs_Subtitle" xml:space="preserve"><value>Renove planos e envie lembretes de pagamento aos donos</value></data>
+  <data name="Subs_ViewEarnings" xml:space="preserve"><value>Ver Ganhos</value></data>
+  <data name="Subs_Active" xml:space="preserve"><value>Ativas</value></data>
+  <data name="Subs_Expiring" xml:space="preserve"><value>A Vencer (≤5 dias)</value></data>
+  <data name="Subs_Inactive" xml:space="preserve"><value>Inativas / Expiradas</value></data>
+  <data name="Subs_Restaurant" xml:space="preserve"><value>Restaurante</value></data>
+  <data name="Subs_Monthly" xml:space="preserve"><value>Mensalidade</value></data>
+  <data name="Subs_DaysRemaining" xml:space="preserve"><value>dias restantes</value></data>
+  <data name="Subs_Expired" xml:space="preserve"><value>EXPIRADA</value></data>
+  <data name="Subs_StatusActive" xml:space="preserve"><value>Ativa</value></data>
+  <data name="Subs_StatusExpiring" xml:space="preserve"><value>A Vencer</value></data>
+  <data name="Subs_StatusInactive" xml:space="preserve"><value>Inativa</value></data>
+  <data name="Subs_RenewTitle" xml:space="preserve"><value>Renovar 30 dias</value></data>
+  <data name="Subs_RenewConfirm" xml:space="preserve"><value>Renovar subscrição por +30 dias?</value></data>
+  <data name="Subs_SendEmail" xml:space="preserve"><value>Enviar email de lembrete</value></data>
+  <data name="Subs_NoSubs" xml:space="preserve"><value>Nenhuma subscrição encontrada.</value></data>
+
+  <!-- ===== PLANS ===== -->
+  <data name="Plans_Title" xml:space="preserve"><value>Gestão de Planos &amp; Financeiro</value></data>
+  <data name="Plans_TabExpiry" xml:space="preserve"><value>Vencimentos</value></data>
+  <data name="Plans_TabConfig" xml:space="preserve"><value>Configuração de Planos</value></data>
+  <data name="Plans_TableRestaurant" xml:space="preserve"><value>Restaurante</value></data>
+  <data name="Plans_TableCurrentPlan" xml:space="preserve"><value>Plano Atual</value></data>
+  <data name="Plans_TableExpiry" xml:space="preserve"><value>Vencimento</value></data>
+  <data name="Plans_ExpiringSoon" xml:space="preserve"><value>Expira em breve</value></data>
+  <data name="Plans_SendBilling" xml:space="preserve"><value>Enviar Cobrança</value></data>
+  <data name="Plans_NoExpiring" xml:space="preserve"><value>Nenhuma subscrição a vencer nos próximos 5 dias.</value></data>
+  <data name="Plans_CurrentConfig" xml:space="preserve"><value>Configuração Atual</value></data>
+  <data name="Plans_Price" xml:space="preserve"><value>Preço</value></data>
+  <data name="Plans_EditValues" xml:space="preserve"><value>Editar Valores</value></data>
+  <data name="Plans_NewMonthlyPrice" xml:space="preserve"><value>Novo Preço Mensal</value></data>
+  <data name="Plans_NewCommission" xml:space="preserve"><value>Nova Comissão (%)</value></data>
+  <data name="Plans_NoPlans" xml:space="preserve"><value>Não foi possível carregar os planos da base de dados.</value></data>
+  <data name="Plans_ConfirmEmail" xml:space="preserve"><value>Deseja enviar um lembrete de pagamento para este restaurante?</value></data>
+  <data name="Plans_EmailSuccess" xml:space="preserve"><value>Email enviado com sucesso!</value></data>
+  <data name="Plans_EmailError" xml:space="preserve"><value>Erro ao enviar email.</value></data>
+
+  <!-- ===== PENDING RESTAURANTS ===== -->
+  <data name="Pending_Title" xml:space="preserve"><value>Restaurantes Pendentes</value></data>
+  <data name="Pending_Subtitle" xml:space="preserve"><value>Analise e aprove novos pedidos de registo</value></data>
+  <data name="Pending_TotalPending" xml:space="preserve"><value>Total Pendente</value></data>
+  <data name="Pending_RecentNew" xml:space="preserve"><value>Novos (últimos 2 dias)</value></data>
+  <data name="Pending_WaitingDays" xml:space="preserve"><value>Há {0} dia(s)</value></data>
+  <data name="Pending_PlanLabel" xml:space="preserve"><value>Plano:</value></data>
+  <data name="Pending_PerMonth" xml:space="preserve"><value>/mês</value></data>
+  <data name="Pending_RestaurantInfo" xml:space="preserve"><value>Informações do Restaurante</value></data>
+  <data name="Pending_OwnerInfo" xml:space="preserve"><value>Dados do Proprietário</value></data>
+  <data name="Pending_OwnerName" xml:space="preserve"><value>Nome:</value></data>
+  <data name="Pending_OwnerEmail" xml:space="preserve"><value>Email:</value></data>
+  <data name="Pending_OwnerPhone" xml:space="preserve"><value>Telefone:</value></data>
+  <data name="Pending_ChosenPlan" xml:space="preserve"><value>Plano Escolhido:</value></data>
+  <data name="Pending_ConfirmApprove" xml:space="preserve"><value>Deseja aprovar este restaurante?</value></data>
+  <data name="Pending_RejectModal_Title" xml:space="preserve"><value>Rejeitar Pedido</value></data>
+  <data name="Pending_RejectWarning" xml:space="preserve"><value>Esta ação irá eliminar permanentemente o restaurante e o utilizador associado.</value></data>
+  <data name="Pending_RejectReason" xml:space="preserve"><value>Motivo da Rejeição</value></data>
+  <data name="Pending_RejectReasonPlaceholder" xml:space="preserve"><value>Explique o motivo da rejeição...</value></data>
+  <data name="Pending_RejectReasonHint" xml:space="preserve"><value>Este motivo será enviado por email ao proprietário.</value></data>
+  <data name="Pending_RejectDefinitely" xml:space="preserve"><value>Rejeitar Definitivamente</value></data>
+  <data name="Pending_EmptyTitle" xml:space="preserve"><value>Tudo em dia!</value></data>
+  <data name="Pending_EmptySubtitle" xml:space="preserve"><value>Não há restaurantes pendentes de aprovação no momento.</value></data>
+</root>

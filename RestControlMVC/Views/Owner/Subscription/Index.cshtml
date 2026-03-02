@@ -1,7 +1,10 @@
 ﻿@model RestControlMVC.DTOs.SubscriptionDTO
+@using Microsoft.Extensions.Localization
+@using RestControlMVC
+@inject IStringLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Minha Subscrição";
+    ViewData["Title"] = Localizer["Subscription_Title"];
 }
 
 <style>
@@ -52,10 +55,10 @@
     <div class="col-12">
         <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
             <i class="bi bi-credit-card-2-front me-2" style="color: #10b981;"></i>
-            Minha Subscrição
+            @Localizer["Subscription_Title"]
         </h1>
         <p class="text-muted mb-0">
-            Gerencie seu plano e acompanhe pagamentos
+            @Localizer["Subscription_Subtitle"]
         </p>
     </div>
 </div>
@@ -68,13 +71,13 @@
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center p-5">
                     <i class="bi bi-exclamation-circle" style="font-size: 4rem; color: #f59e0b;"></i>
-                    <h3 class="mt-4 fw-bold">Nenhuma Subscrição Ativa</h3>
+                    <h3 class="mt-4 fw-bold">@Localizer["Subscription_NoActive"]</h3>
                     <p class="text-muted mb-4">
-                        Entre em contato com o administrador para ativar uma subscrição.
+                        @Localizer["Subscription_NoActiveDesc"]
                     </p>
-                    <a href="mailto:suporte@restflow.com" class="btn btn-primary btn-lg">
+                    <a href="mailto:nextplayerapps@gmail.com" class="btn btn-primary btn-lg">
                         <i class="bi bi-envelope me-2"></i>
-                        Contactar Suporte
+                        @Localizer["Subscription_ContactSupport"]
                     </a>
                 </div>
             </div>
@@ -90,19 +93,19 @@ else
                 <div class="card-body p-5">
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <div>
-                            <h2 class="mb-1 fw-bold">Plano @Model.PlanName</h2>
-                            <p class="mb-0 opacity-75">Subscrição Ativa</p>
+                            <h2 class="mb-1 fw-bold">@Localizer["Dashboard_Plan"] @Model.PlanName</h2>
+                            <p class="mb-0 opacity-75">@Localizer["Dashboard_ActiveSubscription"]</p>
                         </div>
                         <span class="status-badge @(Model.IsExpiring ? "status-expiring" : "status-active")">
                             @if (Model.IsExpiring)
                             {
                                 <i class="bi bi-exclamation-triangle me-1"></i>
-                                <span>A Expirar</span>
+                                <span>@Localizer["Subscription_Expiring"]</span>
                             }
                             else
                             {
                                 <i class="bi bi-check-circle me-1"></i>
-                                <span>Ativo</span>
+                                <span>@Localizer["Subscription_Active"]</span>
                             }
                         </span>
                     </div>
@@ -115,10 +118,10 @@ else
                                     <i class="bi bi-cash-coin" style="font-size: 2rem;"></i>
                                 </div>
                                 <div>
-                                    <small class="d-block opacity-75 mb-1">Pagamento Mensal</small>
+                                    <small class="d-block opacity-75 mb-1">@Localizer["Subscription_MonthlyPayment"]</small>
                                     <h3 class="mb-0 fw-bold">
                                         €@Model.monthlyPrice.ToString()
-                                        <small class="fs-6 fw-normal opacity-75">/mês</small>
+                                        <small class="fs-6 fw-normal opacity-75">@Localizer["Subscription_PerMonth"]</small>
                                     </h3>
                                 </div>
                             </div>
@@ -129,7 +132,7 @@ else
                                     <i class="bi bi-percent" style="font-size: 2rem;"></i>
                                 </div>
                                 <div>
-                                    <small class="d-block opacity-75 mb-1">Comissão por Reserva</small>
+                                    <small class="d-block opacity-75 mb-1">@Localizer["Subscription_CommissionPerReservation"]</small>
                                     <h3 class="mb-0 fw-bold">
                                         @Model.Commission.ToString("F0")%
                                     </h3>
@@ -144,7 +147,7 @@ else
                             <div class="p-3 bg-white bg-opacity-10 rounded-3">
                                 <small class="d-block opacity-75 mb-1">
                                     <i class="bi bi-calendar-check me-1"></i>
-                                    Data de Início
+                                    @Localizer["Subscription_StartDate"]
                                 </small>
                                 <p class="mb-0 fw-semibold">@Model.StartDate.ToString("dd/MM/yyyy")</p>
                             </div>
@@ -153,25 +156,20 @@ else
                             <div class="p-3 bg-white bg-opacity-10 rounded-3">
                                 <small class="d-block opacity-75 mb-1">
                                     <i class="bi bi-calendar-x me-1"></i>
-                                    Data de Vencimento
+                                    @Localizer["Subscription_EndDate"]
                                 </small>
-                                <p class="mb-0 fw-semibold">
-
-                                        @Model.EndDate.ToString("dd/MM/yyyy")
-                                
-                                   
-                                </p>
+                                <p class="mb-0 fw-semibold">@Model.EndDate.ToString("dd/MM/yyyy")</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="p-3 bg-white bg-opacity-10 rounded-3">
                                 <small class="d-block opacity-75 mb-1">
                                     <i class="bi bi-hourglass-split me-1"></i>
-                                    Dias Restantes
+                                    @Localizer["Dashboard_DaysRemaining"]
                                 </small>
                                 <p class="mb-0 fw-bold fs-4">
                                     @Model.DaysRemaining
-                                    <small class="fs-6 fw-normal">dias</small>
+                                    <small class="fs-6 fw-normal">@Localizer["Dashboard_Days"]</small>
                                 </p>
                             </div>
                         </div>
@@ -183,9 +181,9 @@ else
                         <div class="alert alert-warning bg-white d-flex align-items-start mb-4">
                             <i class="bi bi-exclamation-triangle me-3 mt-1" style="font-size: 1.5rem; color: #92400e;"></i>
                             <div style="color: #1e293b;">
-                                <strong>Atenção!</strong> Sua subscrição expira em <strong>@Model.DaysRemaining dias</strong>.
+                                <strong>@string.Format(Localizer["Subscription_AttentionExpires"], Model.DaysRemaining)</strong>
                                 <br />
-                                Renove agora para evitar interrupções no serviço.
+                                @Localizer["Subscription_RenewToAvoid"]
                             </div>
                         </div>
                     }
@@ -196,7 +194,7 @@ else
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-light btn-lg fw-semibold" style="color: #10b981;">
                                 <i class="bi bi-arrow-repeat me-2"></i>
-                                Solicitar Renovação
+                                @Localizer["Subscription_RequestRenewal"]
                             </button>
                         </form>
                     </div>
@@ -211,32 +209,32 @@ else
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-4">
                         <i class="bi bi-star-fill me-2" style="color: #10b981;"></i>
-                        Benefícios Inclusos
+                        @Localizer["Subscription_IncludedBenefits"]
                     </h5>
                     <ul class="list-unstyled mb-0">
                         <li class="mb-3 d-flex align-items-start">
                             <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                            <span>Acesso completo ao sistema de gestão</span>
+                            <span>@Localizer["Subscription_Benefit1"]</span>
                         </li>
                         <li class="mb-3 d-flex align-items-start">
                             <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                            <span>Gestão ilimitada de menu e produtos</span>
+                            <span>@Localizer["Subscription_Benefit2"]</span>
                         </li>
                         <li class="mb-3 d-flex align-items-start">
                             <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                            <span>Sistema de reservas online</span>
+                            <span>@Localizer["Subscription_Benefit3"]</span>
                         </li>
                         <li class="mb-3 d-flex align-items-start">
                             <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                            <span>Dashboard com estatísticas em tempo real</span>
+                            <span>@Localizer["Subscription_Benefit4"]</span>
                         </li>
                         <li class="mb-3 d-flex align-items-start">
                             <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                            <span>Suporte técnico prioritário</span>
+                            <span>@Localizer["Subscription_Benefit5"]</span>
                         </li>
                         <li class="d-flex align-items-start">
                             <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
-                            <span>Atualizações automáticas do sistema</span>
+                            <span>@Localizer["Subscription_Benefit6"]</span>
                         </li>
                     </ul>
                 </div>
@@ -247,13 +245,13 @@ else
                 <div class="card-body p-4">
                     <h6 class="fw-bold mb-3" style="color: #1e40af;">
                         <i class="bi bi-info-circle me-1"></i>
-                        Como Funciona a Comissão?
+                        @Localizer["Subscription_HowCommission"]
                     </h6>
                     <p class="small mb-2" style="color: #1e40af;">
-                        A comissão de <strong>@Model.Commission%</strong> é calculada automaticamente sobre o valor total de cada reserva confirmada.
+                        @string.Format(Localizer["Subscription_CommissionDesc"], Model.Commission)
                     </p>
                     <p class="small mb-0" style="color: #1e40af;">
-                        <strong>Exemplo:</strong><br />
+                        <strong>@Localizer["Subscription_Example"]</strong><br />
                         Reserva de €100 → Comissão: €@((Model.Commission / 100) * 100)
                     </p>
                 </div>
@@ -263,9 +261,9 @@ else
             <div class="card info-card border-0">
                 <div class="card-body p-4 text-center">
                     <i class="bi bi-headset" style="font-size: 3rem; color: #10b981;"></i>
-                    <h6 class="fw-bold mt-3 mb-2">Precisa de Ajuda?</h6>
+                    <h6 class="fw-bold mt-3 mb-2">@Localizer["Subscription_NeedHelp"]</h6>
                     <p class="text-muted small mb-3">
-                        Nossa equipe está pronta para ajudar com renovações ou dúvidas sobre seu plano.
+                        @Localizer["Subscription_SupportDesc"]
                     </p>
                     <a href="mailto:nextplayerapps@gmail.com" class="btn btn-outline-success btn-sm w-100 mb-2">
                         <i class="bi bi-envelope me-1"></i>
@@ -280,18 +278,18 @@ else
         </div>
     </div>
 
-    <!-- Histórico de Pagamentos (Futuro) -->
+    <!-- Histórico de Pagamentos -->
     <div class="row mt-4">
         <div class="col-12">
             <div class="card info-card">
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3">
                         <i class="bi bi-clock-history me-2" style="color: #10b981;"></i>
-                        Histórico de Pagamentos
+                        @Localizer["Subscription_PaymentHistory"]
                     </h5>
                     <div class="alert alert-info mb-0">
                         <i class="bi bi-info-circle me-2"></i>
-                        Funcionalidade em breve! Aqui você verá todo o histórico de pagamentos da sua subscrição.
+                        @Localizer["Subscription_ComingSoon"]
                     </div>
                 </div>
             </div>
@@ -301,7 +299,6 @@ else
 
 @section Scripts {
     <script>
-        // Auto-hide alerts após 5 segundos
         setTimeout(() => {
             $('.alert-dismissible').fadeOut('slow');
         }, 5000);

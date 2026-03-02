@@ -73,12 +73,6 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link-custom @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Plans" ? "active" : "")"
-                           asp-area="Admin" asp-controller="Plans" asp-action="Index">
-                            <i class="bi bi-credit-card me-1"></i> Planos & Financeiro
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link-custom @(ViewContext.RouteData.Values["Action"]?.ToString() == "Pending" ? "active" : "")"
                            asp-area="Admin" asp-controller="PendingRestaurants" asp-action="Index">
                             <i class="bi bi-hourglass-split me-1"></i> Pendentes
@@ -91,7 +85,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Earnings" ? "active" : "")"
+                        <a class="nav-link-custom @(ViewContext.RouteData.Values["controller"]?.ToString() == "Earnings" ? "active" : "")"
                            asp-area="Admin"
                            asp-controller="Earnings"
                            asp-action="Index">
@@ -101,7 +95,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SubscriptionsAdmin" ? "active" : "")"
+                        <a class="nav-link-custom @(ViewContext.RouteData.Values["controller"]?.ToString() == "SubscriptionsAdmin" ? "active" : "")"
                            asp-area="Admin"
                            asp-controller="SubscriptionsAdmin"
                            asp-action="Index">
@@ -112,6 +106,8 @@
                 </ul>
 
                 <div class="d-flex align-items-center">
+
+                    @await Html.PartialAsync("_LanguageSwitcher")
                     <span class="user-badge"><i class="bi bi-person-circle me-1"></i> @User.Identity.Name</span>
 
                     <form asp-area="" asp-controller="Auth" asp-action="Logout" method="post" id="logoutForm" class="d-inline ms-2">

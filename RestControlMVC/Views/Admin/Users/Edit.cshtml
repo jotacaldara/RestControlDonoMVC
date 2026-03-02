@@ -1,45 +1,59 @@
 ﻿@model RestControlMVC.DTOs.UserDTO
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<RestControlMVC.AdminSharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["EditUser_Title"].Value;
+}
 
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card border-0 shadow-sm rounded-4 p-4">
-                <h3 class="fw-bold mb-4">Editar Utilizador</h3>
+                <h3 class="fw-bold mb-4">@Localizer["EditUser_Title"]</h3>
 
                 <form asp-action="Edit" method="post">
                     <input type="hidden" asp-for="id" />
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Nome Completo</label>
-                        <input asp-for="name" class="form-control rounded-3" placeholder="Ex: João Silva" />
+                        <label class="form-label fw-bold small text-muted">@Localizer["EditUser_FullName"]</label>
+                        <input asp-for="name" class="form-control rounded-3"
+                               placeholder="@Localizer["EditUser_FullNamePlaceholder"]" />
                         <span asp-validation-for="name" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">E-mail</label>
-                        <input asp-for="email" type="email" class="form-control rounded-3" placeholder="email@exemplo.com" />
+                        <label class="form-label fw-bold small text-muted">@Localizer["Email"]</label>
+                        <input asp-for="email" type="email" class="form-control rounded-3"
+                               placeholder="@Localizer["EditUser_EmailPlaceholder"]" />
                         <span asp-validation-for="email" class="text-danger small"></span>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold small text-muted">Perfil de Acesso</label>
+                        <label class="form-label fw-bold small text-muted">@Localizer["EditUser_AccessProfile"]</label>
                         <select asp-for="role" class="form-select rounded-3">
-                            <option value="Admin">Administrador Central</option>
-                            <option value="Owner">Dono de Restaurante</option>
-                            <option value="Customer">Cliente</option>
+                            <option value="Admin">@Localizer["EditUser_Admin"]</option>
+                            <option value="Owner">@Localizer["EditUser_Owner"]</option>
+                            <option value="Customer">@Localizer["EditUser_Customer"]</option>
                         </select>
                     </div>
 
                     <div class="mb-4 d-flex align-items-center">
                         <div class="form-check form-switch">
                             <input asp-for="isActive" class="form-check-input" type="checkbox" id="statusSwitch">
-                            <label class="form-check-label ms-2" for="statusSwitch">Conta Ativa</label>
+                            <label class="form-check-label ms-2" for="statusSwitch">
+                                @Localizer["EditUser_ActiveAccount"]
+                            </label>
                         </div>
                     </div>
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary px-4 rounded-pill">Salvar Alterações</button>
-                        <a asp-action="Index" class="btn btn-light px-4 rounded-pill">Cancelar</a>
+                        <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                            @Localizer["Save"]
+                        </button>
+                        <a asp-action="Index" class="btn btn-light px-4 rounded-pill">
+                            @Localizer["Cancel"]
+                        </a>
                     </div>
                 </form>
             </div>

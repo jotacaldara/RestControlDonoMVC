@@ -19,20 +19,23 @@ namespace RestControlMVC.Owner.Controllers
         // GET: Owner/Reservations
         public async Task<IActionResult> Index(string status = "")
         {
-            var endpoint = string.IsNullOrEmpty(status)
-                ? "owner/reservations"
-                : $"owner/reservations?status={status}";
+            // Always fetch ALL reservations so counters are always accurate
+            var allReservations = await _apiService.GetAsync<List<ReservationDTO>>("owner/reservations")
+                                  ?? new List<ReservationDTO>();
 
-            var reservations = await _apiService.GetAsync<List<ReservationDTO>>(endpoint);
+            // Pass real totals to the view via ViewBag — independent of the active filter
             ViewBag.StatusFilter = status;
+            ViewBag.TotalCount = allReservations.Count;
+            ViewBag.PendentCount = allReservations.Count(r => r.Status == "Pending");
+            ViewBag.ConfirmedCount = allReservations.Count(r => r.Status == "Confirmed");
+            ViewBag.CanceledCount = allReservations.Count(r => r.Status == "Canceled");
 
-            if (reservations == null)
-            {
-                return View("~/Views/Owner/Reservations/Index.cshtml", new OwnerDashboardDTO());
-            }
+            // Filter the model that is rendered in the table
+            var filtered = string.IsNullOrEmpty(status)
+                ? allReservations
+                : allReservations.Where(r => r.Status == status).ToList();
 
-            return View("~/Views/Owner/Reservations/Index.cshtml", reservations);
-
+            return View("~/Views/Owner/Reservations/Index.cshtml", filtered);
         }
 
         // POST: Owner/Reservations/ConfirmReservation/5
@@ -42,7 +45,6 @@ namespace RestControlMVC.Owner.Controllers
         {
             if (id <= 0)
             {
-                System.Diagnostics.Debug.WriteLine("[ERRO MVC] O ID recebido é zero ou nulo!");
                 TempData["Error"] = "ID da reserva inválido.";
                 return RedirectToAction(nameof(Index));
             }
@@ -63,7 +65,8 @@ namespace RestControlMVC.Owner.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelReservation(int id)
         {
-            var dto = new { Status = "Cancelada" };
+            // FIX: was "Cancelada" — standard is "Canceled"
+            var dto = new { Status = "Canceled" };
             var success = await _apiService.PutAsync($"owner/reservations/{id}/status", dto);
 
             if (success)

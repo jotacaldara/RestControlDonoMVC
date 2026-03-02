@@ -1,11 +1,20 @@
 ﻿@model IEnumerable<RestControlMVC.DTOs.RestaurantListDTO>
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<RestControlMVC.AdminSharedResource> Localizer
+
+@{
+    ViewData["Title"] = Localizer["Restaurants_Title"].Value;
+}
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold">Gestão de Restaurantes</h2>
+    <h2 class="fw-bold">@Localizer["Restaurants_Title"]</h2>
     <div class="d-flex gap-2">
         <form method="get" class="d-flex gap-2">
-            <input type="text" name="city" class="form-control form-control-sm shadow-sm" placeholder="Filtrar por cidade...">
-            <button type="submit" class="btn btn-sm btn-dark px-3">Pesquisar</button>
+            <input type="text" name="city" class="form-control form-control-sm shadow-sm"
+                   placeholder="@Localizer["Restaurants_FilterCity"]">
+            <button type="submit" class="btn btn-sm btn-dark px-3">
+                @Localizer["Search"]
+            </button>
         </form>
     </div>
 </div>
@@ -15,7 +24,8 @@
     {
         <div class="col-md-4">
             <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                <img src="@item.ImageUrl" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@item.Name">
+                <img src="@item.ImageUrl" class="card-img-top"
+                     style="height: 200px; object-fit: cover;" alt="@item.Name">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <h5 class="card-title fw-bold mb-0">@item.Name</h5>
@@ -23,12 +33,20 @@
                             <i class="bi bi-star-fill"></i> @item.AverageRating.ToString("F1")
                         </span>
                     </div>
-                    <p class="text-muted small mb-3"><i class="bi bi-geo-alt"></i> @item.City</p>
-                    <p class="card-text text-secondary small">@(item.Description.Length > 80 ? item.Description.Substring(0, 80) + "..." : item.Description)</p>
-
+                    <p class="text-muted small mb-3">
+                        <i class="bi bi-geo-alt"></i> @item.City
+                    </p>
+                    <p class="card-text text-secondary small">
+                        @(item.Description.Length > 80 ? item.Description.Substring(0, 80) + "..." : item.Description)
+                    </p>
                     <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                        <span class="text-muted extra-small">@item.TotalReviews avaliações</span>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary px-3 rounded-pill">Ver Detalhes</a>
+                        <span class="text-muted extra-small">
+                            @item.TotalReviews @Localizer["Reviews"]
+                        </span>
+                        <a asp-action="Details" asp-route-id="@item.Id"
+                           class="btn btn-sm btn-outline-primary px-3 rounded-pill">
+                            @Localizer["Details"]
+                        </a>
                     </div>
                 </div>
             </div>

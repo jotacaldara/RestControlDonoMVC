@@ -60,6 +60,13 @@ namespace RestControlMVC.DTOs
         [Required(ErrorMessage = "Email do restaurante é obrigatório")]
         [EmailAddress(ErrorMessage = "Email inválido")]
         [Display(Name = "Email do Restaurante")]
+
+
         public string RestaurantEmail { get; set; }
+
+        [Required(ErrorMessage = "Por favor, escolha um plano")]
+        [Range(1, int.MaxValue, ErrorMessage = "Por favor, escolha um plano")]
+        [Display(Name = "Plano")]
+        public int PlanId { get; set; }
     }
 }

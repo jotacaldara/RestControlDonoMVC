@@ -1,8 +1,11 @@
-﻿
-@model List<RestControlMVC.DTOs.ReviewDTO>
+﻿@model List<RestControlMVC.DTOs.ReviewDTO>
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using RestControlMVC
+@inject IStringLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Avaliações do Restaurante";
+    ViewData["Title"] = Localizer["Reviews_Title"];
     var reviewsList = Model ?? new List<RestControlMVC.DTOs.ReviewDTO>();
     var averageRating = reviewsList.Any() ? reviewsList.Average(r => r.Rating) : 0;
     var totalReviews = reviewsList.Count;
@@ -34,9 +37,9 @@
     <div class="col-12">
         <h1 class="h2 fw-bold mb-1" style="color: #1e293b;">
             <i class="bi bi-star-fill me-2" style="color: #10b981;"></i>
-            Avaliações
+            @Localizer["Reviews_Header"]
         </h1>
-        <p class="text-muted mb-0">Veja o que os clientes dizem sobre o seu restaurante</p>
+        <p class="text-muted mb-0">@Localizer["Reviews_Subtitle"]</p>
     </div>
 </div>
 
@@ -45,7 +48,7 @@
     <div class="col-md-6">
         <div class="card border-0 shadow-sm" style="border-radius: 12px;">
             <div class="card-body p-4 text-center">
-                <h6 class="text-muted text-uppercase small mb-2">Avaliação Média</h6>
+                <h6 class="text-muted text-uppercase small mb-2">@Localizer["Reviews_AverageRating"]</h6>
                 <h2 class="display-4 fw-bold mb-2" style="color: #10b981;">
                     @averageRating.ToString("F1")
                     <small class="fs-5 text-muted">/ 5.0</small>
@@ -62,9 +65,9 @@
     <div class="col-md-6">
         <div class="card border-0 shadow-sm" style="border-radius: 12px;">
             <div class="card-body p-4 text-center">
-                <h6 class="text-muted text-uppercase small mb-2">Total de Avaliações</h6>
+                <h6 class="text-muted text-uppercase small mb-2">@Localizer["Reviews_Total"]</h6>
                 <h2 class="display-4 fw-bold" style="color: #10b981;">@totalReviews</h2>
-                <p class="text-muted small mb-0">Feedback de clientes</p>
+                <p class="text-muted small mb-0">@Localizer["Reviews_CustomerFeedback"]</p>
             </div>
         </div>
     </div>
@@ -79,7 +82,6 @@
             <div class="col-12">
                 <div class="card review-card border-0 shadow-sm">
                     <div class="card-body p-4">
-                        <!-- Review Header -->
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div>
                                 <h6 class="fw-bold mb-1">@review.UserName</h6>
@@ -93,22 +95,20 @@
                             <small class="text-muted">@review.Date</small>
                         </div>
 
-                        <!-- Review Comment -->
                         <p class="mb-3">@review.Comment</p>
 
-                        <!-- Owner Reply (if exists) -->
                         @if (!string.IsNullOrEmpty(review.Reply))
                         {
                             <div class="reply-box p-3 rounded-3 mb-3">
                                 <div class="d-flex align-items-start">
                                     <i class="bi bi-reply-fill text-success me-2 mt-1"></i>
                                     <div class="flex-grow-1">
-                                        <p class="mb-1"><strong>Resposta do Restaurante:</strong></p>
+                                        <p class="mb-1"><strong>@Localizer["Reviews_OwnerReply"]</strong></p>
                                         <p class="mb-1">@review.Reply</p>
                                         @if (review.RepliedAt.HasValue)
                                         {
                                             <small class="text-muted">
-                                                Respondido em @review.RepliedAt.Value.ToString("dd/MM/yyyy HH:mm")
+                                                @Localizer["Reviews_RepliedOn"] @review.RepliedAt.Value.ToString("dd/MM/yyyy HH:mm")
                                             </small>
                                         }
                                     </div>
@@ -120,31 +120,27 @@
                             <button class="btn btn-outline-success btn-sm"
                                     data-bs-toggle="collapse"
                                     data-bs-target="#replyForm@(review.ReviewId)">
-                             
                                 <i class="bi bi-reply me-1"></i>
-                                Responder
+                                @Localizer["Reviews_Reply"]
                             </button>
 
                             <div class="collapse mt-3" id="replyForm@(review.ReviewId)">
-                         
                                 <form method="post" asp-action="ReplyReview">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="reviewId" value="@review.ReviewId" />
-                           
                                     <div class="mb-2">
                                         <textarea class="form-control" name="reply" rows="3"
-                                                  placeholder="Escreva sua resposta..." required></textarea>
+                                      placeholder="@Localizer["Reviews_ReplyPlaceholder"]" required></textarea>
                                     </div>
                                     <div class="d-flex gap-2">
                                         <button type="submit" class="btn btn-success btn-sm">
                                             <i class="bi bi-send me-1"></i>
-                                            Enviar Resposta
+                                            @Localizer["Reviews_SendReply"]
                                         </button>
                                         <button type="button" class="btn btn-secondary btn-sm"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#replyForm@(review.ReviewId)">
-                                           
-                                            Cancelar
+                                            @Localizer["Cancel"]
                                         </button>
                                     </div>
                                 </form>
@@ -161,8 +157,8 @@ else
     <div class="card border-0 shadow-sm">
         <div class="card-body text-center py-5">
             <i class="bi bi-chat-left-text" style="font-size: 4rem; color: #d1d5db;"></i>
-            <h5 class="mt-3 text-muted">Ainda não há avaliações</h5>
-            <p class="text-muted">As avaliações dos clientes aparecerão aqui</p>
+            <h5 class="mt-3 text-muted">@Localizer["Reviews_NoReviews"]</h5>
+            <p class="text-muted">@Localizer["Reviews_NoReviewsSubtitle"]</p>
         </div>
     </div>
 }

@@ -1,7 +1,11 @@
 ﻿@model RestControlMVC.DTOs.Owner.OwnerDashboardDTO
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using RestControlMVC
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResource> Localizer
 
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = Localizer["Dashboard_Title"];
 }
 
 <style>
@@ -41,13 +45,14 @@
 </style>
 
 <!-- Page Header -->
+
 <div class="row mb-4">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h1 class="h2 mb-1 fw-bold" style="color: #1e293b;">
                     <i class="bi bi-grid-1x2-fill me-2" style="color: #10b981;"></i>
-                    Dashboard
+                    @Localizer["Dashboard_Title"]
                 </h1>
                 <p class="text-muted mb-0">
                     <i class="bi bi-shop me-1"></i>
@@ -61,7 +66,7 @@
                 <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
                    class="btn btn-outline-success">
                     <i class="bi bi-gear me-1"></i>
-                    Configurações
+                    @Localizer["Settings"]
                 </a>
             </div>
         </div>
@@ -73,8 +78,12 @@
 {
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
         <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        <strong>Atenção!</strong> Sua subscrição expira em <strong>@Model.Subscription.DaysRemaining dias</strong>.
-        <a href="@Url.Action("Index", "Subscription", new { area = "Owner" })" class="alert-link">Renovar agora</a>
+        <strong>@Localizer["Dashboard_SubscriptionExpiring"]</strong>
+        @Localizer["Dashboard_SubscriptionExpiresIn"]
+        <strong>@Model.Subscription.DaysRemaining @Localizer["Dashboard_Days"]</strong>.
+        <a href="@Url.Action("Index", "Subscription", new { area = "Owner" })" class="alert-link">
+            @Localizer["Dashboard_RenewNow"]
+        </a>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
@@ -88,7 +97,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
-                            Total de Reservas
+                            @Localizer["Dashboard_TotalReservations"]
                         </p>
                         <h3 class="mb-0 fw-bold" style="color: #1e293b;">
                             @Model.TotalReservations
@@ -102,7 +111,7 @@
                 <div class="mt-3 pt-3 border-top">
                     <small class="text-muted">
                         <i class="bi bi-clock me-1"></i>
-                        Atualizado agora
+                        @Localizer["UpdatedNow"]
                     </small>
                 </div>
             </div>
@@ -116,7 +125,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
-                            Pendentes
+                            @Localizer["Dashboard_Pending"]
                         </p>
                         <h3 class="mb-0 fw-bold" style="color: #1e293b;">
                             @Model.PendingReservations
@@ -130,7 +139,7 @@
                 <div class="mt-3 pt-3 border-top">
                     <a href="@Url.Action("Index", "Reservations", new { area = "Owner", status = "Pendente" })"
                        class="text-decoration-none small fw-semibold" style="color: #f59e0b;">
-                        Ver pendentes
+                        @Localizer["Dashboard_ViewPending"]
                         <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>
@@ -145,7 +154,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
-                            Avaliação Média
+                            @Localizer["Dashboard_AverageRating"]
                         </p>
                         <h3 class="mb-0 fw-bold" style="color: #1e293b;">
                             @Model.AverageRating.ToString("F1")
@@ -160,7 +169,7 @@
                 <div class="mt-3 pt-3 border-top">
                     <small class="text-muted">
                         <i class="bi bi-chat-left-text me-1"></i>
-                        @Model.TotalReviews avaliações
+                        @Model.TotalReviews @Localizer["Dashboard_Reviews"]
                     </small>
                 </div>
             </div>
@@ -174,7 +183,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
-                            Produtos no Menu
+                            @Localizer["Dashboard_MenuProducts"]
                         </p>
                         <h3 class="mb-0 fw-bold" style="color: #1e293b;">
                             @Model.TotalProducts
@@ -188,7 +197,7 @@
                 <div class="mt-3 pt-3 border-top">
                     <a href="@Url.Action("Index", "Menu", new { area = "Owner" })"
                        class="text-decoration-none small fw-semibold" style="color: #8b5cf6;">
-                        Gerenciar menu
+                        @Localizer["Dashboard_ManageMenu"]
                         <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>
@@ -207,7 +216,7 @@
                     <div>
                         <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
                             <i class="bi bi-cash-stack me-1"></i>
-                            Receita Total
+                            @Localizer["Dashboard_TotalRevenue"]
                         </p>
                         <h2 class="mb-0 fw-bold text-success">
                             €@Model.TotalRevenue.ToString("N2")
@@ -215,9 +224,7 @@
                     </div>
                 </div>
                 <div class="mt-3 pt-3 border-top">
-                    <small class="text-muted">
-                        Valor bruto de todas as reservas
-                    </small>
+                    <small class="text-muted">@Localizer["Dashboard_GrossRevenue"]</small>
                 </div>
             </div>
         </div>
@@ -231,7 +238,7 @@
                     <div>
                         <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
                             <i class="bi bi-percent me-1"></i>
-                            Comissões Pagas
+                            @Localizer["Dashboard_CommissionsPaid"]
                         </p>
                         <h2 class="mb-0 fw-bold text-danger">
                             €@Model.TotalCommissions.ToString("N2")
@@ -242,11 +249,11 @@
                     <small class="text-muted">
                         @if (Model.Subscription != null)
                         {
-                            <span>Comissão de @Model.Subscription.Commission% por reserva</span>
+                            <span>@string.Format(Localizer["Dashboard_CommissionPerReservation"].Value, Model.Subscription.Commission)</span>
                         }
                         else
                         {
-                            <span>Conforme plano contratado</span>
+                            <span>@Localizer["Dashboard_PerPlan"]</span>
                         }
                     </small>
                 </div>
@@ -262,7 +269,7 @@
                     <div>
                         <p class="text-muted mb-1 small text-uppercase" style="letter-spacing: 0.5px;">
                             <i class="bi bi-wallet2 me-1"></i>
-                            Receita Líquida
+                            @Localizer["Dashboard_NetRevenue"]
                         </p>
                         <h2 class="mb-0 fw-bold" style="color: #10b981;">
                             €@Model.NetRevenue.ToString("N2")
@@ -272,7 +279,7 @@
                 <div class="mt-3 pt-3 border-top">
                     <small class="text-success">
                         <i class="bi bi-arrow-up me-1"></i>
-                        Receita após comissões
+                        @Localizer["Dashboard_AfterCommissions"]
                     </small>
                 </div>
             </div>
@@ -282,7 +289,6 @@
 
 <!-- Subscrição + Quick Actions -->
 <div class="row g-4 mb-4">
-    <!-- Card de Subscrição -->
     @if (Model.Subscription != null)
     {
         <div class="col-lg-4">
@@ -293,38 +299,35 @@
                             <i class="bi bi-credit-card-2-front" style="font-size: 1.75rem;"></i>
                         </div>
                         <div>
-                            <h5 class="mb-0 fw-bold">Plano @Model.Subscription.PlanName</h5>
-                            <small class="opacity-75">Subscrição Ativa</small>
+                            <h5 class="mb-0 fw-bold">@Localizer["Dashboard_Plan"] @Model.Subscription.PlanName</h5>
+                            <small class="opacity-75">@Localizer["Dashboard_ActiveSubscription"]</small>
                         </div>
                     </div>
-
                     <div class="row g-3 mb-3">
                         <div class="col-6">
                             <div class="p-2 bg-white bg-opacity-10 rounded">
-                                <small class="d-block opacity-75">Mensalidade</small>
+                                <small class="d-block opacity-75">@Localizer["Dashboard_MonthlyFee"]</small>
                                 <strong class="fs-5">€@Model.Subscription.monthlyPrice.ToString("F2")</strong>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="p-2 bg-white bg-opacity-10 rounded">
-                                <small class="d-block opacity-75">Dias Restantes</small>
+                                <small class="d-block opacity-75">@Localizer["Dashboard_DaysRemaining"]</small>
                                 <strong class="fs-5">@Model.Subscription.DaysRemaining</strong>
                             </div>
                         </div>
                     </div>
-
                     @if (Model.Subscription.IsExpiring)
                     {
                         <div class="alert alert-warning bg-white text-dark small mb-3">
                             <i class="bi bi-exclamation-triangle me-1"></i>
-                            <strong>Expira em @Model.Subscription.DaysRemaining dias!</strong>
+                            <strong>@string.Format(Localizer["Dashboard_ExpiresIn"].Value, Model.Subscription.DaysRemaining)</strong>
                         </div>
                     }
-
                     <a href="@Url.Action("Index", "Subscription", new { area = "Owner" })"
                        class="btn btn-light btn-sm w-100">
                         <i class="bi bi-eye me-1"></i>
-                        Ver Detalhes da Subscrição
+                        @Localizer["Dashboard_ViewSubscriptionDetails"]
                     </a>
                 </div>
             </div>
@@ -340,23 +343,21 @@
                         <i class="bi bi-shop" style="font-size: 1.75rem;"></i>
                     </div>
                     <div>
-                        <h5 class="mb-0 fw-bold">Meu Restaurante</h5>
-                        <small class="opacity-75">Informações e configurações</small>
+                        <h5 class="mb-0 fw-bold">@Localizer["Dashboard_MyRestaurant"]</h5>
+                        <small class="opacity-75">@Localizer["Dashboard_RestaurantSubtitle"]</small>
                     </div>
                 </div>
-                <p class="mb-3 opacity-90 small">
-                    Visualize e edite as informações do seu restaurante.
-                </p>
+                <p class="mb-3 opacity-90 small">@Localizer["Dashboard_RestaurantDescription"]</p>
                 <div class="d-flex gap-2">
                     <a href="@Url.Action("RestaurantDetail", "Dashboard", new { area = "Owner" })"
                        class="btn btn-light btn-sm flex-fill">
                         <i class="bi bi-eye me-1"></i>
-                        Ver
+                        @Localizer["View"]
                     </a>
                     <a href="@Url.Action("Edit", "Dashboard", new { area = "Owner" })"
                        class="btn btn-outline-light btn-sm flex-fill">
                         <i class="bi bi-pencil me-1"></i>
-                        Editar
+                        @Localizer["Edit"]
                     </a>
                 </div>
             </div>
@@ -372,17 +373,15 @@
                         <i class="bi bi-calendar-check" style="font-size: 1.75rem;"></i>
                     </div>
                     <div>
-                        <h5 class="mb-0 fw-bold">Reservas</h5>
-                        <small class="opacity-75">Gestão de reservas</small>
+                        <h5 class="mb-0 fw-bold">@Localizer["Dashboard_Reservations"]</h5>
+                        <small class="opacity-75">@Localizer["Dashboard_ReservationsSubtitle"]</small>
                     </div>
                 </div>
-                <p class="mb-3 opacity-90 small">
-                    Confirme, cancele e gerencie as reservas do seu restaurante.
-                </p>
+                <p class="mb-3 opacity-90 small">@Localizer["Dashboard_ReservationsDescription"]</p>
                 <a href="@Url.Action("Index", "Reservations", new { area = "Owner" })"
                    class="btn btn-light btn-sm w-100">
                     <i class="bi bi-calendar-event me-1"></i>
-                    Ver Todas as Reservas
+                    @Localizer["Dashboard_ViewAllReservations"]
                 </a>
             </div>
         </div>
@@ -391,9 +390,6 @@
 
 @section Scripts {
     <script>
-        // Auto-hide alerts
-        setTimeout(() => {
-            $('.alert-dismissible').fadeOut('slow');
-        }, 5000);
+        setTimeout(() => { $('.alert-dismissible').fadeOut('slow'); }, 5000);
     </script>
 }

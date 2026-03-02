@@ -1,8 +1,15 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "RestFlow - Sistema de Gestão para Restaurantes";
     Layout = "~/Views/Shared/_LayoutLanding.cshtml";
+
 }
+
+@{
+    var earnings = ViewBag.Earnings as RestControlMVC.DTOs.AdminEarningsDTO ?? new RestControlMVC.DTOs.AdminEarningsDTO();
+    var reservasHoje = earnings.ByRestaurant.Sum(r => r.TotalReservations);
+}
+
+
 
 <!-- Hero Section -->
 <section class="hero-section">
@@ -24,7 +31,7 @@
                     <a href="@Url.Action("Register", "RestaurantRegistration")"
                        class="btn btn-primary btn-lg px-5 py-3 shadow-lg">
                         <i class="bi bi-rocket-takeoff me-2"></i>
-                        Comece Agora 
+                        Comece Agora
                     </a>
                     <a href="@Url.Action("Login", "Home")"
                        class="btn btn-outline-primary btn-lg px-5 py-3">
@@ -51,23 +58,12 @@
                          class="img-fluid rounded-4 shadow-2xl">
                     <div class="floating-card card-1">
                         <div class="d-flex align-items-center gap-3">
-                            <div class="icon-box bg-success">
+                            <div class="icon-box bg-primary">
                                 <i class="bi bi-graph-up-arrow text-white"></i>
                             </div>
                             <div>
-                                <small class="text-muted d-block">Receita Mensal</small>
-                                <strong class="fs-5">+32% <span class="text-success">↑</span></strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="floating-card card-2">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="icon-box bg-primary">
-                                <i class="bi bi-calendar-check text-white"></i>
-                            </div>
-                            <div>
                                 <small class="text-muted d-block">Reservas Hoje</small>
-                                <strong class="fs-5">24</strong>
+                                <strong class="fs-5">@reservasHoje</strong>
                             </div>
                         </div>
                     </div>
@@ -233,86 +229,58 @@
         </div>
 
         <div class="row g-4 justify-content-center">
-            <!-- Básico -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h4 class="fw-bold mb-2">Básico</h4>
-                        <p class="text-muted small mb-4">Para começar</p>
-                        <div class="price">
-                            <span class="currency">€</span>
-                            <span class="amount">29</span>
-                            <span class="period">/mês</span>
-                        </div>
-                    </div>
-                    <ul class="pricing-features">
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Até 50 reservas/mês</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Menu digital ilimitado</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>1 utilizador</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Suporte por email</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>5% comissão/reserva</li>
-                    </ul>
-                    <a href="@Url.Action("Register", "RestaurantRegistration")"
-                       class="btn btn-outline-primary w-100 py-3">
-                        Começar Agora
-                    </a>
-                </div>
-            </div>
+            @if (ViewBag.Plans != null && (ViewBag.Plans as List<RestControlMVC.DTOs.PlanDTO>).Any())
+            {
+                var plans = ViewBag.Plans as List<RestControlMVC.DTOs.PlanDTO>;
+                int delay = 100; // animação delay inicial
 
-            <!-- Pro (Destacado) -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="pricing-card featured">
-                    <div class="badge-featured">Mais Popular</div>
-                    <div class="pricing-header">
-                        <h4 class="fw-bold mb-2">Pro</h4>
-                        <p class="text-muted small mb-4">Para crescer</p>
-                        <div class="price">
-                            <span class="currency">€</span>
-                            <span class="amount">59</span>
-                            <span class="period">/mês</span>
-                        </div>
-                    </div>
-                    <ul class="pricing-features">
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Reservas ilimitadas</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Menu digital ilimitado</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>5 utilizadores</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Suporte prioritário</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>10% comissão/reserva</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Dashboard avançado</li>
-                    </ul>
-                    <a href="@Url.Action("Register", "RestaurantRegistration")"
-                       class="btn btn-primary w-100 py-3 shadow">
-                        Começar Agora
-                    </a>
-                </div>
-            </div>
+                foreach (var plan in plans)
+                {
+                    // Definir classe "featured" para o plano mais popular (ex: o de preço médio)
+                    string cardClass = "";
+                    string badgeFeatured = "";
+                    if (plan.MonthlyPrice == plans.OrderBy(p => p.MonthlyPrice).ElementAt(plans.Count / 2).MonthlyPrice)
+                    {
+                        cardClass = "featured";
+                        badgeFeatured = "<div class=\"badge-featured\">Mais Popular</div>";
+                    }
 
-            <!-- Premium -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h4 class="fw-bold mb-2">Premium</h4>
-                        <p class="text-muted small mb-4">Para escalar</p>
-                        <div class="price">
-                            <span class="currency">€</span>
-                            <span class="amount">199</span>
-                            <span class="period">/mês</span>
+                    <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@delay">
+                        <div class="pricing-card @cardClass">
+                            @Html.Raw(badgeFeatured)
+                            <div class="pricing-header text-center">
+                                <h4 class="fw-bold mb-2">@plan.Name</h4>
+                                <p class="text-muted small mb-4">Plano mensal</p>
+                                <div class="price mb-4">
+                                    <span class="currency">€</span>
+                                    <span class="amount">@plan.MonthlyPrice.ToString("0.00")</span>
+                                    <span class="period">/mês</span>
+                                </div>
+                            </div>
+
+                            <ul class="pricing-features text-center list-unstyled mb-4">
+                                <li>
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    @plan.ReservationCommission.ToString("0.00")% comissão por reserva
+                                </li>
+                            </ul>
+
+                            <a href="@Url.Action("Register", "RestaurantRegistration", new { planId = plan.PlanId })"
+                               class="btn w-100 py-3 @(cardClass == "featured" ? "btn-primary shadow text-white" : "btn-outline-primary")">
+                                Começar Agora
+                            </a>
                         </div>
                     </div>
-                    <ul class="pricing-features">
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Tudo do Pro +</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Utilizadores ilimitados</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Aplicação Desktop</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>Suporte 24/7</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>15% comissão/reserva</li>
-                        <li><i class="bi bi-check-circle-fill text-success"></i>API personalizada</li>
-                    </ul>
-                    <a href="@Url.Action("Register", "RestaurantRegistration")"
-                       class="btn btn-outline-primary w-100 py-3">
-                        Começar Agora
-                    </a>
+
+                    delay += 100; // incrementar delay para animação sequencial
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5 text-muted">
+                    <p>Nenhum plano disponível no momento.</p>
                 </div>
-            </div>
+            }
         </div>
     </div>
 </section>
@@ -328,7 +296,7 @@
             <a href="@Url.Action("Register", "RestaurantRegistration")"
                class="btn btn-light btn-lg px-5 py-3 shadow-lg">
                 <i class="bi bi-rocket-takeoff me-2"></i>
-                Criar Conta Agora
+                Criar Conta Grátis
             </a>
             <a href="#features" class="btn btn-outline-light btn-lg px-5 py-3">
                 Saber Mais

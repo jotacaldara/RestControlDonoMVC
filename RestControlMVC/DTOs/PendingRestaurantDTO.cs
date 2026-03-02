@@ -1,6 +1,6 @@
 ﻿namespace RestControlMVC.DTOs
 {
-    public class PendingRestaurantDTO
+    public class PendingRestaurantsDTO
     {
         public int RestaurantId { get; set; }
         public string RestaurantName { get; set; }
@@ -14,5 +14,10 @@
         public string OwnerPhone { get; set; }
         public DateTime? CreatedAt { get; set; }
         public int DaysWaiting { get; set; }
+
+        public int PlanId { get; set; }
+        public string PlanName { get; set; }
+        public decimal MonthlyPrice { get; set; }
+        public decimal CommissionRate { get; set; }
     }
 }
